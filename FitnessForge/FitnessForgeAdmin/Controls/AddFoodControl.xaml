@@ -32,11 +32,25 @@
 
         <TextBox x:Name="tbSearch" Grid.Row="4" Grid.ColumnSpan="2"/>
 
-        <DataGrid Grid.Row="5" Grid.ColumnSpan="2" x:Name="dgProducts">
+        <DataGrid Grid.Row="5" Grid.ColumnSpan="2" x:Name="dgProducts" AutoGenerateColumns="False">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Termék neve" Binding="{Binding Name}"/>
-                <DataGridCheckBoxColumn Header="Tartalmazza" Binding="{Binding isChecked}"/>
-                <DataGridTextColumn Header="Mennyiség"/>
+                <DataGridTextColumn Header="Márka" Binding="{Binding Brand}"/>
+                <DataGridTextColumn Header="Név" Binding="{Binding Name}"/>
+                <DataGridCheckBoxColumn Header="Tartalmazza" Binding="{Binding isChecked}">
+                    <DataGridCheckBoxColumn.ElementStyle>
+                        <Style>
+                            <EventSetter Event="CheckBox.Checked" Handler="cbContainsProduct_Checked"/>
+                            <EventSetter Event="CheckBox.Unchecked" Handler="cbContainsProduct_Unchecked"/>
+                        </Style>
+                    </DataGridCheckBoxColumn.ElementStyle>
+                </DataGridCheckBoxColumn>
+                <DataGridTextColumn Header="Mennyiség">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style>
+                            <EventSetter Event="TextBox.TextChanged" Handler="tbAmount_TextChanged"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
                 <DataGridTextColumn Header="Mértékegység" Binding="{Binding Unit.Name}"/>
             </DataGrid.Columns>
         </DataGrid>

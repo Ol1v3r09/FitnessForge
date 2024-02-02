@@ -24,33 +24,35 @@ namespace FitnessForgeAdmin.Controls
     {
         class ProductModel 
         {
+            public int ProductId;
+            public string Brand { get; set; }
             public string Name { get; set; }
             public bool isChecked { get; set; }
+            public int Amount { get; set; }
             public Unit Unit { get; set; }
             public ProductModel(Product p) 
             {
+                ProductId = p.Id;
+                Brand = p.Brand;
                 Name = p.Name;
                 isChecked = false;
+                Amount = 0;
                 Unit = p.Unit;
             }
         }
 
         MealContext db;
+        Food f;
         public AddFoodControl(MealContext context)
         {
             InitializeComponent();
             db = context;
+            f = new Food();
         }
 
         public void databaseUpdated()
         {
             cbUnits.Items.Clear();
-            var prods = (from p in db.products select p).ToList();
-            foreach (var p in prods)
-            {
-                var c = new CheckBox();
-                c.Content = p.Name;
-            }
             var units = (from u in db.units select u).ToList();
             foreach (var unit in units)
             {
@@ -64,9 +66,32 @@ namespace FitnessForgeAdmin.Controls
             dgProducts.ItemsSource = products;
         }
 
+        private void cbContainsProduct_Checked(object sender, RoutedEventArgs e)
+        {
+            CheckBox checkBox = (CheckBox)sender;
+            ProductModel p = (ProductModel)checkBox.DataContext;
+            var product = (from pr in db.products where p.ProductId == pr.Id select pr).FirstOrDefault();
+            f.Products.Add(product);
+        }
+
+        private void cbContainsProduct_UnChecked(object sender, RoutedEventArgs e)
+        {
+            CheckBox checkBox = (CheckBox)sender;
+            ProductModel p = (ProductModel)checkBox.DataContext;
+            var product = (from pr in db.products where p.ProductId == pr.Id select pr).FirstOrDefault();
+            f.Products.Remove(product);
+        }
+
+        private void tbAmount_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            TextBox textBox = (TextBox)sender;
+            ProductModel p = (ProductModel)textBox.DataContext;
+            p.Amount = int.Parse(textBox.Text);
+            var product = (from pr in db.products where p.ProductId == pr.Id select pr).FirstOrDefault();
+        }
+
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
-            Food f = new Food();
             f.Name = tbName.Text;
             f.Unit = (from u in db.units where u.Name == cbUnits.SelectedValue select u).FirstOrDefault();
             f.UnitId = (from u in db.units where u.Name == cbUnits.SelectedValue select u.Id).FirstOrDefault();

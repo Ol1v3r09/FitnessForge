@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Programozás\\FitnessForge\\FitnessForge\\FitnessForgeAdmin\\FitnessForgeAdmin.csproj": {}
+    "E:\\Programozás\\FitnessForge\\FitnessForge\\FitnessForgeAdmin\\FitnessForgeAdmin.csproj": {}
   },
   "projects": {
-    "C:\\Programozás\\FitnessForge\\FitnessForge\\FitnessForgeAdmin\\FitnessForgeAdmin.csproj": {
+    "E:\\Programozás\\FitnessForge\\FitnessForge\\FitnessForgeAdmin\\FitnessForgeAdmin.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Programozás\\FitnessForge\\FitnessForge\\FitnessForgeAdmin\\FitnessForgeAdmin.csproj",
+        "projectUniqueName": "E:\\Programozás\\FitnessForge\\FitnessForge\\FitnessForgeAdmin\\FitnessForgeAdmin.csproj",
         "projectName": "FitnessForgeAdmin",
-        "projectPath": "C:\\Programozás\\FitnessForge\\FitnessForge\\FitnessForgeAdmin\\FitnessForgeAdmin.csproj",
-        "packagesPath": "C:\\Users\\horva_mlxp3jw\\.nuget\\packages\\",
-        "outputPath": "C:\\Programozás\\FitnessForge\\FitnessForge\\FitnessForgeAdmin\\obj\\",
+        "projectPath": "E:\\Programozás\\FitnessForge\\FitnessForge\\FitnessForgeAdmin\\FitnessForgeAdmin.csproj",
+        "packagesPath": "C:\\Users\\Olivér\\.nuget\\packages\\",
+        "outputPath": "E:\\Programozás\\FitnessForge\\FitnessForge\\FitnessForgeAdmin\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\horva_mlxp3jw\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\Olivér\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -26,7 +22,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {

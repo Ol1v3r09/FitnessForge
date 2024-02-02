@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-C:\Programozás\FitnessForge\FitnessForge\FitnessForgeAdmin\obj\Debug\net8.0-windows\
+E:\Programozás\FitnessForge\FitnessForge\FitnessForgeAdmin\obj\Debug\net8.0-windows\
 FitnessForgeAdmin
 none
 false
 TRACE;DEBUG;NET;NET8_0;NETCOREAPP
-C:\Programozás\FitnessForge\FitnessForge\FitnessForgeAdmin\App.xaml
+E:\Programozás\FitnessForge\FitnessForge\FitnessForgeAdmin\App.xaml
 4648331799
 
 17-744376257
-212713794151
+2121738809703
 Controls\AddFoodControl.xaml;Controls\AddProductControl.xaml;Controls\AddUnitControl.xaml;MainWindow.xaml;
 
 True
