@@ -17,5 +17,10 @@ namespace FitnessForgeAdmin.Models
         public string Name { get; set; }
         public ICollection<Product> Products { get; set; }
         public ICollection<Food> Foods { get; set; }
+        public Unit()
+        {
+            Products = new HashSet<Product>();
+            Foods = new HashSet<Food>();
+        }
     }
 }

@@ -18,5 +18,10 @@ namespace FitnessForgeAdmin.Models
         [Column("date")]
         public DateTime Date { get; set; }
         public ICollection<User_Meal> UserMeals { get; set; }
+
+        public Meal()
+        {
+            UserMeals = new List<User_Meal>();
+        }
     }
 }

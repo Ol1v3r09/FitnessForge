@@ -10,12 +10,13 @@ namespace FitnessForgeAdmin.Models.Contexts
 {
     public class MealContext : DbContext
     {
-        string connStr = "server=localhost;userid=root;database=fitnessforge;";
+        string connStr = "server=localhost;port=3307;userid=root;database=fitnessforge;";
 
         public DbSet<Food> foods { get; set; }
         public DbSet<Food_has_Product> foods_has_products { get; set; }
         public DbSet<Meal> meals { get; set; }
         public DbSet<Product> products { get; set; }
+        public DbSet<User_Meal> user_meals { get; set; }
         public DbSet<Unit> units { get; set; }
         public DbSet<User> users { get; set; }
 

@@ -14,5 +14,9 @@ namespace FitnessForgeAdmin.Models
         [Key, Column("userId")]
         public int Id { get; set; }
         public ICollection<User_Meal> Meals { get; set; }
+        public User()
+        {
+            Meals = new List<User_Meal>();
+        }
     }
 }

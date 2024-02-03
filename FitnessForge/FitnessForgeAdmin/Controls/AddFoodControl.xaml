@@ -14,6 +14,7 @@
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition Height="3*"/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -44,7 +45,7 @@
                         </Style>
                     </DataGridCheckBoxColumn.ElementStyle>
                 </DataGridCheckBoxColumn>
-                <DataGridTextColumn Header="Mennyiség">
+                <DataGridTextColumn Header="Mennyiség" Binding="{Binding Amount}">
                     <DataGridTextColumn.ElementStyle>
                         <Style>
                             <EventSetter Event="TextBox.TextChanged" Handler="tbAmount_TextChanged"/>
@@ -54,5 +55,6 @@
                 <DataGridTextColumn Header="Mértékegység" Binding="{Binding Unit.Name}"/>
             </DataGrid.Columns>
         </DataGrid>
+        <Button Content="Mentés" Grid.ColumnSpan="2" Grid.Row="6" x:Name="btnSave" Click="btnSave_Click"/>
     </Grid>
 </UserControl>
