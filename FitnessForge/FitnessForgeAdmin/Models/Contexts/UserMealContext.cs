@@ -8,17 +8,20 @@ using System.Threading.Tasks;
 
 namespace FitnessForgeAdmin.Models.Contexts
 {
-    public class MealContext : DbContext
+    public class UserMealContext : DbContext
     {
         string connStr = "server=localhost;port=3307;userid=root;database=fitnessforge;";
 
         public DbSet<Food> foods { get; set; }
-        public DbSet<Food_has_Product> foods_has_products { get; set; }
-        public DbSet<Meal> meals { get; set; }
+        public DbSet<FoodHasProduct> foodsHasProducts { get; set; }
+        public DbSet<MealType> mealTypes { get; set; }
         public DbSet<Product> products { get; set; }
-        public DbSet<User_Meal> user_meals { get; set; }
+        public DbSet<Meal> meals { get; set; }
         public DbSet<Unit> units { get; set; }
         public DbSet<User> users { get; set; }
+        public DbSet<DailyIntake> dailyIntakes { get; set; }
+        public DbSet<NutrientGoal> nutrientGoals { get; set; }
+        public DbSet<ActivityLevel> activityLevels { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -45,7 +48,7 @@ namespace FitnessForgeAdmin.Models.Contexts
             modelBuilder.Entity<Food>()
                 .HasMany(f => f.Products)
                 .WithMany(p => p.Foods)
-                .UsingEntity<Food_has_Product>(
+                .UsingEntity<FoodHasProduct>(
                     j => j
                         .HasOne(fp => fp.Product)
                         .WithMany()
@@ -56,25 +59,46 @@ namespace FitnessForgeAdmin.Models.Contexts
                         .HasForeignKey(fp => fp.FoodId)
                 );
 
-            //Meal UserMeal model kapcsolata
-            modelBuilder.Entity<Meal>()
-                .HasMany(e => e.UserMeals)
-                .WithOne(e => e.Meal)
-                .HasForeignKey(e => e.MealId)
+            //MealType Meal model kapcsolata
+            modelBuilder.Entity<MealType>()
+                .HasMany(e => e.Meals)
+                .WithOne(e => e.MealType)
+                .HasForeignKey(e => e.MealTypeId)
                 .IsRequired();
 
-            //User UserMeal model kapcsolata
-            modelBuilder.Entity<User>()
+            //DailyIntake Meal model kapcsolata
+            modelBuilder.Entity<DailyIntake>()
                 .HasMany(e => e.Meals)
+                .WithOne(e => e.DailyIntake)
+                .HasForeignKey(e => e.IntakeId)
+                .IsRequired();
+
+            //Food Meal model kapcsolata
+            modelBuilder.Entity<Food>()
+                .HasMany(e => e.Meals)
+                .WithOne(e => e.Food)
+                .HasForeignKey(e => e.FoodId)
+                .IsRequired();
+
+            //User ActivityLevel model kapcsolata
+            modelBuilder.Entity<ActivityLevel>()
+                .HasMany(e => e.Users)
+                .WithOne(e => e.ActivityLevel)
+                .HasForeignKey(e => e.ActivityId)
+                .IsRequired();
+
+            //User DailyIntake model kapcsolata
+            modelBuilder.Entity<User>()
+                .HasMany(e => e.DailyIntakes)
                 .WithOne(e => e.User)
                 .HasForeignKey(e => e.UserId)
                 .IsRequired();
 
-            //Food UserMeal model kapcsolata
-            modelBuilder.Entity<Food>()
-                .HasMany(e => e.UserMeals)
-                .WithOne(e => e.Food)
-                .HasForeignKey(e => e.FoodId)
+            //User NutrientGoal model kapcsolata
+            modelBuilder.Entity<NutrientGoal>()
+                .HasMany(e => e.Users)
+                .WithOne(e => e.NutrientGoal)
+                .HasForeignKey(e => e.NutrientId)
                 .IsRequired();
         }
     }

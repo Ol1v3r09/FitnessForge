@@ -18,19 +18,17 @@ namespace FitnessForgeAdmin
     /// </summary>
     public partial class MainWindow : Window
     {
-        MealContext db;
+        UserMealContext db;
 
         AddProductControl apc;
-        AddUnitControl auc;
         AddFoodControl afc;
 
         public MainWindow()
         {
             InitializeComponent();
-            db = new MealContext();
+            db = new UserMealContext();
             db.Database.EnsureCreated();
             apc = new AddProductControl(db);
-            auc = new AddUnitControl(db);
             afc = new AddFoodControl(db);
         }
 
@@ -43,11 +41,6 @@ namespace FitnessForgeAdmin
         {
             apc.databaseUpdated();
             ccTartalom.Content = apc;
-        }
-
-        private void miCreateUnit_Click(object sender, RoutedEventArgs e)
-        {
-            ccTartalom.Content = auc;
         }
 
         private void miCreateFood_Click(object sender, RoutedEventArgs e)

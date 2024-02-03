@@ -7,20 +7,15 @@ using System.Threading.Tasks;
 
 namespace FitnessForgeAdmin.Models
 {
-    [Table("user_meal")]
-    public class User_Meal
+    [Table("food_has_product")]
+    public class FoodHasProduct
     {
-        [Column("user_mealId")]
-        public int Id { get; set; }
-        [Column("mealId")]
-        public int MealId { get; set; }
-        public Meal Meal { get; set; }
         [Column("foodId")]
         public int FoodId { get; set; }
         public Food Food { get; set; }
-        [Column("userId")]
-        public int UserId { get; set; }
-        public User User { get; set; }
+        [Column("productId")]
+        public int ProductId { get; set; }
+        public Product Product { get; set; }
         [Column("amount")]
         public double Amount { get; set; }
     }

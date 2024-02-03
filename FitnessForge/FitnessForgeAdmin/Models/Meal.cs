@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -11,17 +10,18 @@ namespace FitnessForgeAdmin.Models
     [Table("meal")]
     public class Meal
     {
-        [Key,Column("mealId")]
+        [Column("mealId")]
         public int Id { get; set; }
-        [Column("name")]
-        public string Name { get; set; }
-        [Column("date")]
-        public DateTime Date { get; set; }
-        public ICollection<User_Meal> UserMeals { get; set; }
-
-        public Meal()
-        {
-            UserMeals = new List<User_Meal>();
-        }
+        [Column("meal_typeId")]
+        public int MealTypeId { get; set; }
+        public MealType MealType { get; set; }
+        [Column("foodId")]
+        public int FoodId { get; set; }
+        public Food Food { get; set; }
+        [Column("intakeId")]
+        public int IntakeId { get; set; }
+        public DailyIntake DailyIntake { get; set; }
+        [Column("amount")]
+        public double Amount { get; set; }
     }
 }

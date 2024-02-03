@@ -42,11 +42,11 @@ namespace FitnessForgeAdmin.Controls
             }
         }
 
-        MealContext db;
+        UserMealContext db;
         Food f;
         List<ProductModel> products;
 
-        public AddFoodControl(MealContext context)
+        public AddFoodControl(UserMealContext context)
         {
             InitializeComponent();
             db = context;
@@ -121,8 +121,8 @@ namespace FitnessForgeAdmin.Controls
             {
                 if (p.isChecked == true)
                 {
-                    var product_food_relation = (from fhp in db.foods_has_products where fhp.ProductId == p.ProductId && fhp.FoodId == f.Id select fhp).FirstOrDefault();
-                    if (product_food_relation != null) product_food_relation.Amount = p.Amount;
+                    var productFoodRelation = (from fhp in db.foodsHasProducts where fhp.ProductId == p.ProductId && fhp.FoodId == f.Id select fhp).FirstOrDefault();
+                    if (productFoodRelation != null) productFoodRelation.Amount = p.Amount;
                 }
             }
             db.SaveChanges();

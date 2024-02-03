@@ -11,7 +11,7 @@ namespace FitnessForgeAdmin.Models
     [Table("product")]
     public class Product
     {
-        [Key, Column("produtcId")]
+        [Key, Column("productId")]
         public int Id { get; set; }
         [Column("brand")]
         public string Brand { get; set; }

@@ -37,8 +37,6 @@ C:\Programozás\FitnessForge\FitnessForge\FitnessForgeAdmin\bin\Debug\net8.0-win
 C:\Programozás\FitnessForge\FitnessForge\FitnessForgeAdmin\bin\Debug\net8.0-windows\Pomelo.EntityFrameworkCore.MySql.dll
 C:\Programozás\FitnessForge\FitnessForge\FitnessForgeAdmin\obj\Debug\net8.0-windows\Controls\AddProductControl.g.cs
 C:\Programozás\FitnessForge\FitnessForge\FitnessForgeAdmin\obj\Debug\net8.0-windows\Controls\AddProductControl.baml
-C:\Programozás\FitnessForge\FitnessForge\FitnessForgeAdmin\obj\Debug\net8.0-windows\Controls\AddUnitControl.g.cs
-C:\Programozás\FitnessForge\FitnessForge\FitnessForgeAdmin\obj\Debug\net8.0-windows\Controls\AddUnitControl.baml
 C:\Programozás\FitnessForge\FitnessForge\FitnessForgeAdmin\obj\Debug\net8.0-windows\Controls\AddFoodControl.g.cs
 C:\Programozás\FitnessForge\FitnessForge\FitnessForgeAdmin\obj\Debug\net8.0-windows\Controls\AddFoodControl.baml
 E:\Programozás\FitnessForge\FitnessForge\FitnessForgeAdmin\bin\Debug\net8.0-windows\FitnessForgeAdmin.exe

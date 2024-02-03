@@ -12,9 +12,6 @@
                 <MenuItem Header="_Létrehoz" x:Name="miCreate">
                     <MenuItem Header="_Termék" x:Name="miCreateProduct" Click="miCreateProduct_Click"/>
                     <MenuItem Header="_Étel" x:Name="miCreateFood" Click="miCreateFood_Click"/>
-                    <MenuItem Header="_Felhasználó" x:Name="miCreateUser"/>
-                    <MenuItem Header="_Étkezés" x:Name="miCreateMeal"/>
-                    <MenuItem Header="_Mértékegység" x:Name="miCreateUnit" Click="miCreateUnit_Click"/>
                 </MenuItem>
             </Menu>
             <ContentControl x:Name="ccTartalom">

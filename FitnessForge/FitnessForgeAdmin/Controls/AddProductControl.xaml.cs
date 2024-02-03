@@ -22,8 +22,8 @@ namespace FitnessForgeAdmin.Controls
     /// </summary>
     public partial class AddProductControl : UserControl
     {
-        MealContext db;
-        public AddProductControl(MealContext context)
+        UserMealContext db;
+        public AddProductControl(UserMealContext context)
         {
             InitializeComponent();
             db = context;

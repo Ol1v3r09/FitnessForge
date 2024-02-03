@@ -15,6 +15,8 @@ namespace FitnessForgeAdmin.Models
         public int Id { get; set; }
         [Column("name")]
         public string Name { get; set; }
+        [Column("symbol")]
+        public string Symbol { get; set; }
         public ICollection<Product> Products { get; set; }
         public ICollection<Food> Foods { get; set; }
         public Unit()
