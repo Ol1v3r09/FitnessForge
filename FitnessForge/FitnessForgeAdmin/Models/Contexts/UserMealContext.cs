@@ -18,7 +18,7 @@ namespace FitnessForgeAdmin.Models.Contexts
         public DbSet<Product> products { get; set; }
         public DbSet<Meal> meals { get; set; }
         public DbSet<Unit> units { get; set; }
-        public DbSet<User> users { get; set; }
+        public DbSet<ApplicationUser> users { get; set; }
         public DbSet<DailyIntake> dailyIntakes { get; set; }
         public DbSet<NutrientGoal> nutrientGoals { get; set; }
         public DbSet<ActivityLevel> activityLevels { get; set; }
@@ -88,7 +88,7 @@ namespace FitnessForgeAdmin.Models.Contexts
                 .IsRequired();
 
             //User DailyIntake model kapcsolata
-            modelBuilder.Entity<User>()
+            modelBuilder.Entity<ApplicationUser>()
                 .HasMany(e => e.DailyIntakes)
                 .WithOne(e => e.User)
                 .HasForeignKey(e => e.UserId)
