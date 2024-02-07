@@ -15,7 +15,7 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 -- Tábla adatainak mentése fitnessforge.activity_level: ~5 rows (hozzávetőleg)
-INSERT INTO `activity_level` (`activityId`, `name`, `description`, `bmr_multiplier`) VALUES
+INSERT INTO `activity_level` (`Id`, `Name`, `Description`, `BmrMultiplier`) VALUES
 	(1, 'Mozgásszegény életmód', 'Olyan emberek, akik ülő munák végeznek, és nagyon kevés gyakorlatot vagy fizikai aktivitást végeznek.', 1.2),
 	(2, 'Enyhén aktív', 'Olyan emberek, akik fizikai aktivitást végeznek és hosszú sétákat tesznek vagy egy héten legalább 1-3 napot edzenek.', 1.375),
 	(3, 'Közepesen aktív', 'Olyan emberek, akik sokat mozognak napközben, és egy héten legalább 3-5 napot edzenek mérsékelt erőfeszítéssel.', 1.55),
@@ -23,7 +23,7 @@ INSERT INTO `activity_level` (`activityId`, `name`, `description`, `bmr_multipli
 	(5, 'Extrán aktív', 'Olyan emberek, akik heti 6-7 napon intenzív edzést végeznek fizikai aktivitást igénylő munkával.', 1.9);
 
 -- Tábla adatainak mentése fitnessforge.meal_type: ~5 rows (hozzávetőleg)
-INSERT INTO `meal_type` (`meal_typeId`, `name`) VALUES
+INSERT INTO `meal_type` (`Id`, `Name`) VALUES
 	(1, 'Reggeli'),
 	(2, 'Tízórai'),
 	(3, 'Ebéd'),
@@ -31,14 +31,14 @@ INSERT INTO `meal_type` (`meal_typeId`, `name`) VALUES
 	(5, 'Vacsora');
 
 -- Tábla adatainak mentése fitnessforge.nutrient_goal: ~4 rows (hozzávetőleg)
-INSERT INTO `nutrient_goal` (`nutrientId`, `name`, `carbohydrate_percentage`, `protein_percentage`, `fat_percentage`) VALUES
+INSERT INTO `nutrient_goal` (`Id`, `Name`, `CarbohydratePercentage`, `ProteinPercentage`, `FatPercentage`) VALUES
 	(1, 'Alapméretezett', 50, 20, 30),
 	(2, 'Alacsony szénhidráttartalmú', 30, 30, 40),
 	(3, 'Magas proteintartalmú', 35, 40, 25),
 	(4, 'Alacsony zsírtartalmú', 45, 35, 20);
 
 -- Tábla adatainak mentése fitnessforge.unit: ~7 rows (hozzávetőleg)
-INSERT INTO `unit` (`unitId`, `name`, `symbol`) VALUES
+INSERT INTO `unit` (`Id`, `Name`, `Symbol`) VALUES
 	(1, 'Liter', 'l'),
 	(2, 'Centiliter', 'cl'),
 	(3, 'Deciliter', 'dl'),
