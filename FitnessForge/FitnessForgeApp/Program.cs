@@ -3,6 +3,7 @@ using FitnessForgeApp.Data;
 using FitnessForgeApp.Models;
 using FitnessForgeApp.Models.Contexts;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace FitnessForgeApp
@@ -41,9 +42,6 @@ namespace FitnessForgeApp
                 app.UseHsts();
             }
 
-            //Custom config
-            CreateRoles(app.Services);
-
             //Basic config
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -56,20 +54,6 @@ namespace FitnessForgeApp
             
             //Start
             app.Run();
-        }
-
-        static async void CreateRoles(IServiceProvider serviceProvider)
-        {
-            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            string[] roles = ["Admin", "User"];
-            foreach (var role in roles)
-            {
-                var roleExist = await roleManager.RoleExistsAsync(role);
-                if (!roleExist) 
-                {
-                    await roleManager.CreateAsync(new IdentityRole(role));
-                }
-            }
         }
     }
 }
