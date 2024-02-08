@@ -4,6 +4,7 @@ using FitnessForgeApp.Models;
 using FitnessForgeApp.Models.Contexts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace FitnessForgeApp
@@ -18,12 +19,17 @@ namespace FitnessForgeApp
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseMySql(connectionString,ServerVersion.AutoDetect(connectionString)));
-            builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
 
+            builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+            builder.Services.AddSingleton<IEmailSender, DummyEmailSender>();
             builder.Services.AddControllersWithViews();
+            builder.Services.AddRazorPages();
+            builder.Services.AddAuthentication();
+            builder.Services.AddAuthorization();
 
             builder.Services.AddDbContext<UserMealContext>();
             builder.Services.AddDbContext<UserExerciseContext>();
@@ -46,6 +52,7 @@ namespace FitnessForgeApp
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
+            app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllerRoute(
                 name: "default",
