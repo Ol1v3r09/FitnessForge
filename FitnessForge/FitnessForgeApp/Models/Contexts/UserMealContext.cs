@@ -11,7 +11,7 @@ namespace FitnessForgeAdmin.Models.Contexts
 {
     public class UserMealContext : DbContext
     {
-        string connStr = "server=localhost;port=3307;userid=root;database=fitnessforge;";
+        string connStr = "server=localhost;port=3306;userid=root;database=fitnessforge;password=1234";
 
         public DbSet<Food> foods { get; set; }
         public DbSet<FoodHasProduct> foodsHasProducts { get; set; }
@@ -19,7 +19,7 @@ namespace FitnessForgeAdmin.Models.Contexts
         public DbSet<Product> products { get; set; }
         public DbSet<Meal> meals { get; set; }
         public DbSet<Unit> units { get; set; }
-        public DbSet<ApplicationUser> users { get; set; }
+        public DbSet<ApplicationUser> aspnetusers { get; set; }
         public DbSet<DailyIntake> dailyIntakes { get; set; }
         public DbSet<NutrientGoal> nutrientGoals { get; set; }
         public DbSet<ActivityLevel> activityLevels { get; set; }

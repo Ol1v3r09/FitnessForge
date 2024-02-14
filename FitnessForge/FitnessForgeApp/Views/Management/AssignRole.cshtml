@@ -1,6 +1,4 @@
-﻿@model IEnumerable<ApplicationUser>
-
-@{
+﻿@{
     ViewData["Title"] = "Assign Role";
 }
 
@@ -8,7 +6,7 @@
 
 <form asp-action="AssignRole">
     <div class="form-group">
-        <label for="userId">Select User:</label>
+        <label for="userId">Felhasználó kiválasztása</label>
         <select class="form-control" id="userId" name="userId">
             @foreach (var user in ViewBag.Users)
             {
@@ -17,7 +15,7 @@
         </select>
     </div>
     <div class="form-group">
-        <label for="roleName">Select Role:</label>
+        <label for="roleName">Szerep kiválasztása</label>
         <select class="form-control" id="roleName" name="roleName">
             @foreach (var role in ViewBag.Roles)
             {
@@ -26,5 +24,5 @@
         </select>
     </div>
     <button type="submit" class="btn btn-primary">Assign Role</button>
-    <button asp-action="Index" type="submit" class="btn btn-primary">Back</button>
+    <button asp-action="Roles" type="submit" class="btn btn-primary">Back</button>
 </form>

@@ -217,7 +217,7 @@ namespace FitnessForgeApp.Migrations
                 {
                     Id = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Age = table.Column<int>(type: "int", nullable: true),
+                    DateOfBirth = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     Sex = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Weight = table.Column<double>(type: "double", nullable: true),

@@ -4,7 +4,7 @@ namespace FitnessForgeApp.Models.Contexts
 {
     public class UserExerciseContext : DbContext
     {
-        string connStr = "server=localhost;port=3307;userid=root;database=fitnessforge;";
+        string connStr = "server=localhost;port=3306;userid=root;database=fitnessforge;password=1234";
         public DbSet<Exercise> exercises { get; set; }
         public DbSet<ExerciseTrainsMuscle> exerciseTrainsMuscles { get; set; }
         public DbSet<Workout> workouts { get; set; }

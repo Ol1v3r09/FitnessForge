@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FitnessForgeApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240208060609_InitialCreate")]
+    [Migration("20240210063318_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -56,12 +56,12 @@ namespace FitnessForgeApp.Migrations
                         .IsRequired()
                         .HasColumnType("int");
 
-                    b.Property<int?>("Age")
-                        .HasColumnType("int");
-
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("DateOfBirth")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)

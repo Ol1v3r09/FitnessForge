@@ -53,12 +53,12 @@ namespace FitnessForgeApp.Migrations
                         .IsRequired()
                         .HasColumnType("int");
 
-                    b.Property<int?>("Age")
-                        .HasColumnType("int");
-
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("longtext");
+
+                    b.Property<DateOnly?>("DateOfBirth")
+                        .HasColumnType("date");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -397,7 +397,7 @@ namespace FitnessForgeApp.Migrations
                     b.Property<double>("Fat")
                         .HasColumnType("double");
 
-                    b.Property<double>("Fiber")
+                    b.Property<double?>("Fiber")
                         .HasColumnType("double");
 
                     b.Property<string>("Name")

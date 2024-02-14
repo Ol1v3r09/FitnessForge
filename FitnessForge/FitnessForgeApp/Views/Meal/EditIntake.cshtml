@@ -1,0 +1,67 @@
+﻿@model List<Food>
+<h4>@ViewBag.MealType.Name</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Étel</th>
+            <th>Termékek</th>
+            <th>Részletek</th>
+            <th>Törlés</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var food in Model)
+        {
+            if (food != null)
+            {
+                <tr>
+                    <td>@food.Name</td>
+                    <td>
+                        <ul>
+                            @foreach (var product in food.Products)
+                            {
+                                <li>
+                                    <table>
+                                        <thead>
+                                            <th>Termék</th> 
+                                            <th>Szénhidrát</th>
+                                            <th>Fehérje</th>
+                                            <th>Zsír</th>
+                                        </thead>
+                                        <tbody>
+                                            <td>@product.Name</td>
+                                            <td>@product.Carbohydrate g</td>
+                                            <td>@product.Protein g</td>
+                                            <td>@product.Fat g</td>
+                                        </tbody>
+                                    </table>
+                                </li>
+                            }
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>Szénhidrát: @food.Products.Sum(p => p.Carbohydrate) g</li>
+                            <li>Fehérje: @food.Products.Sum(p => p.Protein) g</li>
+                            <li>Zsír: @food.Products.Sum(p => p.Fat) g</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <form method="post" asp-action="Delete" asp-controller="Meal">
+                            <input type="hidden" name="mealtype" value="@ViewBag.MealType" />
+                            <input type="hidden" name="foodId" value="@food.Id" />
+                            <button type="submit" class="btn btn-danger">Törlés</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+<hr />
+<form asp-action="Add" asp-controller="Meal" method="get">
+    <input value="@ViewData["type"]" type="hidden" name="mealType" />
+    <button class="btn btn-primary" type="submit">
+        Étel felvétele
+    </button>
+</form>
