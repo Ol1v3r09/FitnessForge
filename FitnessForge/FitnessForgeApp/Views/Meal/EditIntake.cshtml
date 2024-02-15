@@ -23,16 +23,20 @@
                                 <li>
                                     <table>
                                         <thead>
-                                            <th>Termék</th> 
-                                            <th>Szénhidrát</th>
-                                            <th>Fehérje</th>
-                                            <th>Zsír</th>
+                                            <tr>
+                                                <th>Termék</th> 
+                                                <th>Szénhidrát</th>
+                                                <th>Fehérje</th>
+                                                <th>Zsír</th>
+                                            </tr>
                                         </thead>
                                         <tbody>
-                                            <td>@product.Name</td>
-                                            <td>@product.Carbohydrate g</td>
-                                            <td>@product.Protein g</td>
-                                            <td>@product.Fat g</td>
+                                            <tr>
+                                                <td>@product.Name</td>
+                                                <td>@product.Carbohydrate g</td>
+                                                <td>@product.Protein g</td>
+                                                <td>@product.Fat g</td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </li>
@@ -47,7 +51,7 @@
                         </ul>
                     </td>
                     <td>
-                        <form method="post" asp-action="Delete" asp-controller="Meal">
+                        <form method="post" asp-action="Delete">
                             <input type="hidden" name="mealtype" value="@ViewBag.MealType" />
                             <input type="hidden" name="foodId" value="@food.Id" />
                             <button type="submit" class="btn btn-danger">Törlés</button>
@@ -59,8 +63,8 @@
     </tbody>
 </table>
 <hr />
-<form asp-action="Add" asp-controller="Meal" method="get">
-    <input value="@ViewData["type"]" type="hidden" name="mealType" />
+<form action="@Url.ActionLink("Add","Meal")" method="get">
+    <input value="@ViewBag.MealType" type="hidden" name="mealType" />
     <button class="btn btn-primary" type="submit">
         Étel felvétele
     </button>

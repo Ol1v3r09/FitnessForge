@@ -1,11 +1,13 @@
 ﻿using FitnessForgeAdmin.Models.Contexts;
 using FitnessForgeApp.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace FitnessForgeApp.Controllers
 {
+    [Authorize(Roles = "User")]
     public class MealController : Controller
     {
         UserMealContext db;
@@ -21,7 +23,7 @@ namespace FitnessForgeApp.Controllers
         {
             var currentUser = await userManager.GetUserAsync(User);
             var foods = (from m in db.meals where m.DailyIntake.Date == DateTime.Today && currentUser.Id == m.DailyIntake.UserId && m.MealType.Name == mealType.Name select m.Food).DefaultIfEmpty().ToList();
-            ViewBag.MealType = mealType;
+            ViewBag.MealType = (MealType)mealType;
             return View(foods);
         }
 
@@ -34,6 +36,20 @@ namespace FitnessForgeApp.Controllers
                 db.meals.Remove(meal);
                 db.SaveChanges();
             }
+            return RedirectToAction("EditIntake");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Add(MealType mealType)
+        {
+            var products = await db.products.ToListAsync();
+            ViewBag.MealType = mealType;
+            return View(products);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Add(Food food)
+        {
             return RedirectToAction("EditIntake");
         }
     }

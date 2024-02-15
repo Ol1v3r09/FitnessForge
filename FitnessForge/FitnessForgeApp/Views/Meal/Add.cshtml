@@ -1,0 +1,22 @@
+﻿@model List<Product>
+<table>
+    <thead>
+        <tr>
+            <th>Termék</th>
+            <th>Szénhidrát</th>
+            <th>Fehérje</th>
+            <th>Zsír</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model)
+        {
+            <tr>
+                <td>@product.Name</td>
+                <td>@product.Carbohydrate g</td>
+                <td>@product.Protein g</td>
+                <td>@product.Fat g</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -24,7 +24,7 @@ namespace FitnessForgeApp.Controllers
         public async Task<IActionResult> Home()
         {
             double[] d = new double[4];
-            var currentUser = await _userManager.GetUserAsync(User);
+            ApplicationUser currentUser = await _userManager.GetUserAsync(User);
 
             List<DetailsViewModel> allMeals = new List<DetailsViewModel>();
             DetailsViewModel all = new DetailsViewModel();
@@ -35,7 +35,7 @@ namespace FitnessForgeApp.Controllers
             List<Product> products = db.products.ToList();
 
             //Összes mai kalória kivétele
-            var foods = (from m in meals where m.DailyIntake.Date == DateTime.Today && currentUser.Id == m.DailyIntake.UserId select m.Food).DefaultIfEmpty().ToList();
+            var foods = (from m in meals where m.DailyIntake.Date == DateTime.Today && currentUser?.Id == m.DailyIntake.UserId select m.Food).DefaultIfEmpty().ToList();
             if (foods != null)
             {
                 foreach (var foodProduct in foodHasProducts)
@@ -64,14 +64,14 @@ namespace FitnessForgeApp.Controllers
             foreach (var mealType in mealTypes)
             {
                 DetailsViewModel u = new DetailsViewModel();
-                foods = (from m in meals where m.DailyIntake.Date == DateTime.Today && currentUser.Id == m.DailyIntake.UserId && m.MealTypeId == mealType.Id select m.Food).DefaultIfEmpty().ToList();
+                foods = (from m in meals where m.DailyIntake.Date == DateTime.Today && currentUser?.Id == m.DailyIntake.UserId && m.MealTypeId == mealType.Id select m.Food).DefaultIfEmpty().ToList();
                 if (foods != null)
                 {
                     foreach (var foodProduct in foodHasProducts)
                     {
                         foreach (var food in foods)
                         {
-                            if (foodProduct.FoodId == food.Id)
+                            if (foodProduct.FoodId == food?.Id)
                             {
                                 var product = (from p in products where p.Id == foodProduct.ProductId select p).FirstOrDefault();
                                 if (product != null)

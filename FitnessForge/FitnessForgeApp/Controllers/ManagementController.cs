@@ -21,6 +21,7 @@ namespace FitnessForgeApp.Controllers
         //GET: Management/Users
         public async Task<IActionResult> Users()
         {
+            //Kigyűjti az összes felhasználót egy saját ViewModelbe amibe belekerül az Id, a Név és a Jogai
             var userRoles = new List<UserRolesViewModel>();
             var users = _userManager.Users.ToList();
             foreach (var user in users)
@@ -36,6 +37,7 @@ namespace FitnessForgeApp.Controllers
 
                 userRoles.Add(userWithRolesView);
             }
+            //Belerakja egy ViewBagbe amit a View majd feldolgoz a /Views/User/Users.cshtml 10.sorától
             ViewBag.Users = userRoles;
             return View();
         }
@@ -44,9 +46,11 @@ namespace FitnessForgeApp.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteUser(string UserId)
         {
+            //Megkeresi a User-t az userId alapján amit a Users View ad a 26.sorában lévő form-ból
             var user = await _userManager.FindByIdAsync(UserId);
             await _userManager.DeleteAsync(user);
 
+            //Visszairányítjuk a Users Action-re
             return RedirectToAction("Users");
         }
 

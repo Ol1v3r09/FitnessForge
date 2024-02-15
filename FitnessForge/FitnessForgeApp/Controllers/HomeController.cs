@@ -6,15 +6,10 @@ using System.Diagnostics;
 
 namespace FitnessForgeApp.Controllers
 {
+    //Az ideiglenes Home oldal
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
-
+        //Visszadja az Index View-t
         public IActionResult Index()
         {
             return View();
