@@ -1,0 +1,61 @@
+﻿@using FitnessForgeApp.Models.ViewModels
+@model List<DetailsViewModel>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kalória Tracker</title>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Napi Kalória Bevitel</h2>
+        <div class="card mt-3">
+            <div class="card-body">
+                <h5>@DateTime.Today.ToShortDateString()</h5>
+                <h5 class="card-title">Összesített Kalória Bevitel</h5>
+                <p class="card-text">Napi összesített kalória: @Model[0].Calorie</p>
+                <p class="card-text">Szénhidrát: @Model[0].Carbohydrate g</p>
+                <p class="card-text">Fehérje: @Model[0].Protein g</p>
+                <p class="card-text">Zsír: @Model[0].Fat g</p>
+            </div>
+        </div>
+        <div class="mt-4">
+            <h4>Étkezések</h4>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Étkezés</th>
+                        <th>Kalória</th>
+                        <th>Részletek</th>
+                        <th>Szerkesztés</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 1; i < 6; i++)
+                    {
+                        <tr>
+                            <td>@ViewBag.MealTypes[i-1].Name</td>
+                            <td>@Model[i].Calorie</td>
+                            <td>
+                                <ul>
+                                    <li>Szénhidrát: @Model[i].Carbohydrate</li>
+                                    <li>Fehérje: @Model[i].Protein</li>
+                                    <li>Zsír: @Model[i].Fat</li>
+                                </ul>
+                            </td>
+                            <td>
+                                <form asp-action="EditIntake" asp-controller="Meal" method="get">
+                                    <input value="@ViewBag.MealTypes[i-1]" type="hidden" name="mealType" />
+                                    <button class="btn btn-primary" type="submit">
+                                        Szerkesztés
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

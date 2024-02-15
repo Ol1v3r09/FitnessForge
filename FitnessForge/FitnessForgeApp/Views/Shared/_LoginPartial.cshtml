@@ -1,0 +1,36 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+@if (SignInManager.IsSignedIn(User))
+{
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="SignedInDropdownNarbar" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <span>@User.Identity?.Name</span><i class="fa-solid fa-user ps-2"></i>
+            </a>
+            <ul class="dropdown-menu-end dropdown-menu" aria-labelledby="SignedInDropdownNarbar">
+                <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">Beállítások</a></li>
+                <li><a class="dropdown-item" href="#">Valami</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                    <form class="form-inline dropdown-item" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                        <button type="submit" class="btn btn-primary">Kijelentkezés</button>
+                    </form>
+                </li>
+            </ul>
+        </li>
+}
+else
+{
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="SignedOutDropdownNarbar" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fa-regular fa-user"></i>
+            </a>
+            <ul class="dropdown-menu-end dropdown-menu" aria-labelledby="SignedOutDropdownNarbar">
+                <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Login">Bejelentkezés</a></li>
+                <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Register">Regisztráció</a></li>
+            </ul>
+        </li>
+}
+</ul>

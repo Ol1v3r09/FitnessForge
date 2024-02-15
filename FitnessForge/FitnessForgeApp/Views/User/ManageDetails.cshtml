@@ -1,0 +1,110 @@
+﻿@model ApplicationUser
+@{
+    Layout = "_Layout_Manage";
+}
+<h2>Módosítsd adataidat</h2>
+<form asp-action="ManageDetails" method="post">
+    <div class="form-group">
+        <label asp-for="DateOfBirth">Születési Dátum</label>
+        <input asp-for="DateOfBirth" type="date" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Sex">Nem</label>
+        <input asp-for="Sex" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Weight">Súly</label>
+        <input asp-for="Weight" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Height">Magasság</label>
+        <input asp-for="Height" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="WeightGoal">Cél súly</label>
+        <input asp-for="WeightGoal" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="WeeklyWeightGoal">Heti cél súly(+/- a cél súlytól függ)</label>
+        <input asp-for="WeeklyWeightGoal" class="form-control" />
+    </div>
+
+    <div class="form-group">
+            <div class="row">
+                <div class="col-md-6">
+                    <label asp-for="ActivityId">Activity Level</label>
+                    <select asp-for="ActivityId" class="form-control" onchange="ActivityChange()" id="selectActivity">
+                        @foreach (var activity in ViewBag.Activities)
+                        {
+                            <option value="@activity.Id">@activity.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label id="activityLabel">
+                    </label>
+                </div>
+            </div>
+    </div>
+
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-6">
+                <label asp-for="NutrientId">Nutrient Goal</label>
+                <select asp-for="NutrientId" class="form-control" onchange="NutrientChange()" id="selectNutrient">
+                    @foreach (var nutrient in ViewBag.Nutrients)
+                    {
+                        <option value="@nutrient.Id">@nutrient.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label id="nutrientLabel">
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Mentés</button>
+</form>
+<script>
+    var nutrientDescriptions = {
+    @foreach (var nutrient in ViewBag.Nutrients)
+    {
+        <text>"@nutrient.Id": "Szénhidrát: @nutrient.CarbohydratePercentage, Fehérje: @nutrient.ProteinPercentage, Zsír: @nutrient.FatPercentage", </text>
+    }
+    };
+
+    function NutrientChange() {
+        var select = document.getElementById("selectNutrient");
+        var selectedNutrient = select.options[select.selectedIndex];
+        var descriptionLabel = document.getElementById("nutrientLabel");
+
+        var description = nutrientDescriptions[selectedNutrient.value];
+
+        descriptionLabel.textContent = description;
+    }
+
+
+    var activityDescriptions = {
+    @foreach (var activity in ViewBag.Activities)
+    {
+        <text>"@activity.Id": "@activity.Description", </text>
+    }
+    };
+
+    function ActivityChange() {
+        var select = document.getElementById("selectActivity");
+        var selectedActivity = select.options[select.selectedIndex];
+        var descriptionLabel = document.getElementById("activityLabel");
+
+        var description = activityDescriptions[selectedActivity.value];
+
+        descriptionLabel.textContent = description;
+    }
+</script>

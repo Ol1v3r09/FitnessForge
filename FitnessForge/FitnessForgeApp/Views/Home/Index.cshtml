@@ -1,0 +1,14 @@
+﻿@inject Microsoft.AspNetCore.Identity.SignInManager<ApplicationUser> signInManager
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Üdvözöllek a FitnessForge oldalán</h1>
+    @if (!signInManager.IsSignedIn(User))
+    {
+        <button class="btn btn-primary" asp-area="Identity" asp-page="/Account/Login">Bejelentkezés</button>
+        <br />
+        <button class="btn btn-primary" asp-area="Identity" asp-page="/Account/Register">Regisztráció</button>
+    }
+</div>

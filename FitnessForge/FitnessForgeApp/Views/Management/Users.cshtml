@@ -1,0 +1,35 @@
+﻿   <table class="table">
+        <thead>
+            <tr>
+                <th>Felhasználónév</th>
+                <th>Szerepek</th>
+                <th>Törlés</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in ViewBag.Users)
+            {
+                <tr>
+                    <td>@user.UserName</td>
+                    <td>
+                        @foreach (var role in user.Roles)
+                        {
+                            <span>@role</span>
+                        }
+                        <form action="@Url.ActionLink("Index","Role")" method="get">
+                            <button class="btn btn-primary" type="submit">Szerkesztés</button>
+                        </form>
+                    </td>
+                    <td>
+                        @if (user.UserName != User.Identity.Name)
+                        {
+                            <form method="post" asp-action="Delete">
+                                <input type="hidden" name="userId" value="@user.UserId" />
+                                <button type="submit" class="btn btn-danger">Törlés</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
