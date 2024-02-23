@@ -18,95 +18,165 @@ namespace FitnessForgeApp.Controllers
             _userManager = userManager;
         }
 
-        //GET: Management/Users
-        public async Task<IActionResult> Users()
+        [HttpGet]
+        public async Task<IActionResult> UserList()
         {
-            //Kigyűjti az összes felhasználót egy saját ViewModelbe amibe belekerül az Id, a Név és a Jogai
-            var userRoles = new List<UserRolesViewModel>();
-            var users = _userManager.Users.ToList();
-            foreach (var user in users)
+            try
             {
-                var roles = await _userManager.GetRolesAsync(user);
+                List<UserWithRolesViewModel> userWithRolesList = new List<UserWithRolesViewModel>();
 
-                var userWithRolesView = new UserRolesViewModel
+                List<ApplicationUser> allUsers = _userManager.Users.ToList();
+                if (allUsers == null)
                 {
-                    UserId = user.Id,
-                    UserName = user.UserName,
-                    Roles = roles.ToList()
-                };
+                    ViewData["ErrorMessage"] = "Nem található felhasználó";
+                    //Le kell kezelni majd valahogy
+                    return View();
+                }
 
-                userRoles.Add(userWithRolesView);
+                foreach (ApplicationUser user in allUsers)
+                {
+                    var allRolesOfUser = await _userManager.GetRolesAsync(user);
+                    if (allRolesOfUser == null)
+                    {
+                        ViewData["ErrorMessage"] = $"Nem sikerült lekérni a felhasználó szerepköreit. Azonosytó: {user.Id}";
+                        return View();
+                    }
+
+                    UserWithRolesViewModel userWithRoles = new UserWithRolesViewModel
+                    {
+                        UserId = user.Id,
+                        UserName = user.UserName,
+                        Roles = allRolesOfUser.ToList()
+                    };
+
+                    userWithRolesList.Add(userWithRoles);
+                }
+
+                ViewData["UsersWithRoles"] = userWithRolesList;
+                return View();
             }
-            //Belerakja egy ViewBagbe amit a View majd feldolgoz a /Views/User/Users.cshtml 10.sorától
-            ViewBag.Users = userRoles;
-            return View();
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Hiba: {ex.Message}");
+
+                ViewData["ErrorMessage"] = "Hiba lépett fel a kérés feldolgozása közben";
+                return View();
+            }
         }
 
-        // POST: Management/DeleteUser
         [HttpPost]
         public async Task<IActionResult> DeleteUser(string UserId)
         {
-            //Megkeresi a User-t az userId alapján amit a Users View ad a 26.sorában lévő form-ból
-            var user = await _userManager.FindByIdAsync(UserId);
-            await _userManager.DeleteAsync(user);
+            try
+            {
+                var UserToBeDeleted = await _userManager.FindByIdAsync(UserId);
+                if (UserToBeDeleted == null)
+                {
+                    ViewData["ErrorMessage"] = "A felhasználó nem található";
+                    return RedirectToAction("Users");
+                }
 
-            //Visszairányítjuk a Users Action-re
-            return RedirectToAction("Users");
+                await _userManager.DeleteAsync(UserToBeDeleted);
+
+                return RedirectToAction("Users");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Hiba: {ex.Message}");
+
+                ViewData["ErrorMessage"] = "Hiba lépett fel a felhasználó törlése közben";
+                return RedirectToAction("Users");
+            }
         }
 
-        // GET: Management/Roles
+        [HttpGet]
         public ActionResult Roles()
         {
-            var roles = _roleManager.Roles;
-            return View(roles);
+            var allRoles = _roleManager.Roles;
+            if(allRoles == null)
+            {
+                ViewData["ErrorMessage"] = "Nem találhatók szerepek";
+                return View();
+            }
+            return View(allRoles);
         }
 
-        // GET: Role/Create
-        public ActionResult CreateRoles()
+        [HttpGet]
+        public ActionResult CreateRole()
         {
             return View();
         }
 
-        // POST: Management/Create
         [HttpPost]
-        public async Task<IActionResult> CreateRoles(IdentityRole role)
+        public async Task<IActionResult> CreateRole(IdentityRole role)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var result = await _roleManager.CreateAsync(role);
-                if (result.Succeeded)
-                {
-                    return RedirectToAction("Roles");
-                }
+                await _roleManager.CreateAsync(role);
+                return RedirectToAction("Roles");
             }
-            return View(role);
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Hiba: {ex.Message}");
+
+                ViewData["ErrorMessage"] = "Hiba lépett fel a szerep létrehozása közben";
+                return RedirectToAction("Roles");
+            }
         }
 
-        // GET: Management/AssignRole visszaadja az összes User-t és Role-t
+        [HttpGet]
         public async Task<IActionResult> AssignRole()
         {
-            var users = await _userManager.Users.ToListAsync();
-            var roles = await _roleManager.Roles.ToListAsync();
+            try
+            {
+                var allUsers = await _userManager.Users.ToListAsync();
+                var allRoles = await _roleManager.Roles.ToListAsync();
 
-            ViewBag.Users = users;
-            ViewBag.Roles = roles;
+                ViewData["allUsers"] = allUsers;
+                ViewData["allRoles"] = allRoles;
 
-            return View();
+                return View();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Hiba: {ex.Message}");
+
+                ViewData["ErrorMessage"] = "Hiba lépett fel a felhasználók és a szerepek lekérése közben";
+                return View();
+            }
         }
 
-        // POST: Management/AssignRole Post action hogy lekezeljük a form-ot
         [HttpPost]
         public async Task<IActionResult> AssignRole(string userId, string roleName)
         {
-            var user = await _userManager.FindByIdAsync(userId);
-            var role = await _roleManager.FindByNameAsync(roleName);
-
-            if (user != null && role != null)
+            try
             {
-                await _userManager.AddToRoleAsync(user, role.Name);
-            }
+                var user = await _userManager.FindByIdAsync(userId);
+                var role = await _roleManager.FindByNameAsync(roleName);
 
-            return RedirectToAction("Roles");
+                if (user == null)
+                {
+                    ViewData["ErrorMessage"] = "Nem található a felhasználó";
+                    return RedirectToAction("Roles");
+                }
+
+                if (role == null)
+                {
+                    ViewData["ErrorMessage"] = "Nem található a szerep";
+                    return RedirectToAction("Roles");
+                }
+
+                await _userManager.AddToRoleAsync(user, role.Name);
+
+                return RedirectToAction("Roles");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Hiba: {ex.Message}");
+
+                ViewData["ErrorMessage"] = "Hiba lépett fel a szerep felhasználóhoz való rendelése közben";
+                return RedirectToAction("Roles");
+            }
         }
     }
 }

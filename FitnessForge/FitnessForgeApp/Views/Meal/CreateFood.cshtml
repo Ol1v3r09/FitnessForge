@@ -1,0 +1,145 @@
+﻿@{
+    ViewBag.Title = "Create Food";
+    List<Product>? products = (List<Product>?)ViewData["products"];
+    List<Unit>? units = (List<Unit>?)ViewData["units"];
+}
+<style>
+    tr.product-row:hover {
+        background-color: lightseagreen;
+    }
+</style>
+
+<h2>Étel készítése</h2>
+
+<form asp-action="CreateFood" method="post" class="add-product-form">
+    <div class="form-group">
+        <label class="control-label">Név</label>
+        <input type="text" name="Name" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label class="control-label">Recept/Elkészítés</label>
+        <textarea name="Instructions" class="form-control" rows="15" cols="50"></textarea>
+    </div>
+
+    <div class="form-group">
+        <h4>Termékek</h4>
+        <table class="table table-striped product-table">
+            <thead>
+                <tr>
+                    <th colspan="2">Név</th>
+                    <th>Mennyiség</th>
+                    <th>Hozzáad</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (products != null)
+                {
+                    @foreach (var p in products)
+                    {
+                        <tr class="product-row">
+                            <td colspan="2">@p.Name</td>
+                            <td>
+                                <input class="form-control" name="amount" type="text" />
+                                <label class="control-label">@p.Unit.Symbol</label>
+                            </td>
+                            <td>
+                                <input type="hidden" value="@p.Id" name="productId" />
+                                <input class="btn btn-primary add-item" type="button" value="Hozzáad" />
+                            </td>
+                        </tr>
+                        <tr class="details-row">
+                            <td>Kalóra : @p.Calorie kcal</td>
+                            <td>Szénhidrát : @p.Carbohydrate g</td>
+                            <td>Fehérje : @p.Protein g</td>
+                            <td>Zsír : @p.Fat g</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="form-group">
+        <h4>Recept Termékek</h4>
+        <table class="table table-striped receipt-table">
+            <thead>
+                <tr>
+                    <th colspan="2">Név</th>
+                    <th>Mennyiség</th>
+                    <th>Törlés</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label">Mértékegység</label>
+        <select name="unit" class="form-control">
+            @foreach (var unit in units)
+            {
+                <option value="@unit.Id">@unit.Name</option>
+            }
+        </select>
+    </div>
+
+    <button class="btn btn-primary" type="submit">Mentés</button>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Add jQuery library -->
+<script type="text/javascript">
+    $(document).ready(function () {
+        // Handler for adding item to receipt table
+        $('.add-item').click(function () {
+            var row = $(this).closest('tr.product-row'); // Get the closest product row
+            var detailRow = row.next('.details-row'); // Get the corresponding detail row
+
+            // Clone the product row and its detail row and append to the receipt table
+            var receiptProductRow = row.clone();
+            var receiptDetailRow = detailRow.clone();
+            var addButton = receiptProductRow.find('.add-item');
+            var amountInput = receiptProductRow.find('input[name="amount"]');
+            var productIdInput = receiptProductRow.find('input[name="productId"]');
+
+            // Change name attribute of input fields
+            amountInput.attr('name', 'receiptAmount'); // Change name of amount input
+            productIdInput.attr('name', 'receiptProductId'); // Change name of productId input
+
+            addButton.removeClass('add-item').addClass('remove-item').val('Törlés');
+            if (addButton.hasClass('btn-primary')) {
+                addButton.removeClass('btn-primary').addClass('btn-danger');
+            }
+            $('.receipt-table tbody').append(receiptProductRow);
+            $('.receipt-table tbody').append(receiptDetailRow);
+
+            // Hide the original product and detail rows
+            row.hide();
+            detailRow.hide();
+
+            // Disable the textbox in the receipt table
+            amountInput.prop('readonly', true);
+        });
+
+        // Handler for removing item from receipt table
+        $('.receipt-table').on('click', '.remove-item', function () {
+            var row = $(this).closest('tr');
+            var productName = row.find('td:first').text();
+
+            // Show the corresponding product and detail rows in the product table
+            $('.product-row').each(function () {
+                var name = $(this).find('td:first').text();
+                if (name === productName) {
+                    $(this).show();
+                    $(this).next('.details-row').show();
+                    return false;
+                }
+            });
+
+            // Remove the receipt rows
+            row.next('.details-row').remove(); // Remove the corresponding detail row
+            row.remove(); // Remove the product row
+        });
+    });
+</script>

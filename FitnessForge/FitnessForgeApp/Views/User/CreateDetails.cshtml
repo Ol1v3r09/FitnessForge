@@ -1,5 +1,8 @@
 ﻿@model ApplicationUser
-
+@{
+    List<ActivityLevel>? activities = (List<ActivityLevel>?)ViewData["activities"];
+    List<NutrientGoal>? nutrients = (List<NutrientGoal>?)ViewData["nutrients"];
+}
 <h2>Add meg a további adataidat</h2>
 
 <form asp-action="CreateDetails" method="post">
@@ -36,9 +39,9 @@
     <div class="form-group">
             <div class="row">
                 <div class="col-md-6">
-                    <label asp-for="ActivityId">Activity Level</label>
+                    <label asp-for="ActivityId">Aktivitási szint</label>
                     <select asp-for="ActivityId" class="form-control" onchange="ActivityChange()" id="selectActivity">
-                        @foreach (var activity in ViewBag.Activities)
+                        @foreach (var activity in activities)
                         {
                             <option value="@activity.Id">@activity.Name</option>
                         }
@@ -54,9 +57,9 @@
     <div class="form-group">
         <div class="row">
             <div class="col-md-6">
-                <label asp-for="NutrientId">Nutrient Goal</label>
+                <label asp-for="NutrientId">Tápanyag cél</label>
                 <select asp-for="NutrientId" class="form-control" onchange="NutrientChange()" id="selectNutrient">
-                    @foreach (var nutrient in ViewBag.Nutrients)
+                    @foreach (var nutrient in nutrients)
                     {
                         <option value="@nutrient.Id">@nutrient.Name</option>
                     }
@@ -71,6 +74,8 @@
 
     <button type="submit" class="btn btn-primary">Mentés</button>
 </form>
+
+
 <script>
     var nutrientDescriptions = {
     @foreach (var nutrient in ViewBag.Nutrients)

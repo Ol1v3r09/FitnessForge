@@ -1,0 +1,72 @@
+﻿@model Product
+
+@{
+    ViewBag.Title = "Create Product";
+    List<Unit>? units = (List<Unit>?)ViewData["units"];
+}
+
+<h2>Create</h2>
+
+<form asp-action="CreateProduct" method="post">
+    <div class="form-group">
+        <label asp-for="Brand" class="control-label"></label>
+        <input asp-for="Brand" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Name" class="control-label"></label>
+        <input asp-for="Name" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Calorie" class="control-label"></label>
+        <input asp-for="Calorie" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Carbohydrate" class="control-label"></label>
+        <input asp-for="Carbohydrate" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Sugar" class="control-label"></label>
+        <input asp-for="Sugar" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Protein" class="control-label"></label>
+        <input asp-for="Protein" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Fat" class="control-label"></label>
+        <input asp-for="Fat" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="SaturatedFat" class="control-label"></label>
+        <input asp-for="SaturatedFat" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Salt" class="control-label"></label>
+        <input asp-for="Salt" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Fiber" class="control-label"></label>
+        <input asp-for="Fiber" class="form-control" />
+    </div>
+
+    <div class="form-group">
+                <label asp-for="UnitId">Mértékegység</label>
+                <select asp-for="UnitId" class="form-control">
+                    @foreach (var unit in units)
+                    {
+                        <option value="@unit.Id">@unit.Name</option>
+                    }
+                </select>
+    </div>
+
+    <button class="btn btn-primary" type="submit">Mentés</button>
+</form>

@@ -26,7 +26,7 @@ namespace FitnessForgeAdmin.Models.Contexts
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseMySql(connStr,ServerVersion.AutoDetect(connStr));
+            optionsBuilder.UseMySql(connStr, ServerVersion.AutoDetect(connStr));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

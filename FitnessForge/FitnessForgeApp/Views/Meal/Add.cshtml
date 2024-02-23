@@ -1,21 +1,49 @@
-﻿@model List<Product>
-<table>
+﻿@model Meal
+@{
+    string? mealType = (string?)ViewData["type"];
+    List<Food>? foods = (List<Food>?)ViewData["foods"];
+}
+<table class="table">
     <thead>
         <tr>
-            <th>Termék</th>
+            <th>Étel</th>
+            <th>Kalória (100g/ml)</th>
             <th>Szénhidrát</th>
             <th>Fehérje</th>
             <th>Zsír</th>
+            <th>Mennyiség</th>
+            <th>Hozzáadás</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var product in Model)
+        @foreach (var food in foods)
         {
             <tr>
-                <td>@product.Name</td>
-                <td>@product.Carbohydrate g</td>
-                <td>@product.Protein g</td>
-                <td>@product.Fat g</td>
+                <form action="AddFoodToMeal" method="post">
+                    <input asp-for="FoodId" value="@food.Id" type="hidden"/>
+                    <input value="@mealType" type="hidden" name="mealType"/>
+                    <td>
+                        @food.Name
+                    </td>
+                    <td>
+                        @food.Products.Sum(x => x.Calorie)
+                    </td>
+                    <td>
+                        @food.Products.Sum(x => x.Carbohydrate) g
+                    </td>
+                    <td>
+                        @food.Products.Sum(x => x.Protein) g
+                    </td>
+                    <td>
+                        @food.Products.Sum(x => x.Fat) g
+                        </td>
+                    <td>
+                        <input type="text" asp-for="Amount"/>
+                    </td>
+                    <td>
+                        <button type="submit">Hozzáad</button>
+                    </td>
+                </form>
             </tr>
         }
     </tbody>

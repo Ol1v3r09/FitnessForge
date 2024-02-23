@@ -1,5 +1,8 @@
 ﻿@model List<Food>
-<h4>@ViewBag.MealType.Name</h4>
+@{
+    string? mealType = (string?)ViewData["type"];
+}
+<h4>@mealType</h4>
 <table class="table">
     <thead>
         <tr>
@@ -17,11 +20,9 @@
                 <tr>
                     <td>@food.Name</td>
                     <td>
-                        <ul>
                             @foreach (var product in food.Products)
                             {
-                                <li>
-                                    <table>
+                                    <table class="table">
                                         <thead>
                                             <tr>
                                                 <th>Termék</th> 
@@ -32,16 +33,14 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td>@product.Name</td>
+                                                <td>@product.Brand - @product.Name</td>
                                                 <td>@product.Carbohydrate g</td>
                                                 <td>@product.Protein g</td>
                                                 <td>@product.Fat g</td>
                                             </tr>
                                         </tbody>
                                     </table>
-                                </li>
                             }
-                        </ul>
                     </td>
                     <td>
                         <ul>
@@ -52,7 +51,7 @@
                     </td>
                     <td>
                         <form method="post" asp-action="Delete">
-                            <input type="hidden" name="mealtype" value="@ViewBag.MealType" />
+                            <input type="hidden" name="mealType" value="@mealType" />
                             <input type="hidden" name="foodId" value="@food.Id" />
                             <button type="submit" class="btn btn-danger">Törlés</button>
                         </form>
@@ -63,8 +62,8 @@
     </tbody>
 </table>
 <hr />
-<form action="@Url.ActionLink("Add","Meal")" method="get">
-    <input value="@ViewBag.MealType" type="hidden" name="mealType" />
+<form asp-action="Add" method="get">
+    <input value="@mealType" type="hidden" name="mealType"/>
     <button class="btn btn-primary" type="submit">
         Étel felvétele
     </button>
