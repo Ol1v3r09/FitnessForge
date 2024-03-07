@@ -1,10 +1,17 @@
 ﻿@model IEnumerable<Microsoft.AspNetCore.Identity.IdentityRole>
 
-<h2>Roles</h2>
+<h2>Szerepek</h2>
+
+@if (ViewData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewData["ErrorMessage"]
+    </div>
+}
 
 <form method="get">
-    <button asp-action="Create" type="submit" class="btn btn-primary">Create New Role</button>
-    <button asp-action="AssignRole" type="submit" class="btn btn-primary">Assign Role To User</button>
+    <button asp-action="Create" type="submit" class="btn btn-primary">Új szerep létrehozása</button>
+    <button asp-action="AssignRole" type="submit" class="btn btn-primary">Felahasználó szerephez rendelése</button>
 </form>
 
 <table class="table">

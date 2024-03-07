@@ -19,7 +19,7 @@ namespace FitnessForgeApp.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> UserList()
+        public async Task<IActionResult> Users()
         {
             try
             {

@@ -1,63 +1,72 @@
 ﻿@using FitnessForgeApp.Models.ViewModels
+@inject Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> userManager;
+@inject UserService userService;
 @model List<DetailsViewModel>
 @{
-    List<MealType>? mealTypes = (List<MealType>?)ViewData["types"];
+    List<MealType>? mealTypes = (List<MealType>?)ViewData["mealTypes"];
+    ApplicationUser user = await userManager.GetUserAsync(User);
 }
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Kalória Tracker</title>
-</head>
-<body>
+<style>
+    .card {
+        transition: all 0.3s ease-in-out;
+    }
+
+    .card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+</style>
+
+    @if (ViewData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            @ViewData["ErrorMessage"]
+        </div>
+    }
+
     <div class="container mt-5">
-        <div class="card mt-3">
-            <div class="card-body">
-                <h5>@DateTime.Today.ToShortDateString()</h5>
-                <h5 class="card-title">Összesített Kalória Bevitel</h5>
-                <p class="card-text">Kalória: @Model[0].Calorie kcal</p>
-                <p class="card-text">Szénhidrát: @Model[0].Carbohydrate g</p>
-                <p class="card-text">Fehérje: @Model[0].Protein g</p>
-                <p class="card-text">Zsír: @Model[0].Fat g</p>
+        <div class="row mt-4 text-center">
+            <div class="col-lg-6 col-sm-12 offset-lg-3">
+                <div class="card rounded-3">
+                    <div class="card-body">
+                        <h5 class="card-title">@DateTime.Today.ToShortDateString()</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">@Model.Sum(x => x.Calorie) kcal / @Math.Round(userService.UserDailyCalorie(user), 0) kcal</h6>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Szénhidrát: @Model.Sum(x => x.Carbohydrate) g / @Math.Round(userService.UserDailyNutrients(user)[0], 0) g</li>
+                        <li class="list-group-item">Fehérje: @Model.Sum(x => x.Protein) g / @Math.Round(userService.UserDailyNutrients(user)[1], 0) g</li>
+                        <li class="list-group-item">Zsír: @Model.Sum(x => x.Fat) g / @Math.Round(userService.UserDailyNutrients(user)[2], 0) g</li>
+                    </ul>
+                </div>
             </div>
         </div>
-        <div class="mt-4">
+        <div class="row mt-4 text-center">
             <h4>Étkezések</h4>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Étkezés</th>
-                        <th>Kalória</th>
-                        <th>Részletek</th>
-                        <th>Szerkesztés</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (int i = 1; i < 6; i++)
-                    {
-                        <tr>
-                            <td>@mealTypes[i-1].Name</td>
-                            <td>@Model[i].Calorie kcal</td>
-                            <td>
-                                <ul>
-                                    <li>Szénhidrát: @Model[i].Carbohydrate g</li>
-                                    <li>Fehérje: @Model[i].Protein g</li>
-                                    <li>Zsír: @Model[i].Fat g</li>
-                                </ul>
-                            </td>
-                            <td>
-                                <form asp-action="EditIntake" asp-controller="Meal" method="get">
-                                    <input value="@mealTypes[i-1].Name" type="hidden" name="mealType" />
-                                    <button class="btn btn-primary" type="submit">
-                                        Szerkesztés
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+                @for (int i = 0; i < 5; i++)
+                {
+                <div class="col-lg-2 col-sm-12 @(i == 0 ? "offset-lg-1" : "")">
+                    <div class="card rounded-3">
+                        <img src="/images/meals/@(mealTypes[i].Name.ToLower()).jpg" class="card-img-top border border-3 border-dark rounded-3" alt="@mealTypes[i].Name.ToLower()">
+                        <div class="card-body">
+                            <h5 class="card-title">@mealTypes[i].Name</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">@Model[i].Calorie kcal</h6>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Szénhidrát: @Model[i].Carbohydrate g</li>
+                            <li class="list-group-item">Fehérje: @Model[i].Protein g</li>
+                            <li class="list-group-item">Zsír: @Model[i].Fat g</li>
+                        </ul>
+                        <div class="card-body">
+                            <form asp-action="EditIntake" asp-controller="Meal" method="get" class="card-link">
+                                <input value="@mealTypes[i].Name" type="hidden" name="mealType" />
+                                <button class="btn btn-primary rounded-circle" type="submit">
+                                    <i class="fa-solid fa-plus"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                }
         </div>
     </div>
-</body>
-</html>

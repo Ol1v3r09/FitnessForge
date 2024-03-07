@@ -45,14 +45,14 @@ namespace FitnessForgeApp.Controllers
                         currentUser.DailyIntakes.Add(intake);
                         await UserManager.UpdateAsync(currentUser);
                     }
-                    return View();
+                    return RedirectToAction("Home","User");
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Hiba: {ex.Message}");
 
                     ViewData["ErrorMessage"] = "Hiba lépett fel a napi bevitel kezelésénél";
-                    return View();
+                    return RedirectToAction("Home", "User");
                 }
             }
             return View();

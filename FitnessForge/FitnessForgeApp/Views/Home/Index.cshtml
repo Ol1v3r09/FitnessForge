@@ -1,6 +1,13 @@
 ﻿@inject Microsoft.AspNetCore.Identity.SignInManager<ApplicationUser> signInManager
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Kezdőlap";
+}
+
+@if (ViewData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewData["ErrorMessage"]
+    </div>
 }
 
 <div class="text-center">
@@ -11,4 +18,15 @@
         <br />
         <button class="btn btn-primary" asp-area="Identity" asp-page="/Account/Register">Regisztráció</button>
     }
+    else
+    {
+        <p>Szia, @User.Identity.Name</p>
+    }
 </div>
+
+@if (ViewData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewData["ErrorMessage"]
+    </div>
+}

@@ -1,6 +1,7 @@
 ﻿using FitnessForgeAdmin.Models.Contexts;
 using FitnessForgeApp.Models;
 using FitnessForgeApp.Models.ViewModels;
+using Humanizer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +20,7 @@ namespace FitnessForgeApp.Controllers
         {
             this.db = db;
             _userManager = userManager;
+            List<Product> products = db.products.ToList();
         }
 
         [HttpGet]
@@ -31,8 +33,7 @@ namespace FitnessForgeApp.Controllers
                 List<DetailsViewModel> allMeals = new List<DetailsViewModel>();
 
                 List<MealType> mealTypes = await db.mealTypes.ToListAsync();
-
-                var dailyIntake = await db.dailyIntakes.FirstOrDefaultAsync(d => d.UserId == currentUser.Id && d.Date == DateTime.Today);
+                var dailyIntake = await db.dailyIntakes.Where(d => d.UserId == currentUser.Id && d.Date == DateTime.Today).FirstOrDefaultAsync();
                 if (dailyIntake != null)
                 {
                     foreach (var mealType in mealTypes)
@@ -55,10 +56,21 @@ namespace FitnessForgeApp.Controllers
 
                                     foreach (var fp in foodProducts)
                                     {
-                                        details.Calorie += fp.Product.Calorie;
-                                        details.Carbohydrate += fp.Product.Carbohydrate;
-                                        details.Protein += fp.Product.Protein;
-                                        details.Fat += fp.Product.Fat;
+                                        var unit = await db.foods.Where(x => x.Id == food.Id).Select(x => x.Unit).FirstAsync();
+                                        double foodAmount = food.Amount;
+                                        if (unit.Name.ToLower().Contains("gramm") && unit.Name != "Gramm")
+                                        {
+                                            foodAmount = UnitConverter.ConvertMass(foodAmount, unit.Name, "Gramm");
+                                        }
+                                        else if (unit.Name.ToLower().Contains("liter") && unit.Name != "Milliliter")
+                                        {
+                                            foodAmount = UnitConverter.ConvertVolume(foodAmount, unit.Name, "Milliliter");
+                                        }
+                                        var amount = (foodAmount / 100) * db.meals.Where(x => x.FoodId == food.Id && x.MealTypeId == mealType.Id && x.DailyIntake == dailyIntake).First().Amount;
+                                        details.Calorie += Math.Round(fp.Product.Calorie * amount, 2);
+                                        details.Carbohydrate += Math.Round(fp.Product.Carbohydrate * amount, 2);
+                                        details.Protein += Math.Round(fp.Product.Protein * amount, 2);
+                                        details.Fat += Math.Round(fp.Product.Fat * amount, 2);
                                     }
                                 }
                             }
@@ -119,7 +131,12 @@ namespace FitnessForgeApp.Controllers
                     currentUser.Weight = user.Weight;
                     currentUser.Height = user.Height;
                     currentUser.WeightGoal = user.WeightGoal;
-                    currentUser.WeeklyWeightGoal = user.WeeklyWeightGoal;
+                    if (user.Weight > user.WeightGoal)
+                        currentUser.WeeklyWeightGoal = user.WeeklyWeightGoal * -1;
+                    else if (user.Weight < user.WeightGoal)
+                        currentUser.WeeklyWeightGoal = user.WeeklyWeightGoal;
+                    else
+                        currentUser.WeeklyWeightGoal = 0;
                     currentUser.ActivityId = user.ActivityId;
                     currentUser.NutrientId = user.NutrientId;
 

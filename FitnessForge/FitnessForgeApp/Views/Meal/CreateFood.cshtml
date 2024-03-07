@@ -1,8 +1,17 @@
-﻿@{
+﻿@model Food
+@{
     ViewBag.Title = "Create Food";
-    List<Product>? products = (List<Product>?)ViewData["products"];
-    List<Unit>? units = (List<Unit>?)ViewData["units"];
+    List<Product>? products = (List<Product>?)ViewData["allProducts"];
+    List<Unit>? units = (List<Unit>?)ViewData["allUnits"];
 }
+
+@if (ViewData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewData["ErrorMessage"]
+    </div>
+}
+
 <style>
     tr.product-row:hover {
         background-color: lightseagreen;
@@ -14,12 +23,14 @@
 <form asp-action="CreateFood" method="post" class="add-product-form">
     <div class="form-group">
         <label class="control-label">Név</label>
-        <input type="text" name="Name" class="form-control" />
+        <input type="text" name="Name" class="form-control" required />
+        <span asp-validation-for="Name" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label class="control-label">Recept/Elkészítés</label>
-        <textarea name="Instructions" class="form-control" rows="15" cols="50"></textarea>
+        <textarea name="Instructions" class="form-control" rows="15" cols="50" required></textarea>
+        <span asp-validation-for="Instructions" class="text-danger"></span>
     </div>
 
     <div class="form-group">
@@ -40,7 +51,7 @@
                         <tr class="product-row">
                             <td colspan="2">@p.Name</td>
                             <td>
-                                <input class="form-control" name="amount" type="text" />
+                                <input name="amount" type="number" step="0.01" min="0"/>
                                 <label class="control-label">@p.Unit.Symbol</label>
                             </td>
                             <td>
@@ -76,13 +87,21 @@
     </div>
 
     <div class="form-group">
-        <label class="control-label">Mértékegység</label>
-        <select name="unit" class="form-control">
-            @foreach (var unit in units)
-            {
-                <option value="@unit.Id">@unit.Name</option>
-            }
-        </select>
+        <div class="row w-50">
+            <div class="col-8">
+                <label class="control-label">Mennyiség</label>
+                <input name="foodAmount" type="number" step="0.01" min="0"/>
+            </div>
+            <div class="col-4">
+                <label class="control-label">Mértékegység</label>
+                <select name="unit" class="form-control">
+                    @foreach (var unit in units)
+                    {
+                        <option value="@unit.Id">@unit.Name</option>
+                    }
+                </select>
+            </div>
+        </div>
     </div>
 
     <button class="btn btn-primary" type="submit">Mentés</button>

@@ -49,15 +49,14 @@ namespace FitnessForgeApp.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ActivityId")
-                        .IsRequired()
+                    b.Property<int>("ActivityId")
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("longtext");
 
-                    b.Property<DateOnly?>("DateOfBirth")
+                    b.Property<DateOnly>("DateOfBirth")
                         .HasColumnType("date");
 
                     b.Property<string>("Email")
@@ -84,8 +83,7 @@ namespace FitnessForgeApp.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("varchar(256)");
 
-                    b.Property<int?>("NutrientId")
-                        .IsRequired()
+                    b.Property<int>("NutrientId")
                         .HasColumnType("int");
 
                     b.Property<string>("PasswordHash")
@@ -263,8 +261,10 @@ namespace FitnessForgeApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<double>("Amount")
+                        .HasColumnType("double");
+
                     b.Property<string>("Instructions")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("Name")
@@ -387,6 +387,10 @@ namespace FitnessForgeApp.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    b.Property<string>("BarCode")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Brand")
                         .IsRequired()

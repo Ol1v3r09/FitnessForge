@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace FitnessForgeApp.Controllers
 {
@@ -22,6 +23,7 @@ namespace FitnessForgeApp.Controllers
             List<FoodHasProduct> f = db.foodsHasProducts.ToList();
             List<Food> food = db.foods.ToList();
             List<Product> p = db.products.ToList();
+            List<Unit> u = db.units.ToList();
         }
 
         [HttpGet]
@@ -37,15 +39,15 @@ namespace FitnessForgeApp.Controllers
                     return View();
                 }
 
-                var userFoods = await (from m in db.meals
-                                   where m.DailyIntake.Date == DateTime.Today &&
-                                         m.DailyIntake.UserId == currentUser.Id &&
-                                         m.MealType.Name == mealType
-                                   select m.Food).ToListAsync();
+                var userMeals = await (from m in db.meals
+                                       where m.DailyIntake.Date == DateTime.Today &&
+                                             m.DailyIntake.UserId == currentUser.Id &&
+                                             m.MealType.Name == mealType
+                                       select m).ToListAsync();
 
                 ViewData["mealType"] = mealType;
 
-                return View(userFoods);
+                return View(userMeals);
             }
             catch (Exception ex)
             {
@@ -56,7 +58,7 @@ namespace FitnessForgeApp.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpPost]
         public async Task<IActionResult> Delete(string mealType,int foodId)
         {
             try
@@ -94,12 +96,18 @@ namespace FitnessForgeApp.Controllers
 
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Add(string mealType)
+        [HttpPost]
+        public async Task<IActionResult> Add(string mealType, string foods)
         {
             try
             {
-                var allFoods = await db.foods.ToListAsync();
+                List<Meal> meals = JsonConvert.DeserializeObject<List<Meal>>(foods);
+
+                var mealIds = meals.Select(m => m.Id); // Assuming Meal has an Id property
+                var allFoods = await db.meals
+                    .Where(x => !mealIds.Contains(x.Id))
+                    .Select(x => x.Food)
+                    .ToListAsync();
 
                 ViewData["mealType"] = mealType;
                 ViewData["allFoods"] = allFoods;
@@ -116,7 +124,7 @@ namespace FitnessForgeApp.Controllers
 
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> AddFoodToMeal(Meal meal, string mealType)
         {
             try
@@ -157,8 +165,10 @@ namespace FitnessForgeApp.Controllers
                     FoodId = meal.FoodId,
                     Food = meal.Food,
                     MealType = currentMealType,
-                    Amount = meal.Amount
                 };
+                
+                var newMealAmount = meal.Amount / db.foods.Where(x => x.Id == meal.FoodId).Select(x => x.Amount).First();
+                newMeal.Amount = newMealAmount;
 
                 await db.meals.AddAsync(newMeal);
                 await db.SaveChangesAsync();
@@ -167,7 +177,7 @@ namespace FitnessForgeApp.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Hiba: {ex.Message}");
+                Console.WriteLine($"Hiba: {ex.InnerException}");
 
                 ViewData["ErrorMessage"] = "Hiba lépett fel az étkezés létrehozásakor";
                 return RedirectToAction("Index", "Home");
@@ -196,7 +206,7 @@ namespace FitnessForgeApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateProduct(Product product)
+        public async Task<IActionResult> CreateProduct(Product product, int Amount)
         {
             try
             {
@@ -212,10 +222,11 @@ namespace FitnessForgeApp.Controllers
                     SaturatedFat = product.SaturatedFat,
                     Salt = product.Salt,
                     Fiber = product.Fiber,
-                    UnitId = product.UnitId
+                    UnitId = product.UnitId,
+                    BarCode = product.BarCode
                 };
 
-                newProduct.Unit = await db.units.FirstOrDefaultAsync(u => u.Id == newProduct.UnitId);
+                newProduct.Unit = await db.units.Where(x => x.Id == product.UnitId).FirstAsync();
 
                 await db.products.AddAsync(newProduct);
 
@@ -223,7 +234,7 @@ namespace FitnessForgeApp.Controllers
                 {
                     Name = product.Brand + " - " + product.Name,
                     Unit = newProduct.Unit,
-                    UnitId = newProduct.UnitId
+                    UnitId = newProduct.UnitId,
                 };
 
                 newFood.Products.Add(newProduct);
@@ -232,11 +243,19 @@ namespace FitnessForgeApp.Controllers
 
                 await db.SaveChangesAsync();
 
+                var foodHasProduct = await db.foodsHasProducts.Where(x => x.ProductId == newProduct.Id && x.FoodId == newFood.Id).FirstAsync();
+                foodHasProduct.Amount = Amount;
+
+                newFood.Amount = Amount;
+                db.foods.Update(newFood);
+
+                await db.SaveChangesAsync();
+
                 return RedirectToAction("CreateProduct");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Hiba: {ex.Message}");
+                Console.WriteLine($"Hiba: {ex.InnerException}");
                 ViewData["ErrorMessage"] = "Hiba lépett fel a termék létrehozása közben";
                 return RedirectToAction("CreateProduct");
             }
@@ -277,12 +296,14 @@ namespace FitnessForgeApp.Controllers
                 var unitId = int.Parse(form["unit"]);
                 var receiptProductIds = form["receiptProductId"];
                 var receiptAmounts = form["receiptAmount"];
+                var foodAmount = double.Parse(form["foodAmount"]);
 
                 Food newFood = new Food
                 {
                     Name = name,
                     Instructions = instructions,
-                    UnitId = unitId
+                    UnitId = unitId,
+                    Amount = foodAmount
                 };
 
                 newFood.Unit = await db.units.FindAsync(unitId);
@@ -300,7 +321,6 @@ namespace FitnessForgeApp.Controllers
                     if (!double.TryParse(amountStr, out var amount))
                     {
                         Console.WriteLine("Nem megfelelő mennyiség a terméknél Id: " + productId);
-                        continue;
                     }
 
                     var product = await db.products.FindAsync(productId);

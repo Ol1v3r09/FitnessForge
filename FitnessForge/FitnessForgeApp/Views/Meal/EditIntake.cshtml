@@ -1,59 +1,83 @@
-﻿@model List<Food>
+﻿@model List<Meal>
 @{
-    string? mealType = (string?)ViewData["type"];
+    string? mealType = (string?)ViewData["mealType"];
 }
 <h4>@mealType</h4>
+
+@if (ViewData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewData["ErrorMessage"]
+    </div>
+}
+
+<p>
+    Search: <input type="text" id="searchString" />
+</p>
+<div class="container" style="height: 300px; overflow-y: auto;">
 <table class="table">
     <thead>
         <tr>
             <th>Étel</th>
-            <th>Termékek</th>
             <th>Részletek</th>
+            <th>Termékek</th>
             <th>Törlés</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var food in Model)
+        @foreach (var meal in Model)
         {
-            if (food != null)
+            double amount = 0;
+            if (meal != null)
             {
                 <tr>
-                    <td>@food.Name</td>
+                    <td>@meal.Food.Name</td>
                     <td>
-                            @foreach (var product in food.Products)
-                            {
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th>Termék</th> 
-                                                <th>Szénhidrát</th>
-                                                <th>Fehérje</th>
-                                                <th>Zsír</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>@product.Brand - @product.Name</td>
-                                                <td>@product.Carbohydrate g</td>
-                                                <td>@product.Protein g</td>
-                                                <td>@product.Fat g</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                            }
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Termék</th>
+                                        <th>Szénhidrát</th>
+                                        <th>Fehérje</th>
+                                        <th>Zsír</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var product in meal.Food.Products)
+                                    {
+                                        var unit = meal.Food.Unit;
+                                        double foodAmount = meal.Food.Amount;
+                                        if (unit.Name.ToLower().Contains("gramm") && unit.Name != "Gramm")
+                                        {
+                                            foodAmount = UnitConverter.ConvertMass(foodAmount, unit.Name, "Gramm");
+                                        }
+                                        else if (unit.Name.ToLower().Contains("liter") && unit.Name != "Milliliter")
+                                        {
+                                            foodAmount = UnitConverter.ConvertVolume(foodAmount, unit.Name, "Milliliter");
+                                        }
+                                        amount = (foodAmount / 100) * meal.Amount;
+                                        <tr class="foodInMeal">
+                                            <td>@product.Brand - @product.Name</td>
+                                            <td>@Math.Round(product.Carbohydrate * amount, 2) g</td>
+                                            <td>@Math.Round(product.Protein * amount, 2) g</td>
+                                            <td>@Math.Round(product.Fat * amount, 2) g</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
                     </td>
-                    <td>
-                        <ul>
-                            <li>Szénhidrát: @food.Products.Sum(p => p.Carbohydrate) g</li>
-                            <li>Fehérje: @food.Products.Sum(p => p.Protein) g</li>
-                            <li>Zsír: @food.Products.Sum(p => p.Fat) g</li>
-                        </ul>
-                    </td>
+                        <td>
+                            <ul>
+                                <li>Szénhidrát: @meal.Food.Products.Sum(p => Math.Round(p.Carbohydrate * amount, 2)) g</li>
+                                <li>Fehérje: @meal.Food.Products.Sum(p => Math.Round(p.Protein * amount, 2)) g</li>
+                                <li>Zsír: @meal.Food.Products.Sum(p => Math.Round(p.Fat * amount, 2)) g</li>
+                            </ul>
+                        </td>
                     <td>
                         <form method="post" asp-action="Delete">
                             <input type="hidden" name="mealType" value="@mealType" />
-                            <input type="hidden" name="foodId" value="@food.Id" />
-                            <button type="submit" class="btn btn-danger">Törlés</button>
+                            <input type="hidden" name="foodId" value="@meal.FoodId" />
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Biztosan törölni szeretné ezt az ételt?');">Törlés</button>
                         </form>
                     </td>
                 </tr>
@@ -61,10 +85,10 @@
         }
     </tbody>
 </table>
+</div>
 <hr />
-<form asp-action="Add" method="get">
-    <input value="@mealType" type="hidden" name="mealType"/>
-    <button class="btn btn-primary" type="submit">
-        Étel felvétele
-    </button>
+<form asp-action="Add" method="post">
+    <input type="hidden" name="foods" id="foods"/>
+    <input value="@mealType" type="hidden" name="mealType" />
+    <button class="btn btn-primary" type="submit">Étel felvétele</button>
 </form>

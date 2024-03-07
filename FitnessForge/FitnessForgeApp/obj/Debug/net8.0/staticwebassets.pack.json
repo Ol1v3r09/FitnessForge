@@ -13,6 +13,26 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "C:\\Programozás\\FitnessForge\\FitnessForge\\FitnessForgeApp\\wwwroot\\images\\meals\\ebéd.jpg",
+      "PackagePath": "staticwebassets\\images\\meals\\ebéd.jpg"
+    },
+    {
+      "Id": "C:\\Programozás\\FitnessForge\\FitnessForge\\FitnessForgeApp\\wwwroot\\images\\meals\\reggeli.jpg",
+      "PackagePath": "staticwebassets\\images\\meals\\reggeli.jpg"
+    },
+    {
+      "Id": "C:\\Programozás\\FitnessForge\\FitnessForge\\FitnessForgeApp\\wwwroot\\images\\meals\\tízórai.jpg",
+      "PackagePath": "staticwebassets\\images\\meals\\tízórai.jpg"
+    },
+    {
+      "Id": "C:\\Programozás\\FitnessForge\\FitnessForge\\FitnessForgeApp\\wwwroot\\images\\meals\\uzsonna.jpg",
+      "PackagePath": "staticwebassets\\images\\meals\\uzsonna.jpg"
+    },
+    {
+      "Id": "C:\\Programozás\\FitnessForge\\FitnessForge\\FitnessForgeApp\\wwwroot\\images\\meals\\vacsora.jpg",
+      "PackagePath": "staticwebassets\\images\\meals\\vacsora.jpg"
+    },
+    {
       "Id": "C:\\Programozás\\FitnessForge\\FitnessForge\\FitnessForgeApp\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
     },

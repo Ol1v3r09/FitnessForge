@@ -1,39 +1,52 @@
 ﻿@model ApplicationUser
 @{
-    List<ActivityLevel>? activities = (List<ActivityLevel>?)ViewData["activities"];
-    List<NutrientGoal>? nutrients = (List<NutrientGoal>?)ViewData["nutrients"];
+    List<ActivityLevel>? activities = (List<ActivityLevel>?)ViewData["allActivities"];
+    List<NutrientGoal>? nutrients = (List<NutrientGoal>?)ViewData["allNutrients"];
 }
 <h2>Add meg a további adataidat</h2>
+
+@if (ViewData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewData["ErrorMessage"]
+    </div>
+}
 
 <form asp-action="CreateDetails" method="post">
     <div class="form-group">
         <label asp-for="DateOfBirth">Születési Dátum</label>
         <input asp-for="DateOfBirth" type="date" class="form-control" />
+        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label asp-for="Sex">Nem</label>
         <input asp-for="Sex" class="form-control" />
+        <span asp-validation-for="Sex" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label asp-for="Weight">Súly</label>
         <input asp-for="Weight" class="form-control" />
+        <span asp-validation-for="Weight" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label asp-for="Height">Magasság</label>
         <input asp-for="Height" class="form-control" />
+        <span asp-validation-for="Height" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label asp-for="WeightGoal">Cél súly</label>
         <input asp-for="WeightGoal" class="form-control" />
+        <span asp-validation-for="WeightGoal" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label asp-for="WeeklyWeightGoal">Heti cél súly(+/- a cél súlytól függ)</label>
         <input asp-for="WeeklyWeightGoal" class="form-control" />
+        <span asp-validation-for="WeeklyWeightGoal" class="text-danger"></span>
     </div>
 
     <div class="form-group">
@@ -46,6 +59,7 @@
                             <option value="@activity.Id">@activity.Name</option>
                         }
                     </select>
+                <span asp-validation-for="ActivityId" class="text-danger"></span>
                 </div>
                 <div class="col-md-6">
                     <label id="activityLabel">
@@ -64,6 +78,7 @@
                         <option value="@nutrient.Id">@nutrient.Name</option>
                     }
                 </select>
+                <span asp-validation-for="NutrientId" class="text-danger"></span>
             </div>
             <div class="col-md-6">
                 <label id="nutrientLabel">
@@ -78,7 +93,7 @@
 
 <script>
     var nutrientDescriptions = {
-    @foreach (var nutrient in ViewBag.Nutrients)
+    @foreach (var nutrient in nutrients)
     {
         <text>"@nutrient.Id": "Szénhidrát: @nutrient.CarbohydratePercentage, Fehérje: @nutrient.ProteinPercentage, Zsír: @nutrient.FatPercentage", </text>
     }
@@ -96,7 +111,7 @@
 
 
     var activityDescriptions = {
-    @foreach (var activity in ViewBag.Activities)
+    @foreach (var activity in activities)
     {
         <text>"@activity.Id": "@activity.Description", </text>
     }

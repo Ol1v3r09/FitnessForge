@@ -24,6 +24,16 @@ namespace FitnessForgeApp
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            builder.Services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequireDigit = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = true;
+                options.Password.RequiredLength = 6;
+                options.Password.RequiredUniqueChars = 0;
+            });
+
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
             builder.Services.AddSingleton<IEmailSender, DummyEmailSender>();
             builder.Services.AddControllersWithViews();
@@ -33,6 +43,9 @@ namespace FitnessForgeApp
 
             builder.Services.AddDbContext<UserMealContext>();
             builder.Services.AddDbContext<UserExerciseContext>();
+
+            //Nemtudom miért kell ez
+            builder.Services.AddScoped<UserService>();
 
             var app = builder.Build();
 

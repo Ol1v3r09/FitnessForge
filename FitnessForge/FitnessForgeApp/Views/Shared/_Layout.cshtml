@@ -15,10 +15,10 @@
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-controller="Home" asp-action="Index">FitnessForge</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarContent">
+                <div class="collapse navbar-collapse" id="navbar">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         @if (signInManager.IsSignedIn(User))
                         {
@@ -34,6 +34,15 @@
                                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                         <li><a class="dropdown-item" asp-action="Users" asp-controller="Management">Felhasználók</a></li>
                                         <li><a class="dropdown-item" asp-action="Roles" asp-controller="Management">Jogosultságok</a></li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Ételek Kezelése
+                                    </a>
+                                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <li><a class="dropdown-item" asp-action="CreateProduct" asp-controller="Meal">Termék felvétele</a></li>
+                                        <li><a class="dropdown-item" asp-action="CreateFood" asp-controller="Meal">Étel felvétele</a></li>
                                     </ul>
                                 </li>
                             }

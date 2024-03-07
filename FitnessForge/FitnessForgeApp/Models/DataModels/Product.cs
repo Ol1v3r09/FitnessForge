@@ -24,6 +24,7 @@ namespace FitnessForgeApp.Models
         public double? Fiber { get; set; }
         public int UnitId { get; set; }
         public Unit Unit { get; set; }
+        public string BarCode { get; set; }
         public ICollection<Food> Foods { get; set; }
         public Product()
         {

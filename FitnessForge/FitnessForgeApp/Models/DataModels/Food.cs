@@ -15,7 +15,8 @@ namespace FitnessForgeApp.Models
         public string Name { get; set; }
         public int UnitId { get; set; }
         public Unit Unit { get; set; }
-        public string Instructions { get; set; }
+        public double Amount { get; set; }
+        public string? Instructions { get; set; }
         public ICollection<Product> Products { get; set; }
         public ICollection<Meal> Meals { get; set; }
 
