@@ -3,6 +3,7 @@
     Layout = "_Layout_Manage";
     List<ActivityLevel>? activities = (List<ActivityLevel>?)ViewData["allActivities"];
     List<NutrientGoal>? nutrients = (List<NutrientGoal>?)ViewData["allNutrients"];
+    //TODO Design átalakítás
 }
 <h2>Add meg a további adataidat</h2>
 
@@ -14,6 +15,7 @@
 }
 
 <form asp-action="CreateDetails" method="post">
+    <a href="c:\programozás\fitnessforge\fitnessforge\fitnessforgeapp\views\user\managedetails.cshtml">c:\programozás\fitnessforge\fitnessforge\fitnessforgeapp\views\user\managedetails.cshtml</a>
     <div class="form-group">
         <label asp-for="DateOfBirth">Születési Dátum</label>
         <input asp-for="DateOfBirth" type="date" class="form-control" />

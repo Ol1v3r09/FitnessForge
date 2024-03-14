@@ -71,6 +71,10 @@ namespace FitnessForgeApp.Controllers
                                         details.Carbohydrate += Math.Round(fp.Product.Carbohydrate * amount, 2);
                                         details.Protein += Math.Round(fp.Product.Protein * amount, 2);
                                         details.Fat += Math.Round(fp.Product.Fat * amount, 2);
+                                        details.Fiber += Math.Round(fp.Product.Fiber * amount, 2);
+                                        details.Salt += Math.Round(fp.Product.Salt * amount, 2);
+                                        details.SaturatedFat += Math.Round(fp.Product.SaturatedFat * amount, 2);
+                                        details.Sugar += Math.Round(fp.Product.Sugar * amount, 2);
                                     }
                                 }
                             }

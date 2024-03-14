@@ -4,19 +4,9 @@
 @model List<DetailsViewModel>
 @{
     List<MealType>? mealTypes = (List<MealType>?)ViewData["mealTypes"];
-    ApplicationUser user = await userManager.GetUserAsync(User);
+    ApplicationUser? user = await userManager.GetUserAsync(User);
+    // TODO színkódok beállítása, kis kockák létrehozása leírással a grafikonokhoz
 }
-
-<style>
-    .card {
-        transition: all 0.3s ease-in-out;
-    }
-
-    .card:hover {
-        transform: scale(1.05);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), 0 8px 16px rgba(0, 0, 0, 0.2);
-    }
-</style>
 
     @if (ViewData["ErrorMessage"] != null)
     {
@@ -25,43 +15,56 @@
         </div>
     }
 
-    <div class="container mt-5">
-        <div class="row mt-4 text-center">
-            <div class="col-lg-6 col-sm-12 offset-lg-3">
-                <div class="card rounded-3">
-                    <div class="card-body">
-                        <h5 class="card-title">@DateTime.Today.ToShortDateString()</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">@Model.Sum(x => x.Calorie) kcal / @Math.Round(userService.UserDailyCalorie(user), 0) kcal</h6>
+<div class="container bg-gray rounded-3 p-3">
+    <div class="row mt-2 text-center">
+        <div class="col-lg-4 col-sm-12">
+            <h5 class="text-orange fw-bold">Tápanyag eloszlás (g)</h5>
+            <div class="cube" style="background-color:rgba(255, 99, 132, 0.6)">Szénhidrát</div>
+            <div class="chart-container d-flex justify-content-center">
+                <canvas id="chart"></canvas>
+            </div>
+        </div>
+        <div class="col-lg-4 col-sm-12">
+            <div class="card rounded-3 bg-red">
+                <div class="card-body bg-red text-orange">
+                    <h3 class="card-title fw-bolder">@DateTime.Today.ToShortDateString()</h3>
+                    <h5 class="card-subtitle mb-2 fw-bolder">@Model.Sum(x => x.Calorie) kcal / @Math.Round(userService.UserDailyCalorie(user), 0) kcal</h5>
                     </div>
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Szénhidrát: @Model.Sum(x => x.Carbohydrate) g / @Math.Round(userService.UserDailyNutrients(user)[0], 0) g</li>
-                        <li class="list-group-item">Fehérje: @Model.Sum(x => x.Protein) g / @Math.Round(userService.UserDailyNutrients(user)[1], 0) g</li>
-                        <li class="list-group-item">Zsír: @Model.Sum(x => x.Fat) g / @Math.Round(userService.UserDailyNutrients(user)[2], 0) g</li>
+                    <li class="list-group-item bg-red text-orange fw-bold">Szénhidrát: @Model.Sum(x => x.Carbohydrate) g / @Math.Round(userService.UserDailyNutrients(user)[0], 0) g</li>
+                    <li class="list-group-item bg-red text-orange fw-bold">Fehérje: @Model.Sum(x => x.Protein) g / @Math.Round(userService.UserDailyNutrients(user)[1], 0) g</li>
+                    <li class="list-group-item bg-red text-orange fw-bold">Zsír: @Model.Sum(x => x.Fat) g / @Math.Round(userService.UserDailyNutrients(user)[2], 0) g</li>
                     </ul>
                 </div>
             </div>
+        <div class="col-lg-4 col-sm-12">
+            <h5 class="text-orange fw-bold">Kalória étkezésenként (kcal)</h5>
+            <div class="chart-container d-flex justify-content-center">
+                <canvas id="caloriesChart"></canvas>
+            </div>
         </div>
-        <div class="row mt-4 text-center">
-            <h4>Étkezések</h4>
+    </div>
+        <div class="row mt-3 text-center">
+            <h4 class="text-orange fw-bold">Étkezések</h4>
                 @for (int i = 0; i < 5; i++)
                 {
-                <div class="col-lg-2 col-sm-12 @(i == 0 ? "offset-lg-1" : "")">
-                    <div class="card rounded-3">
-                        <img src="/images/meals/@(mealTypes[i].Name.ToLower()).jpg" class="card-img-top border border-3 border-dark rounded-3" alt="@mealTypes[i].Name.ToLower()">
-                        <div class="card-body">
-                            <h5 class="card-title">@mealTypes[i].Name</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">@Model[i].Calorie kcal</h6>
+                <div class="col-lg-2 col-sm-12 @(i == 0 ? "offset-lg-1" : "") mt-1">
+                    <div class="card rounded-3 bg-red">
+                        <img src="/images/meals/@(mealTypes[i].Name.ToLower()).jpg" class="card-img-top rounded-3" alt="@mealTypes[i].Name.ToLower()">
+                        <div class="card-body bg-red text-orange">
+                        <h5 class="card-title fw-bolder">@mealTypes[i].Name</h5>
+                            <h6 class="card-subtitle mb-2 fw-bolder">@Model[i].Calorie kcal</h6>
                         </div>
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item">Szénhidrát: @Model[i].Carbohydrate g</li>
-                            <li class="list-group-item">Fehérje: @Model[i].Protein g</li>
-                            <li class="list-group-item">Zsír: @Model[i].Fat g</li>
+                        <li class="list-group-item bg-red text-orange fw-bold">Szénhidrát: @Model[i].Carbohydrate g</li>
+                        <li class="list-group-item bg-red text-orange fw-bold">Fehérje: @Model[i].Protein g</li>
+                        <li class="list-group-item bg-red text-orange fw-bold">Zsír: @Model[i].Fat g</li>
                         </ul>
                         <div class="card-body">
                             <form asp-action="EditIntake" asp-controller="Meal" method="get" class="card-link">
                                 <input value="@mealTypes[i].Name" type="hidden" name="mealType" />
-                                <button class="btn btn-primary rounded-circle" type="submit">
-                                    <i class="fa-solid fa-plus"></i>
+                                <button class="btn btn-success rounded-circle text-center" type="submit">
+                                <i class="fa-solid fa-plus"></i>
                                 </button>
                             </form>
                         </div>
@@ -69,4 +72,104 @@
                 </div>
                 }
         </div>
-    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const canvas = document.getElementById("chart");
+        const ctx = canvas.getContext("2d");
+
+        let sugarTotal = "@Model.Sum(x => x.Sugar)".replace(',', '.');
+        let carbohydrateTotal = Math.abs((@Model.Sum(x => x.Carbohydrate) - sugarTotal)).toString().replace(',', '.');
+        let proteinTotal = "@Model.Sum(x => x.Protein)".replace(',', '.');
+        let saturatedFatTotal = "@Model.Sum(x => x.SaturatedFat)".replace(',', '.');
+        let fatTotal = Math.abs((@Model.Sum(x => x.Fat) - saturatedFatTotal)).toString().replace(',', '.');
+        let saltTotal = "@Model.Sum(x => x.Salt)".replace(',', '.');
+        let fiberTotal = "@Model.Sum(x => x.Fiber)".replace(',', '.');
+
+        const labels = ['Szénhidrát', 'Cukor', 'Fehérje', 'Zsír', 'Telített zsír', 'Só', 'Rost'];
+        const data = [carbohydrateTotal, sugarTotal, proteinTotal, fatTotal, saturatedFatTotal, saltTotal, fiberTotal];
+
+        const backgroundColors = [
+            'rgba(255, 99, 132, 0.6)', // Szénhidrát
+            'rgba(255, 159, 64, 0.6)', // Cukor
+            'rgba(255, 205, 86, 0.6)', // Fehérje
+            'rgba(75, 192, 192, 0.6)', // Zsír
+            'rgba(153, 102, 255, 0.6)', // Telített Zsír
+            'rgba(54, 162, 235, 0.6)', // Só
+            'rgba(201, 203, 207, 0.6)' // Rost
+        ];
+
+        const dataset = {
+            data: data,
+            backgroundColor: backgroundColors
+        };
+
+        const options = {
+            plugins: {
+                title: {
+                    display: false
+                },
+                legend: {
+                    display: false
+                }
+            }
+        };
+
+        var myChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [dataset]
+            },
+            options: options
+        });
+    });
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const canvas = document.getElementById("caloriesChart");
+        const ctx = canvas.getContext("2d");
+
+        const mealNames = [];
+        const calorieData = [];
+
+    @for (int i = 0; i < 5; i++)
+    {
+        <text>
+                mealNames.push("@mealTypes[i].Name");
+                calorieData.push(@Model[i].Calorie);
+        </text>
+    }
+
+        const dataset = {
+            data: calorieData,
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.6)',
+                'rgba(54, 162, 235, 0.6)',
+                'rgba(255, 205, 86, 0.6)',
+                'rgba(75, 192, 192, 0.6)',
+                'rgba(153, 102, 255, 0.6)'
+            ]
+        };
+
+        var myChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: mealNames,
+                datasets: [dataset]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: false
+                    },
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    });
+</script>

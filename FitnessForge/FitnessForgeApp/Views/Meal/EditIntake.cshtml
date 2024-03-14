@@ -2,7 +2,10 @@
 @{
     string? mealType = (string?)ViewData["mealType"];
 }
-<h4>@mealType</h4>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<div class="container text-center mt-3 pt-3">
+    <h4 class="text-orange fw-bolder">@mealType</h4>
 
 @if (ViewData["ErrorMessage"] != null)
 {
@@ -10,85 +13,70 @@
         @ViewData["ErrorMessage"]
     </div>
 }
+    <div class="d-flex justify-content-center">
+        <input type="text" id="searchString" class="rounded-2 form-control form-control-thin" placeholder="Keresés">
+    </div>
+    
 
-<p>
-    Search: <input type="text" id="searchString" />
-</p>
-<div class="container" style="height: 300px; overflow-y: auto;">
-<table class="table">
-    <thead>
-        <tr>
-            <th>Étel</th>
-            <th>Részletek</th>
-            <th>Termékek</th>
-            <th>Törlés</th>
-        </tr>
-    </thead>
-    <tbody>
+    <form asp-action="Add" asp-controller="Meal" method="post" class="mt-2">
         @foreach (var meal in Model)
         {
-            double amount = 0;
             if (meal != null)
             {
-                <tr>
-                    <td>@meal.Food.Name</td>
-                    <td>
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Termék</th>
-                                        <th>Szénhidrát</th>
-                                        <th>Fehérje</th>
-                                        <th>Zsír</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var product in meal.Food.Products)
-                                    {
-                                        var unit = meal.Food.Unit;
-                                        double foodAmount = meal.Food.Amount;
-                                        if (unit.Name.ToLower().Contains("gramm") && unit.Name != "Gramm")
-                                        {
-                                            foodAmount = UnitConverter.ConvertMass(foodAmount, unit.Name, "Gramm");
-                                        }
-                                        else if (unit.Name.ToLower().Contains("liter") && unit.Name != "Milliliter")
-                                        {
-                                            foodAmount = UnitConverter.ConvertVolume(foodAmount, unit.Name, "Milliliter");
-                                        }
-                                        amount = (foodAmount / 100) * meal.Amount;
-                                        <tr class="foodInMeal">
-                                            <td>@product.Brand - @product.Name</td>
-                                            <td>@Math.Round(product.Carbohydrate * amount, 2) g</td>
-                                            <td>@Math.Round(product.Protein * amount, 2) g</td>
-                                            <td>@Math.Round(product.Fat * amount, 2) g</td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                    </td>
-                        <td>
-                            <ul>
-                                <li>Szénhidrát: @meal.Food.Products.Sum(p => Math.Round(p.Carbohydrate * amount, 2)) g</li>
-                                <li>Fehérje: @meal.Food.Products.Sum(p => Math.Round(p.Protein * amount, 2)) g</li>
-                                <li>Zsír: @meal.Food.Products.Sum(p => Math.Round(p.Fat * amount, 2)) g</li>
-                            </ul>
-                        </td>
-                    <td>
-                        <form method="post" asp-action="Delete">
-                            <input type="hidden" name="mealType" value="@mealType" />
-                            <input type="hidden" name="foodId" value="@meal.FoodId" />
-                            <button type="submit" class="btn btn-danger" onclick="return confirm('Biztosan törölni szeretné ezt az ételt?');">Törlés</button>
-                        </form>
-                    </td>
-                </tr>
+                <input type="hidden" name="foods" value="@meal.FoodId" />
             }
         }
-    </tbody>
-</table>
+        <input value="@mealType" type="hidden" name="mealType" />
+        <button class="btn btn-success" type="submit">Étel felvétele</button>
+    </form>
+
+    <div class="container" id="scroll-table">
+        <partial name="_FoodPartial" model="Model"/>
+    </div>
 </div>
-<hr />
-<form asp-action="Add" method="post">
-    <input type="hidden" name="foods" id="foods"/>
-    <input value="@mealType" type="hidden" name="mealType" />
-    <button class="btn btn-primary" type="submit">Étel felvétele</button>
-</form>
+
+<script>
+    function toggleHiddenDiv(icon) {
+        var parentDiv = icon.parentNode.parentNode.nextElementSibling;
+        var iconClassList = icon.classList;
+
+        parentDiv.classList.toggle("shown-div");
+        iconClassList.toggle("fa-angles-down");
+        iconClassList.toggle("fa-angles-up");
+
+        var allHiddenDivs = document.querySelectorAll('.hidden-div');
+        allHiddenDivs.forEach(function (div) {
+            if (div !== parentDiv) {
+                div.classList.remove("shown-div");
+                var siblingIcon = div.previousElementSibling.querySelector('.fa-solid');
+                if (siblingIcon) {
+                    var siblingIconClassList = siblingIcon.classList;
+                    siblingIconClassList.remove("fa-angles-up");
+                    siblingIconClassList.add("fa-angles-down");
+                }
+            }
+        });
+    }
+
+    var mealType = '@mealType';
+
+    $(document).ready(function () {
+        $('#searchString').keyup(function () {
+            var searchString = $(this).val().trim();
+            $.ajax({
+                url: '@Url.Action("SearchFood", "Meal")',
+                type: 'GET',
+                data: { searchString: searchString, mealType: mealType },
+                success: function (data) {
+                    $('#scroll-table').html(data);
+                },
+                error: function () {
+                    alert('An error occurred while processing your request.');
+                }
+            });
+        });
+    });
+</script>
+
+
+

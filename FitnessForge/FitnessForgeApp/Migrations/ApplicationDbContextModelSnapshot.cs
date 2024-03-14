@@ -405,7 +405,7 @@ namespace FitnessForgeApp.Migrations
                     b.Property<double>("Fat")
                         .HasColumnType("double");
 
-                    b.Property<double?>("Fiber")
+                    b.Property<double>("Fiber")
                         .HasColumnType("double");
 
                     b.Property<string>("Name")

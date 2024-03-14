@@ -10,51 +10,69 @@
         @ViewData["ErrorMessage"]
     </div>
 }
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>Étel</th>
-            <th>Kalória (100g/ml)</th>
-            <th>Szénhidrát</th>
-            <th>Fehérje</th>
-            <th>Zsír</th>
-            <th>Mennyiség</th>
-            <th>Hozzáadás</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var food in foods)
+<div class="container text-center mt-3 pt-3">
+    <h4 class="text-orange fw-bolder">Ételek</h4>
+    <div class="row fw-bolder text-orange mt-5 m-1 pe-2 ps-2 rounded-3">
+        <div class="col-2">
+            <p>Étel</p>
+        </div>
+        <div class="col-2">
+            <p>Kalória (100g/ml)</p>
+        </div>
+        <div class="col-2">
+            <p>Szénhidrát</p>
+        </div>
+        <div class="col-2">
+            <p>Fehérje</p>
+        </div>
+        <div class="col-2">
+            <p>Zsír</p>
+        </div>
+        <div class="col-2">
+            <p>Mennyiség</p>
+        </div>
+        <hr style="border:5px solid rgb(204,0,0)" />
+    </div>
+    <div class="container" id="scroll-table">
+     @foreach (var food in foods)
         {
-            <tr>
-                <form asp-action="AddFoodToMeal" method="post">
-                    <td>
-                            @food.Name
-                    </td>
-                    <td>
-                            @food.Products.Sum(x => x.Calorie)
-                    </td>
-                    <td>
-                            @food.Products.Sum(x => x.Carbohydrate) g
-                    </td>
-                    <td>
-                            @food.Products.Sum(x => x.Protein) g
-                    </td>
-                    <td>
-                            @food.Products.Sum(x => x.Fat) g
-                    </td>
-                    <td>
-                        <input asp-for="FoodId" value="@food.Id" type="hidden" />
-                        <input value="@mealType" type="hidden" name="mealType" />
-                        <input type="number" asp-for="Amount" min="0" step="0.001" required />
-                        <label>@food.Unit.Symbol</label>
-                        <span asp-validation-for="Amount" class="text-danger"></span>
-                    </td>
-                    <td>
-                        <button type="submit">Hozzáad</button>
-                    </td>
-                </form>
-            </tr>
+            <form asp-action="AddFoodToMeal" method="post">
+            <div class="row fw-bold bg-red text-orange mt-3 m-1 p-2 rounded-3" id="foodDiv">
+        <div class="col-2">
+                    <p>@food.Name</p>
+        </div>
+        <div class="col-2">
+                    <p>@food.Products.Sum(x => x.Calorie)</p>
+        </div>
+        <div class="col-2">
+                    <p>@food.Products.Sum(x => x.Carbohydrate) g</p>
+        </div>
+        <div class="col-2">
+                    <p>@food.Products.Sum(x => x.Protein) g</p>
+        </div>
+        <div class="col-2">
+                    <p>@food.Products.Sum(x => x.Fat) g</p>
+        </div>
+        <div class="col-2">
+            <div class="row">
+                <div class="col-6">
+                            <input asp-for="FoodId" value="@food.Id" type="hidden" />
+                            <input value="@mealType" type="hidden" name="mealType" />
+                            <input id="Amount" type="number" asp-for="Amount" min="0" step="0.001" required />
+                            <span asp-validation-for="Amount" class="text-danger"></span>
+                </div>
+                <div class="col-2">
+                            <label>@food.Unit.Symbol</label>
+                </div>
+                <div class="col-4">
+                            <button class="btn-sm btn-success rounded-circle text-center" type="submit">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
         }
-    </tbody>
-</table>
+    </div>
+</div>

@@ -3,6 +3,7 @@
     ViewBag.Title = "Create Food";
     List<Product>? products = (List<Product>?)ViewData["allProducts"];
     List<Unit>? units = (List<Unit>?)ViewData["allUnits"];
+    //TODO A recept oszlopnál lejjebb kell hozni az elemeket
 }
 
 @if (ViewData["ErrorMessage"] != null)
@@ -11,90 +12,63 @@
         @ViewData["ErrorMessage"]
     </div>
 }
+<div class="container text-center fw-bold text-orange rounded-3 mt-3 pt-3">
 
-<style>
-    tr.product-row:hover {
-        background-color: lightseagreen;
-    }
-</style>
+    <h2 class="text-orange fw-bolder">Étel készítése</h2>
 
-<h2>Étel készítése</h2>
-
-<form asp-action="CreateFood" method="post" class="add-product-form">
-    <div class="form-group">
-        <label class="control-label">Név</label>
-        <input type="text" name="Name" class="form-control" required />
-        <span asp-validation-for="Name" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label class="control-label">Recept/Elkészítés</label>
-        <textarea name="Instructions" class="form-control" rows="15" cols="50" required></textarea>
-        <span asp-validation-for="Instructions" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <h4>Termékek</h4>
-        <table class="table table-striped product-table">
-            <thead>
-                <tr>
-                    <th colspan="2">Név</th>
-                    <th>Mennyiség</th>
-                    <th>Hozzáad</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (products != null)
-                {
-                    @foreach (var p in products)
-                    {
-                        <tr class="product-row">
-                            <td colspan="2">@p.Name</td>
-                            <td>
-                                <input name="amount" type="number" step="0.01" min="0"/>
-                                <label class="control-label">@p.Unit.Symbol</label>
-                            </td>
-                            <td>
-                                <input type="hidden" value="@p.Id" name="productId" />
-                                <input class="btn btn-primary add-item" type="button" value="Hozzáad" />
-                            </td>
-                        </tr>
-                        <tr class="details-row">
-                            <td>Kalóra : @p.Calorie kcal</td>
-                            <td>Szénhidrát : @p.Carbohydrate g</td>
-                            <td>Fehérje : @p.Protein g</td>
-                            <td>Zsír : @p.Fat g</td>
-                        </tr>
-                    }
-                }
-            </tbody>
-        </table>
-    </div>
-
-    <div class="form-group">
-        <h4>Recept Termékek</h4>
-        <table class="table table-striped receipt-table">
-            <thead>
-                <tr>
-                    <th colspan="2">Név</th>
-                    <th>Mennyiség</th>
-                    <th>Törlés</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
-
-    <div class="form-group">
-        <div class="row w-50">
-            <div class="col-8">
-                <label class="control-label">Mennyiség</label>
-                <input name="foodAmount" type="number" step="0.01" min="0"/>
+    <form asp-action="CreateFood" method="post" class="add-product-form">
+        <div class="form-group">
+            <h4 class="control-label fw-bold">Név</h4>
+            <div class="d-flex justify-content-center">
+                <input type="text" name="Name" class="form-control form-control-thin fw-bold" required />
             </div>
-            <div class="col-4">
-                <label class="control-label">Mértékegység</label>
-                <select name="unit" class="form-control">
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <h4 class="control-label fw-bold">Recept/Elkészítés</h4>
+                <textarea name="Instructions" class="form-control fw-bold" rows="15" cols="50" required></textarea>
+            <span asp-validation-for="Instructions" class="text-danger"></span>
+        </div>
+
+        <div class="container form-group">
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <h4 class="fw-bold mt-2">Termékek</h4>
+                        <div class="d-flex justify-content-center">
+                            <input type="text" id="searchString" class="rounded-2 form-control form-control-thin fw-bold" placeholder="Keresés">
+                        </div>
+                        <div class="container product-div mt-2 mb-2" id="scroll-table">
+                            @if (products != null)
+                            {
+                                <partial name="_ProductPartial" model="products" />
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <h4 class="fw-bold mt-2">Recept termékei</h4>
+                        <div class="container receipt-div mt-2 mb-2" id="scroll-table">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group text-center">
+            <h4 class="fw-bold">Mennyiség</h4>
+            <div class="d-flex justify-content-center">
+                <input class="form-control fw-bold form-control-thin" name="foodAmount" type="number" step="0.01" min="0" />
+            </div>
+        </div>
+
+        <div class="form-group text-center">
+            <h4 class="fw-bold">Mértékegység</h4>
+            <div class="d-flex justify-content-center">
+                <select name="unit" class="form-control form-control-thin">
                     @foreach (var unit in units)
                     {
                         <option value="@unit.Id">@unit.Name</option>
@@ -102,63 +76,113 @@
                 </select>
             </div>
         </div>
-    </div>
 
-    <button class="btn btn-primary" type="submit">Mentés</button>
-</form>
+        <button class="btn btn-primary" type="submit">Mentés</button>
+    </form>
+</div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Add jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
 <script type="text/javascript">
-    $(document).ready(function () {
-        // Handler for adding item to receipt table
-        $('.add-item').click(function () {
-            var row = $(this).closest('tr.product-row'); // Get the closest product row
-            var detailRow = row.next('.details-row'); // Get the corresponding detail row
+    function toggleHiddenDiv(icon) {
+        var parentDiv = icon.parentNode.parentNode.nextElementSibling;
+        var iconClassList = icon.classList;
 
-            // Clone the product row and its detail row and append to the receipt table
-            var receiptProductRow = row.clone();
-            var receiptDetailRow = detailRow.clone();
-            var addButton = receiptProductRow.find('.add-item');
-            var amountInput = receiptProductRow.find('input[name="amount"]');
-            var productIdInput = receiptProductRow.find('input[name="productId"]');
+        parentDiv.classList.toggle("shown-div");
+        iconClassList.toggle("fa-angles-down");
+        iconClassList.toggle("fa-angles-up");
 
-            // Change name attribute of input fields
-            amountInput.attr('name', 'receiptAmount'); // Change name of amount input
-            productIdInput.attr('name', 'receiptProductId'); // Change name of productId input
-
-            addButton.removeClass('add-item').addClass('remove-item').val('Törlés');
-            if (addButton.hasClass('btn-primary')) {
-                addButton.removeClass('btn-primary').addClass('btn-danger');
-            }
-            $('.receipt-table tbody').append(receiptProductRow);
-            $('.receipt-table tbody').append(receiptDetailRow);
-
-            // Hide the original product and detail rows
-            row.hide();
-            detailRow.hide();
-
-            // Disable the textbox in the receipt table
-            amountInput.prop('readonly', true);
-        });
-
-        // Handler for removing item from receipt table
-        $('.receipt-table').on('click', '.remove-item', function () {
-            var row = $(this).closest('tr');
-            var productName = row.find('td:first').text();
-
-            // Show the corresponding product and detail rows in the product table
-            $('.product-row').each(function () {
-                var name = $(this).find('td:first').text();
-                if (name === productName) {
-                    $(this).show();
-                    $(this).next('.details-row').show();
-                    return false;
+        var allHiddenDivs = document.querySelectorAll('.hidden-div');
+        allHiddenDivs.forEach(function (div) {
+            if (div !== parentDiv) {
+                div.classList.remove("shown-div");
+                var siblingIcon = div.previousElementSibling.querySelector('.fa-solid');
+                if (siblingIcon) {
+                    var siblingIconClassList = siblingIcon.classList;
+                    siblingIconClassList.remove("fa-angles-up");
+                    siblingIconClassList.add("fa-angles-down");
                 }
+            }
+        });
+    }
+
+    function addItemToReceipt(btn) {
+        var productDiv = btn.closest('.product');
+
+        var clonedDiv = productDiv.cloneNode(true);
+
+        var productIdInput = clonedDiv.querySelector('input[name="productId"]');
+        productIdInput.name = 'receiptProductId';
+
+        var amountInput = clonedDiv.querySelector('input[name="amount"]');
+        amountInput.name = 'receiptAmount';
+
+        var button = clonedDiv.querySelector('.add-item');
+        button.classList.remove('btn-success');
+        button.classList.add('btn-danger');
+
+        var icon = button.querySelector('.fa-plus');
+        icon.classList.remove('fa-plus');
+        icon.classList.add('fa-xmark');
+
+        button.setAttribute('onclick', 'removeItemFromReceipt(this)');
+
+        var receiptDiv = document.querySelector('.receipt-div');
+        receiptDiv.appendChild(clonedDiv);
+
+        productDiv.remove();
+    }
+
+    function removeItemFromReceipt(btn) {
+        var receiptItemDiv = btn.closest('.product');
+
+        var clonedDiv = receiptItemDiv.cloneNode(true);
+
+        var productIdInput = clonedDiv.querySelector('input[name="receiptProductId"]');
+        productIdInput.name = 'productId';
+
+        var amountInput = clonedDiv.querySelector('input[name="receiptAmount"]');
+        amountInput.name = 'amount';
+
+        var button = clonedDiv.querySelector('.add-item');
+        button.classList.remove('btn-danger');
+        button.classList.add('btn-success');
+
+        var icon = button.querySelector('.fa-xmark');
+        icon.classList.remove('fa-xmark');
+        icon.classList.add('fa-plus');
+
+        button.setAttribute('onclick', 'addItemToReceipt(this)');
+
+        var productDiv = document.querySelector('.product-div');
+        productDiv.appendChild(clonedDiv);
+
+        receiptItemDiv.remove();
+    }
+
+    $(document).ready(function () {
+        $('#searchString').keyup(function () {
+            var searchString = $(this).val().trim();
+            var receiptProductIds = [];
+
+            $('.receipt-div .product').each(function () {
+                var productId = $(this).find('input[name="receiptProductId"]').val();
+                receiptProductIds.push(productId);
             });
 
-            // Remove the receipt rows
-            row.next('.details-row').remove(); // Remove the corresponding detail row
-            row.remove(); // Remove the product row
+            $.ajax({
+                url: '@Url.Action("SearchProduct", "Meal")',
+                type: 'GET',
+                data: { search: searchString, productIds: receiptProductIds },
+                traditional: true,
+                success: function (data) {
+                    $('#scroll-table').html(data);
+                },
+                error: function () {
+                    alert('An error occurred while processing your request.');
+                }
+            });
         });
     });
 </script>

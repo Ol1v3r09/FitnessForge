@@ -43,7 +43,10 @@ namespace FitnessForgeApp.Controllers
                                        where m.DailyIntake.Date == DateTime.Today &&
                                              m.DailyIntake.UserId == currentUser.Id &&
                                              m.MealType.Name == mealType
-                                       select m).ToListAsync();
+                                       select m)
+                                       .Include(m => m.Food)
+                                       .Include(m => m.MealType)
+                                       .ToListAsync();
 
                 ViewData["mealType"] = mealType;
 
@@ -59,7 +62,7 @@ namespace FitnessForgeApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(string mealType,int foodId)
+        public async Task<IActionResult> Delete(string mealType, int foodId)
         {
             try
             {
@@ -72,11 +75,11 @@ namespace FitnessForgeApp.Controllers
                 }
 
                 var mealToBeDeleted = await (from m in db.meals
-                                  where m.MealType.Name == mealType &&
-                                        m.DailyIntake.UserId == currentUser.Id &&
-                                        m.DailyIntake.Date == DateTime.Today &&
-                                        m.FoodId == foodId
-                                  select m).FirstOrDefaultAsync();
+                                             where m.MealType.Name == mealType &&
+                                                   m.DailyIntake.UserId == currentUser.Id &&
+                                                   m.DailyIntake.Date == DateTime.Today &&
+                                                   m.FoodId == foodId
+                                             select m).FirstOrDefaultAsync();
 
                 if (mealToBeDeleted != null)
                 {
@@ -97,31 +100,17 @@ namespace FitnessForgeApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(string mealType, string foods)
+        public async Task<IActionResult> Add(List<int>? foods, string mealType)
         {
-            try
+            var allFoods = await db.foods.ToListAsync();
+            if (foods != null)
             {
-                List<Meal> meals = JsonConvert.DeserializeObject<List<Meal>>(foods);
-
-                var mealIds = meals.Select(m => m.Id); // Assuming Meal has an Id property
-                var allFoods = await db.meals
-                    .Where(x => !mealIds.Contains(x.Id))
-                    .Select(x => x.Food)
-                    .ToListAsync();
-
-                ViewData["mealType"] = mealType;
-                ViewData["allFoods"] = allFoods;
-
-                return View();
+                allFoods = await db.foods.Where(x => !foods.Contains(x.Id)).ToListAsync();
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Hiba: {ex.Message}");
+            ViewData["mealType"] = mealType;
+            ViewData["allFoods"] = allFoods;
 
-                ViewData["ErrorMessage"] = "Hiba lépett fel az ételek lekérése közben";
-                return View();
-            }
-
+            return View();
         }
 
         [HttpPost]
@@ -340,7 +329,73 @@ namespace FitnessForgeApp.Controllers
                 ViewData["ErrorMessage"] = "Hiba lépett fel az étel létrehozása közben";
                 return View();
             }
+        }
 
+        [HttpGet]
+        public async Task<IActionResult> SearchFood(string searchString, string mealType)
+        {
+            try
+            {
+                var currentUser = await userManager.GetUserAsync(User);
+                var meals = (from m in db.meals
+                                      where m.DailyIntake.Date == DateTime.Today &&
+                                            m.DailyIntake.UserId == currentUser.Id &&
+                                            m.MealType.Name == mealType
+                                      select m)
+                       .Include(m => m.Food)
+                       .Include(m => m.Food.Products)
+                       .Include(m => m.MealType)
+                       .AsQueryable();
+
+                if (!string.IsNullOrEmpty(searchString))
+                {
+                    meals = meals.Where(m => m.Food.Name.Contains(searchString));
+                }
+
+                if (meals == null)
+                {
+                    return PartialView("_FoodPartial", new List<Meal>());
+                }
+
+                return PartialView("_FoodPartial", meals.ToList());
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, "Internal server error occurred.");
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> SearchProduct(string search, List<int> productIds)
+        {
+            try
+            {
+                var products = await db.products
+                    .Where(p => !productIds.Contains(p.Id))
+                    .ToListAsync();
+
+                if (!string.IsNullOrEmpty(search))
+                {
+                    products = products
+                        .Where(p => $"{p.Brand} - {p.Name}".Contains(search))
+                        .ToList();
+                }
+
+                if (products == null)
+                {
+                    return PartialView("_ProductPartial", new List<Product>());
+                }
+
+                return PartialView("_ProductPartial", products);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, "Internal server error occurred.");
+            }
         }
     }
 }

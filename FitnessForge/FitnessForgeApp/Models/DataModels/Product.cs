@@ -21,7 +21,7 @@ namespace FitnessForgeApp.Models
         public double Fat { get; set; }
         public double SaturatedFat { get; set; }
         public double Salt { get; set; }
-        public double? Fiber { get; set; }
+        public double Fiber { get; set; }
         public int UnitId { get; set; }
         public Unit Unit { get; set; }
         public string BarCode { get; set; }
