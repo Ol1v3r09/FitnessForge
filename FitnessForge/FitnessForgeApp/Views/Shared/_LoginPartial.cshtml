@@ -11,7 +11,7 @@
             </a>
             <ul class="dropdown-menu-end dropdown-menu" aria-labelledby="SignedInDropdownNarbar">
                 <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">Beállítások</a></li>
-                <li><a class="dropdown-item" href="#">Valami</a></li>
+                <li><a class="dropdown-item text-danger" asp-action="Feedback" asp-controller="User">Visszajelzés</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li>
                     <form class="form-inline dropdown-item" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">

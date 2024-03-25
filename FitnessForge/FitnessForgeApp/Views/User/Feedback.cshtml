@@ -1,0 +1,9 @@
+﻿@model string
+<div class="container text-center text-orange">
+    <h3 class="fw-bold">Visszajelzés</h3>
+    <form asp-action="Feedback" method="post">
+        <h4 class="fw-bold">Szöveg</h4>
+        <textarea class="form-control" id="feedback" name="feedback"></textarea>
+        <button type="submit" class="btn btn-success">Küldés</button>
+    </form>
+</div>

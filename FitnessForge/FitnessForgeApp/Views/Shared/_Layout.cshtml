@@ -1,4 +1,7 @@
 ﻿@inject Microsoft.AspNetCore.Identity.SignInManager<ApplicationUser> signInManager
+@{
+    //TODO profilkép feltöltés
+}
 <!DOCTYPE html>
 <html lang="hu">
 <head>
@@ -24,6 +27,20 @@
                             <li class="nav-item">
                                 <a class="nav-link" asp-action="Home" asp-controller="User">Főoldal</a>
                             </li>
+                            @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Ételek Kezelése
+                                    </a>
+                                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <li><a class="dropdown-item" asp-action="CreateProduct" asp-controller="Meal">Termék felvétele</a></li>
+                                        <li><a class="dropdown-item" asp-action="ManageProduct" asp-controller="Meal">Termékek jóváhagyása</a></li>
+                                        <li><a class="dropdown-item" asp-action="CreateFood" asp-controller="Meal">Étel felvétele</a></li>
+                                        
+                                    </ul>
+                                </li>
+                            }
                             @if (User.IsInRole("Admin"))
                             {
                                 <li class="nav-item dropdown">
@@ -35,17 +52,7 @@
                                         <li><a class="dropdown-item" asp-action="Roles" asp-controller="Management">Jogosultságok</a></li>
                                     </ul>
                                 </li>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Ételek Kezelése
-                                    </a>
-                                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <li><a class="dropdown-item" asp-action="CreateProduct" asp-controller="Meal">Termék felvétele</a></li>
-                                        <li><a class="dropdown-item" asp-action="CreateFood" asp-controller="Meal">Étel felvétele</a></li>
-                                    </ul>
-                                </li>
                             }
-
                         }
                     </ul>
                     <partial name="_LoginPartial" />

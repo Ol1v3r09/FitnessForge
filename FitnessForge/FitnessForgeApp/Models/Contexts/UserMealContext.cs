@@ -1,4 +1,5 @@
-﻿using FitnessForgeApp.Models;
+﻿using FitnessForgeApp.Data;
+using FitnessForgeApp.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,8 +12,6 @@ namespace FitnessForgeAdmin.Models.Contexts
 {
     public class UserMealContext : DbContext
     {
-        string connStr = "server=localhost;port=3306;userid=root;database=fitnessforge;password=1234";
-
         public DbSet<Food> foods { get; set; }
         public DbSet<FoodHasProduct> foodsHasProducts { get; set; }
         public DbSet<MealType> mealTypes { get; set; }
@@ -24,9 +23,9 @@ namespace FitnessForgeAdmin.Models.Contexts
         public DbSet<NutrientGoal> nutrientGoals { get; set; }
         public DbSet<ActivityLevel> activityLevels { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public UserMealContext(DbContextOptions<UserMealContext> options)
+        : base(options)
         {
-            optionsBuilder.UseMySql(connStr, ServerVersion.AutoDetect(connStr));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

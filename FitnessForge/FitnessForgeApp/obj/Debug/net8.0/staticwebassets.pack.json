@@ -13,6 +13,10 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "C:\\Programozás\\FitnessForge\\FitnessForge\\FitnessForgeApp\\wwwroot\\files\\feedback.txt",
+      "PackagePath": "staticwebassets\\files\\feedback.txt"
+    },
+    {
       "Id": "C:\\Programozás\\FitnessForge\\FitnessForge\\FitnessForgeApp\\wwwroot\\images\\meals\\ebéd.jpg",
       "PackagePath": "staticwebassets\\images\\meals\\ebéd.jpg"
     },

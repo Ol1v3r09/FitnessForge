@@ -3,51 +3,47 @@
 @foreach (var p in Model)
 {
     <div class="container product">
-        <div class="row bg-red text-orange fw-bold mt-3 m-1 p-2 rounded-3">
-            <div class="col-4">
-                <p>@($"{p.Brand} - {p.Name}")</p>
-                <i class="fa-solid fa-angles-down" onclick="toggleHiddenDiv(this)"></i>
+        <div class="row bg-red text-orange fw-bold mt-3 m-1 p-2 rounded-3 d-flex flex-column justify-content-between">
+            <div>
+                <h5 class="fw-bold">@($"{p.Brand} - {p.Name}")</h5>
             </div>
-            <div class="col-4">
+            <div class="d-flex justify-content-between">
                 <label class="control-label">
-                    <input name="amount" type="number" step="0.01" min="0" style="width: 3rem;" />
+                    <input name="amount" type="number" step="0.001" min="0" style="width: 6rem;" />
                     @p.Unit.Symbol
                 </label>
+                <div>
+                    <input type="hidden" value="@p.Id" name="productId" />
+                    <button class="btn btn-success rounded-circle add-item text-center" onclick="addItemToReceipt(this)">
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
+                </div>
             </div>
-            <div class="col-4">
-                <input type="hidden" value="@p.Id" name="productId" />
-                <button class="btn btn-success rounded-circle add-item text-center" onclick="addItemToReceipt(this)">
-                    <i class="fa-solid fa-plus"></i>
-                </button>
+            <div>
+                <i class="fa-solid fa-angles-down align-self-end" onclick="toggleHiddenDiv(this)"></i>
             </div>
         </div>
         <div class="row hidden-div bg-red fw-bold text-orange m-1 p-1 rounded-3">
-            <div class="row">
-                <div class="col-3">
-                    <p>Kalória (100g/ml)</p>
+            <div class="col-12" style="border-top: none;">
+                <div class="row" style="border-bottom: 1px solid #ffc107;">
+                    <div class="col-6" style="border-right: 1px solid #ffc107;">
+                        <h6 class="fw-bold">Kalória (100g/ml)</h6>
+                        <p>@p.Calorie kcal</p>
+                    </div>
+                    <div class="col-6">
+                        <h6 class="fw-bold">Szénhidrát</h6>
+                        <p>@p.Carbohydrate g</p>
+                    </div>
                 </div>
-                <div class="col-3">
-                    <p>Szénhidrát</p>
-                </div>
-                <div class="col-3">
-                    <p>Fehérje</p>
-                </div>
-                <div class="col-3">
-                    <p>Zsír</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-3">
-                    <p>@p.Calorie kcal</p>
-                </div>
-                <div class="col-3">
-                    <p>@p.Carbohydrate g</p>
-                </div>
-                <div class="col-3">
-                    <p>@p.Protein g</p>
-                </div>
-                <div class="col-3">
-                    <p>@p.Fat g</p>
+                <div class="row " style="border-bottom: none;">
+                    <div class="col-6" style="border-right: 1px solid #ffc107;">
+                        <h6 class="fw-bold">Fehérje</h6>
+                        <p>@p.Protein g</p>
+                    </div>
+                    <div class="col-6">
+                        <h6 class="fw-bold">Zsír</h6>
+                        <p>@p.Fat g</p>
+                    </div>
                 </div>
             </div>
         </div>

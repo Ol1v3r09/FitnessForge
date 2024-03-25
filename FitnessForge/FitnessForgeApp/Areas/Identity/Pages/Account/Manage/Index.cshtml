@@ -1,28 +1,25 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Profile";
+    ViewData["Title"] = "Profil";
     ViewData["ActivePage"] = ManageNavPages.Index;
     //TODO Design átalakítás
     //TODO egész manage nav átalakítása átgondolása mi kell mi nem
 }
 
-<h3>@ViewData["Title"]</h3>
-<partial name="_StatusMessage" for="StatusMessage" />
-<div class="row">
-    <div class="col-md-6">
+<div class="container text-center">
+    <h1 class="fw-bold my-3">@ViewData["Title"]</h1>
+    <partial name="_StatusMessage" for="StatusMessage" />
+    <div class="row d-flex justify-content-center">
         <form id="profile-form" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-            <div class="form-floating mb-3">
-                <input asp-for="Username" class="form-control" placeholder="Please choose your username." disabled />
-                <label asp-for="Username" class="form-label"></label>
+            <div class="form-group mb-3">
+                <h3 class="fw-bold">Felhasználónév</h3>
+                <div class="d-flex justify-content-center">
+                    <input asp-for="Username" class="form-control form-control-thin" />
+                </div>
             </div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Please enter your phone number."/>
-                <label asp-for="Input.PhoneNumber" class="form-label"></label>
-                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
-            </div>
-            <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
+            <button id="update-profile-button" type="submit" class="btn btn-success">Save</button>
         </form>
     </div>
 </div>

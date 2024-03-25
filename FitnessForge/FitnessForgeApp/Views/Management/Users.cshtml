@@ -1,54 +1,56 @@
 ﻿@using FitnessForgeApp.Models.ViewModels
 @{
     List<UserWithRolesViewModel>? usersWithRoles = (List<UserWithRolesViewModel>?)ViewData["UsersWithRoles"];
-    //TODO Design átalakítás
-    //TODO Szerkesztés gomb nem működik
 }
+<div class="text-orange mt-3 text-center">
+    <h2 class="fw-bolder">Felhasználók</h2>
 
-@if (ViewData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger" role="alert">
-        @ViewData["ErrorMessage"]
-    </div>
-}
+    @if (ViewData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            @ViewData["ErrorMessage"]
+        </div>
+    }
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Felhasználónév</th>
-            <th>Szerepek</th>
-            <th>Törlés</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var user in usersWithRoles)
-        {
+    <table class="table bg-red text-orange fw-bold mt-3 rounded-3">
+        <thead>
             <tr>
-                <td>@user.UserName</td>
-                <td>
-                    @foreach (var role in user.Roles)
-                    {
-                        <span>@role</span>
-                    }
-                    <form action="@Url.ActionLink("Index","Role")" method="get">
-                        <button class="btn btn-primary" type="submit">Szerkesztés</button>
-                    </form>
-                </td>
-                <td>
-                    @if (user.UserName != User.Identity.Name)
-                    {
-                        <form method="post" asp-action="Delete" onsubmit="return confirm('Biztosan törölni szeretné ezt a felhasználót?');">
-                            <input type="hidden" name="userId" value="@user.UserId" />
-                            <button type="submit" class="btn btn-danger">Törlés</button>
-                        </form>
-                    }
-                    else
-                    {
-                        <button class="btn btn-danger" disabled>Törlés</button>
-                        <span class="text-danger">Nem törölheti saját magát.</span>
-                    }
-                </td>
+                <th><h5 class="fw-bolder">Felhasználónév</h5></th>
+                <th><h5 class="fw-bolder">Szerepek</h5></th>
+                <th><h5 class="fw-bolder">Törlés</h5></th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var user in usersWithRoles)
+            {
+                <tr>
+                    <td>@user.UserName</td>
+                    <td>
+                        @foreach (var role in user.Roles)
+                        {
+                            <span>@role,</span>
+                        }
+                        <form action="@Url.ActionLink("Roles","Management")" method="get">
+                            <button class="btn btn-success text-center" type="submit"><i class="fa-solid fa-pen-to-square"></i></button>
+                        </form>
+                    </td>
+                    <td>
+                        @if (user.UserName != User.Identity.Name)
+                        {
+                            <form method="post" asp-action="DeleteUser" onsubmit="return confirm('Biztosan törölni szeretné ezt a felhasználót?');">
+                                <input type="hidden" name="userId" value="@user.UserId" />
+                                <button type="submit" class="btn btn-warning text-center"><i class="fa-solid fa-trash"></i></button>
+                            </form>
+                        }
+                        else
+                        {
+                            <button class="btn btn-warning text-center" disabled><i class="fa-solid fa-trash"></i></button>
+                            <span class="text-warning">Nem törölheti saját magát.</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

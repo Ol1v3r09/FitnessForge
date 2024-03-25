@@ -1,39 +1,49 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @{
-    //TODO Deisgn átalakítás
     ViewData["Title"] = "Szerepkezelés";
     List<ApplicationUser>? users = (List<ApplicationUser>?)ViewData["allUsers"];
     List<IdentityRole>? roles = (List<IdentityRole>?)ViewData["allRoles"];
 }
 
-<h1>Szerep felhasználóhoz rendelése</h1>
+<div class="container text-orange mt-3 text-center">
+    <h1 class="fw-bolder">Szerep felhasználóhoz rendelése</h1>
 
-@if (ViewData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger" role="alert">
-        @ViewData["ErrorMessage"]
-    </div>
-}
+    @if (ViewData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            @ViewData["ErrorMessage"]
+        </div>
+    }
 
-<form asp-action="AssignRole" method="post">
-    <div class="form-group">
-        <label for="userId">Felhasználó kiválasztása</label>
-        <select class="form-control" id="userId" name="userId">
-            @foreach (var user in users)
-            {
-                <option value="@user.Id">@user.UserName</option>
-            }
-        </select>
+    <div class="d-flex justify-content-center">
+        <form asp-action="AssignRole" method="post" class="bg-red rounded-3 p-3 w-50">
+            <div class="form-group">
+                <h3 class="fw-bold">Felhasználó kiválasztása</h3>
+                <div class="d-flex justify-content-center">
+                    <select class="form-control form-control-thin" id="userId" name="userId">
+                        @foreach (var user in users)
+                        {
+                            <option value="@user.Id">@user.UserName</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <h3 class="fw-bold">Szerep kiválasztása</h3>
+                <div class="d-flex justify-content-center">
+                    <select class="form-control form-control-thin" id="roleName" name="roleName">
+                        @foreach (var role in roles)
+                        {
+                            <option value="@role.Name">@role.Name</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="form-group mt-3">
+                <button type="submit" class="btn btn-success">Szerep hozzárendelése</button>
+                <a asp-action="Roles" class="btn btn-success">Vissza</a>
+            </div>
+        </form>
     </div>
-    <div class="form-group">
-        <label for="roleName">Szerep kiválasztása</label>
-        <select class="form-control" id="roleName" name="roleName">
-            @foreach (var role in roles)
-            {
-                <option value="@role.Name">@role.Name</option>
-            }
-        </select>
-    </div>
-    <button type="submit" class="btn btn-primary">Szerep hozzárendelése</button>
-    <a asp-action="Roles" class="btn btn-primary">Vissza</a>
-</form>
+</div>
+

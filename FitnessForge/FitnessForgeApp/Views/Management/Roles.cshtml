@@ -1,33 +1,35 @@
 ﻿@model IEnumerable<Microsoft.AspNetCore.Identity.IdentityRole>
-@{//TODO Design átalakítás
-    //TODO Új szerep gomb nem működik
-}
-<h2>Szerepek</h2>
 
-@if (ViewData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger" role="alert">
-        @ViewData["ErrorMessage"]
+<div class="container text-orange mt-3 text-center">
+    <h2 class="text-orange fw-bolder mt-3">Szerepek</h2>
+
+    @if (ViewData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            @ViewData["ErrorMessage"]
+        </div>
+    }
+
+    <form method="get">
+        <button asp-action="CreateRole" type="submit" class="btn btn-success">Új szerep létrehozása</button>
+        <button asp-action="AssignRole" type="submit" class="btn btn-success">Felhasználó szerephez rendelése</button>
+    </form>
+    <div class="d-flex justify-content-center">
+        <table class="table bg-red text-orange fw-bold mt-3 rounded-3 w-25">
+            <thead>
+                <tr>
+                    <th><h3 class="fw-bolder">Szerep neve</h3></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var role in Model)
+                {
+                    <tr>
+                        <td>@role.Name</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
-}
+</div>
 
-<form method="get">
-    <button asp-action="Create" type="submit" class="btn btn-primary">Új szerep létrehozása</button>
-    <button asp-action="AssignRole" type="submit" class="btn btn-primary">Felahasználó szerephez rendelése</button>
-</form>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>Szerep neve</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var role in Model)
-        {
-            <tr>
-                <td>@role.Name</td>
-            </tr>
-        }
-    </tbody>
-</table>

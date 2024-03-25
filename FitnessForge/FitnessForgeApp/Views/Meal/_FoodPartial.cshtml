@@ -8,57 +8,40 @@
         {
             <div class="container text-center">
                 <div class="row bg-red text-orange fw-bold mt-3 m-1 p-2 rounded-3" id="foodDiv">
-                    <div class="col-4">
+                    <div class="col-12 col-md-4">
                         <p>@meal.Food.Name</p>
-                        <i class="fa-solid fa-angles-down" onclick="toggleHiddenDiv(this)"></i>
+                        @if (meal.Food.Products != null && meal.Food.Products.Count > 1)
+                        {
+                            <i class="fa-solid fa-angles-down" onclick="toggleHiddenDiv(this)"></i>
+                        }    
                     </div>
-                    <div class="col-4">
+                    <div class="col-12 col-md-4">
                         <div class="row">
-                            <div class="col-3">
-                                <p>Szénhidrát</p>
-                            </div>
-                            <div class="col-3">
-                                <p>Fehérje</p>
-                            </div>
-                            <div class="col-3">
-                                <p>Zsír</p>
-                            </div>
-                            <div class="col-3">
-                                <p>Mennyiség</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            @foreach (var product in meal.Food.Products)
-                            {
-                                var unit = meal.Food.Unit;
-                                double foodAmount = meal.Food.Amount;
-                                if (unit.Name.ToLower().Contains("gramm") && unit.Name != "Gramm")
-                                {
-                                    foodAmount = UnitConverter.ConvertMass(foodAmount, unit.Name, "Gramm");
-                                }
-                                else if (unit.Name.ToLower().Contains("liter") && unit.Name != "Milliliter")
-                                {
-                                    foodAmount = UnitConverter.ConvertVolume(foodAmount, unit.Name, "Milliliter");
-                                }
-                                amount = (foodAmount / 100) * meal.Amount;
-                                Console.WriteLine($"({foodAmount} / 100) * {meal.Amount}");
-                                Console.WriteLine(amount);
-                            }
-                            <div class="col-3">
-                                <p>@meal.Food.Products.Sum(p => Math.Round(p.Carbohydrate * amount, 2)) g</p>
-                            </div>
-                            <div class="col-3">
-                                <p>@meal.Food.Products.Sum(p => Math.Round(p.Protein * amount, 2)) g</p>
-                            </div>
-                            <div class="col-3">
-                                <p>@meal.Food.Products.Sum(p => Math.Round(p.Fat * amount, 2)) g</p>
-                            </div>
-                            <div class="col-3">
-                                <p>@(meal.Food.Amount*meal.Amount) @meal.Food.Unit.Symbol</p>
+                            <div class="col-12" style="border-top: none;">
+                                <div class="row" style="border-bottom: 1px solid #ffc107;">
+                                    <div class="col-6" style="border-right: 1px solid #ffc107;">
+                                        <h6 class="fw-bold">Kalória (100g/ml)</h6>
+                                        <p>@meal.Food.Products.Sum(p => p.Calorie) kcal</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6 class="fw-bold">Szénhidrát</h6>
+                                        <p>@meal.Food.Products.Sum(p => p.Carbohydrate) g</p>
+                                    </div>
+                                </div>
+                                <div class="row " style="border-bottom: none;">
+                                    <div class="col-6" style="border-right: 1px solid #ffc107;">
+                                        <h6 class="fw-bold">Fehérje</h6>
+                                        <p>@meal.Food.Products.Sum(p => p.Protein) g</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6 class="fw-bold">Zsír</h6>
+                                        <p>@meal.Food.Products.Sum(p => p.Fat) g</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-4">
+                    <div class="col-12 col-md-4">
                         <form method="post" asp-action="Delete">
                             <input type="hidden" name="mealType" value="@meal.MealType.Name" />
                             <input type="hidden" name="foodId" value="@meal.FoodId" />
@@ -66,39 +49,31 @@
                         </form>
                     </div>
                 </div>
-                <div class="row hidden-div bg-red fw-bold text-orange m-1 p-1 rounded-3">
-                    <div class="row">
-                        <div class="col-3"><p>Termék neve</p></div>
-                        <div class="col-3"><p>Szénhidrát</p></div>
-                        <div class="col-3"><p>Fehérje</p></div>
-                        <div class="col-3"><p>Zsír</p></div>
-                    </div>
-                    <hr/>
-                    @foreach (var product in meal.Food.Products)
-                    {
-                        amount = 0;
-                        var unit = meal.Food.Unit;
-                        double foodAmount = meal.Food.Amount;
-                        if (unit.Name.ToLower().Contains("gramm") && unit.Name != "Gramm")
-                        {
-                            foodAmount = UnitConverter.ConvertMass(foodAmount, unit.Name, "Gramm");
-                        }
-                        else if (unit.Name.ToLower().Contains("liter") && unit.Name != "Milliliter")
-                        {
-                            foodAmount = UnitConverter.ConvertVolume(foodAmount, unit.Name, "Milliliter");
-                        }
-                        amount = (foodAmount / 100) * meal.Amount;
-                        Console.WriteLine($"({foodAmount} / 100) * {meal.Amount}");
-                        Console.WriteLine(amount);
+                @if (meal.Food.Products != null && meal.Food.Products.Count > 1)
+                {
+                    <div class="row hidden-div bg-red fw-bold text-orange m-1 p-1 rounded-3">
                         <div class="row">
-                            <div class="col-3"><p>@product.Brand - @product.Name</p></div>
-                            <div class="col-3"><p>@Math.Round(product.Carbohydrate * amount, 2) g</p></div>
-                            <div class="col-3"><p>@Math.Round(product.Protein * amount, 2) g</p></div>
-                            <div class="col-3"><p>@Math.Round(product.Fat * amount, 2) g</p></div>
+                            <div class="col-3"><p>Termék neve</p></div>
+                            <div class="col-3"><p>Kalória (100g/ml)</p></div>
+                            <div class="col-3"><p>Szénhidrát</p></div>
+                            <div class="col-3"><p>Fehérje</p></div>
+                            <div class="col-3"><p>Zsír</p></div>
                         </div>
-                    }
-                </div>
+                        <hr />
+                        @foreach (var product in meal.Food.Products)
+                        {
+                            <div class="row">
+                                <div class="col-3"><p>@product.Brand - @product.Name</p></div>
+                                <div class="col-3"><p>@product.Calorie kcal</p></div>
+                                <div class="col-3"><p>@product.Carbohydrate g</p></div>
+                                <div class="col-3"><p>@product.Protein g</p></div>
+                                <div class="col-3"><p>@product.Fat g</p></div>
+                            </div>
+                        }
+                    </div>
+                }
             </div>
+
         }
     }
 }

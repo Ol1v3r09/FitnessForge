@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  fitnessforgeapp:
+    image: ${DOCKER_REGISTRY-}fitnessforgeapp
+    build:
+      context: .
+      dockerfile: FitnessForgeApp/Dockerfile

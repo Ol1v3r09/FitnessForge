@@ -25,6 +25,7 @@ namespace FitnessForgeApp.Models
         public int UnitId { get; set; }
         public Unit Unit { get; set; }
         public string BarCode { get; set; }
+        public string? ProductStatus { get; set; }
         public ICollection<Food> Foods { get; set; }
         public Product()
         {

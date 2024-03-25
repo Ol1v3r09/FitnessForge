@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "pGc/nKWhvvbzXUpZ1OnlvsDknU5a75KM6nfo1duCY+0=",
+  "Hash": "JcRo6nuUizF6NcqkbiJ5YdWt5x4yueK/l5nHsN8DMZw=",
   "Source": "FitnessForgeApp",
   "BasePath": "_content/FitnessForgeApp",
   "Mode": "Default",
@@ -91,6 +91,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\favicon.ico"
+    },
+    {
+      "Identity": "C:\\Programozás\\FitnessForge\\FitnessForge\\FitnessForgeApp\\wwwroot\\files\\feedback.txt",
+      "SourceId": "FitnessForgeApp",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Programozás\\FitnessForge\\FitnessForge\\FitnessForgeApp\\wwwroot\\",
+      "BasePath": "_content/FitnessForgeApp",
+      "RelativePath": "files/feedback.txt",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\files\\feedback.txt"
     },
     {
       "Identity": "C:\\Programozás\\FitnessForge\\FitnessForge\\FitnessForgeApp\\wwwroot\\images\\meals\\ebéd.jpg",

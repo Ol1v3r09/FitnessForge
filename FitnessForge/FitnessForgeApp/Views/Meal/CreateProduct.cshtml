@@ -59,7 +59,7 @@
             <div class="form-group">
                 <label asp-for="Calorie" class="control-label">Kalória</label>
                     <div class="d-flex justify-content-center">
-                        <input asp-for="Calorie" class="form-control form-control-thin" required />
+                        <input asp-for="Calorie" type="number" min="0" step="0.001" class="form-control form-control-thin" required />
                     </div>
                 <span asp-validation-for="Calorie" class="text-danger"></span>
             </div>
@@ -67,7 +67,7 @@
             <div class="form-group">
                 <label asp-for="Carbohydrate" class="control-label">Szénhidrát</label>
                     <div class="d-flex justify-content-center">
-                        <input asp-for="Carbohydrate" class="form-control form-control-thin" required />
+                        <input asp-for="Carbohydrate" type="number" min="0" step="0.001" class="form-control form-control-thin" required />
                     </div>
                 <span asp-validation-for="Carbohydrate" class="text-danger"></span>
             </div>
@@ -75,7 +75,7 @@
             <div class="form-group">
                 <label asp-for="Sugar" class="control-label">Cukor</label>
                     <div class="d-flex justify-content-center">
-                        <input asp-for="Sugar" class="form-control form-control-thin" required />
+                        <input asp-for="Sugar" type="number" min="0" step="0.001" class="form-control form-control-thin" required />
                     </div>
                 <span asp-validation-for="Sugar" class="text-danger"></span>
             </div>
@@ -83,7 +83,7 @@
             <div class="form-group">
                 <label asp-for="Protein" class="control-label">Fehérje</label>
                     <div class="d-flex justify-content-center">
-                        <input asp-for="Protein" class="form-control form-control-thin" required />
+                        <input asp-for="Protein" type="number" min="0" step="0.001" class="form-control form-control-thin" required />
                     </div>
                 <span asp-validation-for="Protein" class="text-danger"></span>
             </div>
@@ -91,7 +91,7 @@
             <div class="form-group">
                 <label asp-for="Fat" class="control-label">Zsír</label>
                     <div class="d-flex justify-content-center">
-                        <input asp-for="Fat" class="form-control form-control-thin" required />
+                        <input asp-for="Fat" type="number" min="0" step="0.001" class="form-control form-control-thin" required />
                     </div>
                 <span asp-validation-for="Fat" class="text-danger"></span>
             </div>
@@ -99,7 +99,7 @@
             <div class="form-group">
                 <label asp-for="SaturatedFat" class="control-label">Telített Zsír</label>
                     <div class="d-flex justify-content-center">
-                        <input asp-for="SaturatedFat" class="form-control form-control-thin" required />
+                        <input asp-for="SaturatedFat" type="number" min="0" step="0.001" class="form-control form-control-thin" required />
                     </div>
                 <span asp-validation-for="SaturatedFat" class="text-danger"></span>
             </div>
@@ -107,7 +107,7 @@
             <div class="form-group">
                 <label asp-for="Salt" class="control-label">Só</label>
                     <div class="d-flex justify-content-center">
-                        <input asp-for="Salt" class="form-control form-control-thin" required />
+                        <input asp-for="Salt" type="number" min="0" step="0.001" class="form-control form-control-thin" required />
                     </div>
                 <span asp-validation-for="Salt" class="text-danger"></span>
             </div>
@@ -115,7 +115,7 @@
             <div class="form-group">
                 <label asp-for="Fiber" class="control-label">Rost</label>
                     <div class="d-flex justify-content-center">
-                        <input asp-for="Fiber" class="form-control form-control-thin" />
+                        <input asp-for="Fiber" type="number" min="0" step="0.001" class="form-control form-control-thin" />
                     </div>
                 <span asp-validation-for="Fiber" class="text-danger"></span>
             </div>
@@ -154,7 +154,7 @@
                     </div>
                 <span asp-validation-for="BarCode" class="text-danger"></span>
             </div>
-
+            <input type="hidden" asp-for="ProductStatus" value="Jóváhagyásra vár" />
                 <button class="btn btn-success mt-3 mb-1" type="button" onclick="goToDetails()"><i class="fa-solid fa-arrow-left"></i></button>
                 <button class="btn btn-warning mt-3 mb-1" type="submit"><i class="fa-solid fa-check"></i></button>
         </div>

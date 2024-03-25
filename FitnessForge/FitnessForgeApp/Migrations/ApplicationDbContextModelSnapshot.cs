@@ -412,6 +412,9 @@ namespace FitnessForgeApp.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<string>("ProductStatus")
+                        .HasColumnType("longtext");
+
                     b.Property<double>("Protein")
                         .HasColumnType("double");
 

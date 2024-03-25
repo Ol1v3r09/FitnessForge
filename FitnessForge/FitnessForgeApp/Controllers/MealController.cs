@@ -102,13 +102,16 @@ namespace FitnessForgeApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(List<int>? foods, string mealType)
         {
-            var allFoods = await db.foods.ToListAsync();
-            if (foods != null)
-            {
-                allFoods = await db.foods.Where(x => !foods.Contains(x.Id)).ToListAsync();
-            }
+            var allFoodHasProducts = await db.foodsHasProducts
+                .Include(fhp => fhp.Food)
+                .Include(fhp => fhp.Product)
+                .Where(fhp => fhp.Product.ProductStatus == "Jóváhagyva")
+                .GroupBy(fhp => fhp.FoodId)
+                .Select(group => group.First())
+                .ToListAsync();
+
             ViewData["mealType"] = mealType;
-            ViewData["allFoods"] = allFoods;
+            ViewData["allFoodHasProducts"] = allFoodHasProducts;
 
             return View();
         }
@@ -175,6 +178,7 @@ namespace FitnessForgeApp.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Manager, Admin")]
         public async Task<IActionResult> CreateProduct()
         {
             try
@@ -195,6 +199,7 @@ namespace FitnessForgeApp.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Manager, Admin")]
         public async Task<IActionResult> CreateProduct(Product product, int Amount)
         {
             try
@@ -212,18 +217,21 @@ namespace FitnessForgeApp.Controllers
                     Salt = product.Salt,
                     Fiber = product.Fiber,
                     UnitId = product.UnitId,
-                    BarCode = product.BarCode
+                    BarCode = product.BarCode,
+                    ProductStatus = product.ProductStatus
                 };
 
                 newProduct.Unit = await db.units.Where(x => x.Id == product.UnitId).FirstAsync();
 
                 await db.products.AddAsync(newProduct);
 
+                await db.SaveChangesAsync();
+
                 var newFood = new Food
                 {
                     Name = product.Brand + " - " + product.Name,
-                    Unit = newProduct.Unit,
-                    UnitId = newProduct.UnitId,
+                    Unit = product.Unit,
+                    UnitId = product.UnitId,
                 };
 
                 newFood.Products.Add(newProduct);
@@ -232,7 +240,7 @@ namespace FitnessForgeApp.Controllers
 
                 await db.SaveChangesAsync();
 
-                var foodHasProduct = await db.foodsHasProducts.Where(x => x.ProductId == newProduct.Id && x.FoodId == newFood.Id).FirstAsync();
+                var foodHasProduct = await db.foodsHasProducts.Where(x => x.ProductId == product.Id && x.FoodId == newFood.Id).FirstAsync();
                 foodHasProduct.Amount = Amount;
 
                 newFood.Amount = Amount;
@@ -252,13 +260,14 @@ namespace FitnessForgeApp.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> CreateFood()
         {
             try
             {
                 var allUnits = await db.units.ToListAsync();
 
-                var allProducts = await db.products.ToListAsync();
+                var allProducts = await db.products.Where(p => p.ProductStatus == "Jóváhagyva").ToListAsync();
 
                 ViewData["allProducts"] = allProducts;
                 ViewData["allUnits"] = allUnits;
@@ -276,6 +285,7 @@ namespace FitnessForgeApp.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> CreateFood(IFormCollection form)
         {
             try
@@ -305,17 +315,11 @@ namespace FitnessForgeApp.Controllers
                 for (int i = 0; i < receiptProductIds.Count; i++)
                 {
                     var productId = int.Parse(receiptProductIds[i]);
-                    var amountStr = receiptAmounts[i];
-
-                    if (!double.TryParse(amountStr, out var amount))
-                    {
-                        Console.WriteLine("Nem megfelelő mennyiség a terméknél Id: " + productId);
-                    }
 
                     var product = await db.products.FindAsync(productId);
 
                     var foodHasProduct = await db.foodsHasProducts.FindAsync(newFood.Id, product.Id);
-                    foodHasProduct.Amount = amount;
+                    foodHasProduct.Amount = double.Parse(receiptAmounts[i]);
                 }
 
                 await db.SaveChangesAsync();
@@ -327,7 +331,7 @@ namespace FitnessForgeApp.Controllers
                 Console.WriteLine("Hiba: " + ex.Message);
 
                 ViewData["ErrorMessage"] = "Hiba lépett fel az étel létrehozása közben";
-                return View();
+                return RedirectToAction("Index", "Home");
             }
         }
 
@@ -373,7 +377,7 @@ namespace FitnessForgeApp.Controllers
             try
             {
                 var products = await db.products
-                    .Where(p => !productIds.Contains(p.Id))
+                    .Where(p => !productIds.Contains(p.Id) && p.ProductStatus == "Jóváhagyva")
                     .ToListAsync();
 
                 if (!string.IsNullOrEmpty(search))
@@ -396,6 +400,39 @@ namespace FitnessForgeApp.Controllers
                 Console.WriteLine(ex.Message);
                 return StatusCode(500, "Internal server error occurred.");
             }
+        }
+        [HttpGet]
+        [Authorize(Roles = "Manager, Admin")]
+        public async Task<IActionResult> ManageProduct()
+        {
+            var products = await db.products.Where(p => p.ProductStatus == "Jóváhagyásra vár").ToListAsync();
+            return View(products);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Manager, Admin")]
+        public async Task<IActionResult> ProductAllow(int productId)
+        {
+            var product = await db.products.FirstOrDefaultAsync(p => p.Id == productId);
+            product.ProductStatus = "Jóváhagyva";
+            db.Update(product);
+            await db.SaveChangesAsync();
+            return RedirectToAction("ManageProduct");
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Manage, Admin")]
+        public async Task<IActionResult> ProductForbid(int productId)
+        {
+            var product = await db.products.FirstOrDefaultAsync(p => p.Id == productId);
+            var foodHasProduct = await db.foodsHasProducts.FirstOrDefaultAsync(p => p.ProductId == productId);
+            var food = await db.foods.FirstOrDefaultAsync(f => f.Id == foodHasProduct.FoodId);
+
+            db.products.Remove(product);
+            db.foodsHasProducts.Remove(foodHasProduct);
+            db.foods.Remove(food);
+            await db.SaveChangesAsync();
+            return RedirectToAction("ManageProduct");
         }
     }
 }

@@ -1,0 +1,41 @@
+﻿@model List<Product>
+
+<div class="container text-orange fw-bold text-center">
+    <h2 class="fw-bolder mt-2">Termékek jóváhagyása</h2>
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-sm-12 col-md-6 col-lg-4 my-4">
+                <div class="card bg-red">
+                    <div class="card-body">
+                        <h5 class="card-title fw-bolder">@item.Name</h5>
+                        <h6 class="card-subtitle mb-2">@item.Brand</h6>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item text-orange bg-red">Kalória: @item.Calorie kcal</li>
+                            <li class="list-group-item text-orange bg-red">Szénhidrát: @item.Carbohydrate g</li>
+                            <li class="list-group-item text-orange bg-red">Cukor: @item.Sugar g</li>
+                            <li class="list-group-item text-orange bg-red">Fehérje: @item.Protein g</li>
+                            <li class="list-group-item text-orange bg-red">Zsír: @item.Fat g</li>
+                            <li class="list-group-item text-orange bg-red">Telített Zsír: @item.SaturatedFat g</li>
+                            <li class="list-group-item text-orange bg-red">Só: @item.Salt g</li>
+                            <li class="list-group-item text-orange bg-red">Rost: @item.Fiber g</li>
+                            <li class="list-group-item text-orange bg-red">Mértékegység: @item.Unit.Name</li>
+                            <li class="list-group-item text-orange bg-red">Vonalkód: @item.BarCode</li>
+                            <li class="list-group-item text-orange bg-red">Státusz: @item.ProductStatus</li>
+                        </ul>
+                        <div class="d-flex justify-content-center">
+                            <form method="post" asp-action="ProductAllow" asp-controller="Meal">
+                                <input type="hidden" name="productId" value="@item.Id" />
+                                <button type="submit" class="btn btn-success m-2 text-center"><i class="fa-solid fa-check"></i></button>
+                            </form>
+                            <form method="post" asp-action="ProductForbid" asp-controller="Meal">
+                                <input type="hidden" name="productId" value="@item.Id" />
+                                <button type="submit" class="btn btn-warning m-2 text-center"><i class="fa-solid fa-xmark"></i></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

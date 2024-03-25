@@ -1,9 +1,13 @@
-﻿<ul class="nav nav-pills flex-column">
-    <li class="nav-item"><a class="nav-link" id="profile" asp-area="Identity" asp-page="/Account/Manage/Index">Profil</a></li>
-    <li class="nav-item"><a class="nav-link" id="email" asp-area="Identity" asp-page="/Account/Manage/Email">Email</a></li>
-    <li class="nav-item"><a class="nav-link" id="change-password" asp-area="Identity" asp-page="/Account/Manage/ChangePassword">Jelszó</a></li>
-    <li class="nav-item"><a class="nav-link" asp-controller="User" asp-action="ManageDetails">Adatok</a></li>
-</ul>
-@{
-            //TODO Design átalakítás
-}
+﻿<div class="d-flex justify-content-center">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark rounded-3 w-50 text-center">
+        <div class="container d-flex justify-content-center">
+            <div class="navbar-nav">
+                <a class="nav-link text-orange" id="profile" asp-area="Identity" asp-page="/Account/Manage/Index">Profil</a>
+                <a class="nav-link text-orange" id="email" asp-area="Identity" asp-page="/Account/Manage/Email">Email</a>
+                <a class="nav-link text-orange" id="change-password" asp-area="Identity" asp-page="/Account/Manage/ChangePassword">Jelszó</a>
+                <a class="nav-link text-orange" asp-controller="User" asp-action="ManageDetails">Adatok</a>
+            </div>
+        </div>
+    </nav>
+</div>
+

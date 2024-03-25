@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FitnessForgeApp.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace FitnessForgeApp.Models.Contexts
 {
     public class UserExerciseContext : DbContext
     {
-        string connStr = "server=localhost;port=3306;userid=root;database=fitnessforge;password=1234";
         public DbSet<Exercise> exercises { get; set; }
         public DbSet<ExerciseTrainsMuscle> exerciseTrainsMuscles { get; set; }
         public DbSet<Workout> workouts { get; set; }
@@ -14,11 +14,11 @@ namespace FitnessForgeApp.Models.Contexts
         public DbSet<Equipment> equipments { get; set; }
         public DbSet<Muscle> muscles { get; set;}
         public DbSet<ExerciseType> exerciseTypes { get; set; }
-        public  DbSet<WorkoutHasExercise> workoutHasExercises { get; set; } 
+        public  DbSet<WorkoutHasExercise> workoutHasExercises { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public UserExerciseContext(DbContextOptions<UserExerciseContext> options)
+            : base(options)
         {
-            optionsBuilder.UseMySql(connStr,ServerVersion.AutoDetect(connStr));
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

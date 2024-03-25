@@ -1,11 +1,12 @@
 ﻿@using FitnessForgeApp.Models.ViewModels
+@using System.Web
 @inject Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> userManager;
 @inject UserService userService;
 @model List<DetailsViewModel>
 @{
     List<MealType>? mealTypes = (List<MealType>?)ViewData["mealTypes"];
     ApplicationUser? user = await userManager.GetUserAsync(User);
-    // TODO színkódok beállítása, kis kockák létrehozása leírással a grafikonokhoz
+    // TODO Kis formázás a színkódókra még ráférne
 }
 
     @if (ViewData["ErrorMessage"] != null)
@@ -19,7 +20,31 @@
     <div class="row mt-2 text-center">
         <div class="col-lg-4 col-sm-12">
             <h5 class="text-orange fw-bold">Tápanyag eloszlás (g)</h5>
-            <div class="cube" style="background-color:rgba(255, 99, 132, 0.6)">Szénhidrát</div>
+             <div class="row mb-1 fw-bold">
+                <div class="col-3" style="background-color: rgba(255, 99, 132, 0.6)">
+                     <p>Szénhidrát</p>
+                 </div>
+                <div class="col-3" style="background-color: rgba(255, 205, 86, 0.6)">
+                    <p>Fehérje</p>
+                </div>
+                <div class="col-3" style="background-color: rgba(75, 192, 192, 0.6)">
+                    <p>Zsír</p>
+                </div>
+                <div class="col-3" style="background-color: rgba(255, 159, 64, 0.6)">
+                    <p>Cukor</p>
+                </div>
+             </div>
+             <div class="row fw-bold">
+                <div class="col-4" style="background-color: rgba(153, 102, 255, 0.6)">
+                     <p>Telített zsír</p>
+                 </div>
+                <div class="col-4" style="background-color: rgba(54, 162, 235, 0.6)">
+                    <p>Só</p>
+                </div>
+                <div class="col-4" style="background-color: rgba(201, 203, 207, 0.6)">
+                    <p>Rost</p>
+                </div>
+             </div>
             <div class="chart-container d-flex justify-content-center">
                 <canvas id="chart"></canvas>
             </div>
@@ -39,6 +64,25 @@
             </div>
         <div class="col-lg-4 col-sm-12">
             <h5 class="text-orange fw-bold">Kalória étkezésenként (kcal)</h5>
+            <div class="row fw-bold mb-1">
+                <div class="col-4" style="background-color:rgba(255, 99, 132, 0.6)">
+                    <p>Reggeli</p>
+                </div>
+                <div class="col-4" style="background-color:rgba(54, 162, 235, 0.6)">
+                    <p>Tízórai</p>
+                </div>
+                <div class="col-4" style="background-color:rgba(255, 205, 86, 0.6)">
+                    <p>Ebéd</p>
+                </div>
+            </div>
+            <div class="row fw-bold">
+                <div class="col-6" style="background-color:rgba(75, 192, 192, 0.6)">
+                    <p>Uzsonna</p>
+                </div>
+                <div class="col-6" style="background-color:rgba(153, 102, 255, 0.6)">
+                    <p>Vacsora</p>
+                </div>
+            </div>
             <div class="chart-container d-flex justify-content-center">
                 <canvas id="caloriesChart"></canvas>
             </div>
@@ -46,7 +90,7 @@
     </div>
         <div class="row mt-3 text-center">
             <h4 class="text-orange fw-bold">Étkezések</h4>
-                @for (int i = 0; i < 5; i++)
+                @for (int i = 0; i < mealTypes.Count; i++)
                 {
                 <div class="col-lg-2 col-sm-12 @(i == 0 ? "offset-lg-1" : "") mt-1">
                     <div class="card rounded-3 bg-red">
@@ -138,7 +182,7 @@
     @for (int i = 0; i < 5; i++)
     {
         <text>
-                mealNames.push("@mealTypes[i].Name");
+                mealNames.push("@Html.Raw(HttpUtility.HtmlDecode(mealTypes[i].Name))");
                 calorieData.push(@Model[i].Calorie);
         </text>
     }

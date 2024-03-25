@@ -1,12 +1,14 @@
 ﻿using FitnessForgeAdmin.Models.Contexts;
 using FitnessForgeApp.Models;
 using FitnessForgeApp.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace FitnessForgeApp.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class ManagementController : Controller
     {
         RoleManager<IdentityRole> _roleManager;

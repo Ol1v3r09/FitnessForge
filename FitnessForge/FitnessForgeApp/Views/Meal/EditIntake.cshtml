@@ -58,10 +58,9 @@
         });
     }
 
-    var mealType = '@mealType';
-
     $(document).ready(function () {
         $('#searchString').keyup(function () {
+            var mealType = '@mealType';
             var searchString = $(this).val().trim();
             $.ajax({
                 url: '@Url.Action("SearchFood", "Meal")',

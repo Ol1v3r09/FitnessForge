@@ -155,7 +155,7 @@ namespace FitnessForgeApp.Controllers
                     }
                 }
 
-                return RedirectToAction("CreateDetails");
+                return RedirectToAction("Index","Home");
             }
             catch (Exception ex)
             {
@@ -205,6 +205,12 @@ namespace FitnessForgeApp.Controllers
                     currentUser.Weight = user.Weight;
                     currentUser.Height = user.Height;
                     currentUser.WeightGoal = user.WeightGoal;
+                    if (user.Weight > user.WeightGoal)
+                        currentUser.WeeklyWeightGoal = user.WeeklyWeightGoal * -1;
+                    else if (user.Weight < user.WeightGoal)
+                        currentUser.WeeklyWeightGoal = user.WeeklyWeightGoal;
+                    else
+                        currentUser.WeeklyWeightGoal = 0;
                     currentUser.WeeklyWeightGoal = user.WeeklyWeightGoal;
                     currentUser.ActivityId = user.ActivityId;
                     currentUser.NutrientId = user.NutrientId;
@@ -215,7 +221,7 @@ namespace FitnessForgeApp.Controllers
                     {
                         Console.WriteLine($"Hiba a frissítésnél: {result.Errors}");
                         ViewData["ErrorMessage"] = "Hiba a felhasználó fríssítése közben";
-                        return RedirectToAction("Index", "Home");
+                        return RedirectToAction("ManageDetails");
                     }
                 }
                 return RedirectToAction("ManageDetails");
@@ -227,6 +233,22 @@ namespace FitnessForgeApp.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
+        }
+
+        [HttpGet]
+        public IActionResult Feedback()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> Feedback(string feedback)
+        {
+            FileStream fs = new FileStream("wwwroot/files/feedback.txt",FileMode.Append);
+            StreamWriter sw = new StreamWriter(fs);
+            await sw.WriteAsync("-" + feedback + "\n");
+            sw.Close();
+            fs.Close();
+            return RedirectToAction("Feedback");
         }
     }
 }
