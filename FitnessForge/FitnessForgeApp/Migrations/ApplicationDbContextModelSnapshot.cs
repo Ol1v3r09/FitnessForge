@@ -16,7 +16,7 @@ namespace FitnessForgeApp.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.1")
+                .HasAnnotation("ProductVersion", "8.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("FitnessForgeApp.Models.ActivityLevel", b =>
@@ -159,6 +159,25 @@ namespace FitnessForgeApp.Migrations
                     b.ToTable("daily_intake");
                 });
 
+            modelBuilder.Entity("FitnessForgeApp.Models.DataModels.Feedback", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("feedback");
+                });
+
             modelBuilder.Entity("FitnessForgeApp.Models.Equipment", b =>
                 {
                     b.Property<int>("Id")
@@ -200,19 +219,13 @@ namespace FitnessForgeApp.Migrations
 
             modelBuilder.Entity("FitnessForgeApp.Models.ExerciseRequiresEquipment", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
                     b.Property<int>("EquipmentId")
                         .HasColumnType("int");
 
                     b.Property<int>("ExerciseId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("EquipmentId");
+                    b.HasKey("EquipmentId", "ExerciseId");
 
                     b.HasIndex("ExerciseId");
 
@@ -221,19 +234,13 @@ namespace FitnessForgeApp.Migrations
 
             modelBuilder.Entity("FitnessForgeApp.Models.ExerciseTrainsMuscle", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
                     b.Property<int>("ExerciseId")
                         .HasColumnType("int");
 
                     b.Property<int>("MuscleId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("ExerciseId");
+                    b.HasKey("ExerciseId", "MuscleId");
 
                     b.HasIndex("MuscleId");
 
@@ -486,6 +493,10 @@ namespace FitnessForgeApp.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    b.Property<string>("CreatorUserId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Name")
                         .IsRequired()

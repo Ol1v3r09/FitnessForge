@@ -1,0 +1,45 @@
+﻿@using FitnessForgeApp.Models.ViewModels
+@model WorkoutListViewModel
+
+@{
+    ViewBag.Title = "Workouts";
+}
+
+<div class="container text-orange fw-bold text-center">
+<h2 class="fw-bold">Edzések</h2>
+<div class="d-flex justify-content-center">
+    <select id="workoutSelect" class="form-control form-control-thin">
+        <option value="0" selected>Csak saját</option>
+        <option value="1">Bárki által létrehozott</option>
+    </select>
+</div>
+
+    <form asp-action="Create" method="get" class="mt-2">
+        <button class="btn btn-success">Új edzés létrehozása</button>
+    </form>
+
+<div class="container" id="scroll-table">
+        <partial name="_WorkoutPartial" model="Model" />
+</div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#workoutSelect').change(function () {
+            var selectedValue = $(this).val();
+
+            $.ajax({
+                url: '@Url.Action("UpdateList", "Workout")',
+                type: 'POST',
+                data: { selectedValue: selectedValue },
+                success: function (result) {
+                    $('#scroll-table').html(result);
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+    });
+</script>

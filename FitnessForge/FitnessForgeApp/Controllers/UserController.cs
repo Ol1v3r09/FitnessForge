@@ -1,6 +1,8 @@
-﻿using FitnessForgeAdmin.Models.Contexts;
+﻿using FitnessForgeApp.Data;
 using FitnessForgeApp.Models;
+using FitnessForgeApp.Models.DataModels;
 using FitnessForgeApp.Models.ViewModels;
+using FitnessForgeApp.Services;
 using Humanizer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -13,14 +15,17 @@ namespace FitnessForgeApp.Controllers
     [Authorize(Roles = "User")]
     public class UserController : Controller
     {
-        UserMealContext db;
+        ApplicationDbContext db;
+        ApplicationDbContext appDb;
         UserManager<ApplicationUser> _userManager { get; set; }
 
-        public UserController(UserMealContext db, UserManager<ApplicationUser> userManager)
+        public UserController(ApplicationDbContext db, UserManager<ApplicationUser> userManager, ApplicationDbContext applicationDb)
         {
             this.db = db;
+            appDb = applicationDb;
             _userManager = userManager;
             List<Product> products = db.products.ToList();
+            List<Unit> units = db.units.ToList();
         }
 
         [HttpGet]
@@ -30,7 +35,7 @@ namespace FitnessForgeApp.Controllers
             {
                 ApplicationUser currentUser = await _userManager.GetUserAsync(User);
 
-                List<DetailsViewModel> allMeals = new List<DetailsViewModel>();
+                List<UserHomeViewModel> allMeals = new List<UserHomeViewModel>();
 
                 List<MealType> mealTypes = await db.mealTypes.ToListAsync();
                 var dailyIntake = await db.dailyIntakes.Where(d => d.UserId == currentUser.Id && d.Date == DateTime.Today).FirstOrDefaultAsync();
@@ -38,7 +43,7 @@ namespace FitnessForgeApp.Controllers
                 {
                     foreach (var mealType in mealTypes)
                     {
-                        DetailsViewModel details = new DetailsViewModel();
+                        UserHomeViewModel details = new UserHomeViewModel();
 
                         var allFoodsToday = await (from m in db.meals
                                            where m.IntakeId == dailyIntake.Id && m.MealTypeId == mealType.Id
@@ -56,25 +61,26 @@ namespace FitnessForgeApp.Controllers
 
                                     foreach (var fp in foodProducts)
                                     {
-                                        var unit = await db.foods.Where(x => x.Id == food.Id).Select(x => x.Unit).FirstAsync();
-                                        double foodAmount = food.Amount;
-                                        if (unit.Name.ToLower().Contains("gramm") && unit.Name != "Gramm")
+                                        double fhpAmount = fp.Amount;
+                                        if (fp.Product.Unit.Name.ToLower().Contains("gramm"))
                                         {
-                                            foodAmount = UnitConverter.ConvertMass(foodAmount, unit.Name, "Gramm");
+                                            fhpAmount = UnitConverter.ConvertMass(fhpAmount, fp.Product.Unit.Name, "Gramm");
                                         }
-                                        else if (unit.Name.ToLower().Contains("liter") && unit.Name != "Milliliter")
+                                        if (fp.Product.Unit.Name.ToLower().Contains("liter"))
                                         {
-                                            foodAmount = UnitConverter.ConvertVolume(foodAmount, unit.Name, "Milliliter");
+                                            fhpAmount = UnitConverter.ConvertVolume(fhpAmount, fp.Product.Unit.Name, "Milliliter");
                                         }
-                                        var amount = (foodAmount / 100) * db.meals.Where(x => x.FoodId == food.Id && x.MealTypeId == mealType.Id && x.DailyIntake == dailyIntake).First().Amount;
-                                        details.Calorie += Math.Round(fp.Product.Calorie * amount, 2);
-                                        details.Carbohydrate += Math.Round(fp.Product.Carbohydrate * amount, 2);
-                                        details.Protein += Math.Round(fp.Product.Protein * amount, 2);
-                                        details.Fat += Math.Round(fp.Product.Fat * amount, 2);
-                                        details.Fiber += Math.Round(fp.Product.Fiber * amount, 2);
-                                        details.Salt += Math.Round(fp.Product.Salt * amount, 2);
-                                        details.SaturatedFat += Math.Round(fp.Product.SaturatedFat * amount, 2);
-                                        details.Sugar += Math.Round(fp.Product.Sugar * amount, 2);
+
+                                        Meal meal = db.meals.Where(x => x.FoodId == food.Id && x.MealTypeId == mealType.Id && x.DailyIntake == dailyIntake).First();
+
+                                        details.Calorie += Math.Round(fp.Product.Calorie * meal.Amount * fhpAmount / 100, 2);
+                                        details.Carbohydrate += Math.Round(fp.Product.Carbohydrate * meal.Amount * fhpAmount / 100, 2);
+                                        details.Protein += Math.Round(fp.Product.Protein * meal.Amount * fhpAmount / 100, 2);
+                                        details.Fat += Math.Round(fp.Product.Fat * meal.Amount * fhpAmount / 100, 2);
+                                        details.Fiber += Math.Round(fp.Product.Fiber * meal.Amount * fhpAmount / 100, 2);
+                                        details.Salt += Math.Round(fp.Product.Salt * meal.Amount * fhpAmount / 100, 2);
+                                        details.SaturatedFat += Math.Round(fp.Product.SaturatedFat * meal.Amount * fhpAmount / 100, 2);
+                                        details.Sugar += Math.Round(fp.Product.Sugar * meal.Amount * fhpAmount / 100, 2);
                                     }
                                 }
                             }
@@ -243,11 +249,10 @@ namespace FitnessForgeApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Feedback(string feedback)
         {
-            FileStream fs = new FileStream("wwwroot/files/feedback.txt",FileMode.Append);
-            StreamWriter sw = new StreamWriter(fs);
-            await sw.WriteAsync("-" + feedback + "\n");
-            sw.Close();
-            fs.Close();
+            var user = await _userManager.GetUserAsync(User);
+            var f = new Feedback { UserId = user.Id, Text = feedback};
+            await appDb.feedbacks.AddAsync(f);
+            await appDb.SaveChangesAsync();
             return RedirectToAction("Feedback");
         }
     }

@@ -24,3 +24,5 @@ C:\Programozás\FitnessForge\FitnessForge\bin\Debug\FitnessForgeApp.pdb
 C:\Programozás\FitnessForge\FitnessForge\obj\Debug\docker-compose.dcproj.AssemblyReference.cache
 C:\Programozás\FitnessForge\FitnessForge\obj\Debug\docker-compose.dcproj.CoreCompileInputs.cache
 C:\Programozás\FitnessForge\FitnessForge\obj\Debug\docker-compose.dcproj.CopyComplete
+C:\Programozás\FitnessForge\FitnessForge\bin\Debug\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Programozás\FitnessForge\FitnessForge\bin\Debug\Microsoft.Extensions.DependencyInjection.Abstractions.dll

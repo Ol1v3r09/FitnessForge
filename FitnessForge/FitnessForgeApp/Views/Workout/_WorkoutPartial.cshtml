@@ -1,0 +1,29 @@
+﻿@using FitnessForgeApp.Models.ViewModels
+@model WorkoutListViewModel
+
+<table class="table text-orange">
+    <tr>
+        <th class="fw-bolder">Név</th>
+        <th class="fw-bolder">Részletek</th>
+        <th class="fw-bolder">Hozzáadás a mai naphoz</th>
+    </tr>
+    @foreach (var item in Model.Workouts)
+    {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => item.Name)</td>
+            <td>
+                <form asp-action="Details" method="get" asp-controller="Workout">
+                    <input type="hidden" value="@item.Id" name="id"/>
+                    <input type="hidden" value="List" name="returnAction" />
+                    <button type="submit" class="btn btn-warning">Részletek</button>
+                </form>
+            </td>
+            <td>
+                <form asp-action="Add" method="post">
+                    <input type="hidden" value="@item.Id" name="id" />
+                    <button type="submit" class="btn btn-success rounded-circle text-center"><i class="fa-solid fa-plus"></i></button>
+                </form>
+            </td>
+        </tr>
+    }
+</table>

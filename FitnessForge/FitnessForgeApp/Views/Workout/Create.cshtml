@@ -1,0 +1,89 @@
+﻿@using FitnessForgeApp.Models.ViewModels
+@model WorkoutCreateViewModel
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<div class="container text-orange text-center fw-bold">
+    <h2 class="fw-bolder">Edzés készítés</h2>
+
+    <form asp-action="Create" asp-controller="Workout" method="post">
+        <div class="form-group">
+            <h3>Név</h3>
+            <div class="d-flex justify-content-center">
+                <input type="text" class="form-control form-control-thin" name="Name" />
+            </div>
+        </div>
+        
+
+        <div class="container form-group">
+            <div class="row">
+                <div class="form-group col-lg-6 col-sm-12">
+                    <h2 class="fw-bold mt-2">Feladatok</h2>
+                    <div class="d-flex justify-content-center">
+                        <input type="text" id="searchString" class="rounded-2 form-control form-control-thin fw-bold" placeholder="Keresés">
+                    </div>
+                    <div class="container exercise-div mt-2 mb-2" id="scroll-table">
+                        <partial name="_ExercisePartial" model="Model" />
+                    </div>
+                </div>
+                <div class="form-group col-lg-6 col-sm-12">
+                    <h2 class="fw-bold mt-2">Feladatsor</h2>
+                    <div class="container workout-div mt-2 mb-2" id="scroll-table">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-2">Létrehozás</button>
+    </form>
+
+    <a href="@Url.Action("List")" class="mt-2">Vissza az edzéslistára</a>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    function addItemToWorkout(button) {
+        var exerciseContainer = button.closest('.exercise');
+        var clonedExercise = exerciseContainer.cloneNode(true);
+
+        clonedExercise.querySelector('input[name="SetCount"]').name = 'exerciseSetCount';
+        clonedExercise.querySelector('input[name="RepCount"]').name = 'exerciseRepCount';
+        clonedExercise.querySelector('input[name="Id"]').name = 'exerciseId';
+
+        var addButton = clonedExercise.querySelector('.add-item');
+        addButton.classList.remove('btn-success');
+        addButton.classList.add('btn-danger');
+        addButton.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+
+        addButton.setAttribute('onclick', 'removeItemFromWorkout(this)');
+
+        document.querySelector('.workout-div').appendChild(clonedExercise);
+    }
+
+    function removeItemFromWorkout(button) {
+        var workoutItem = button.closest('.exercise');
+        workoutItem.remove();
+    }
+
+    $(document).ready(function () {
+        $('#searchString').keyup(function () {
+            var searchString = $(this).val().trim();
+
+            $.ajax({
+                url: '@Url.Action("SearchExercise", "Workout")',
+                type: 'GET',
+                data: { search: searchString},
+                traditional: true,
+                success: function (data) {
+                    $('#scroll-table').html(data);
+                },
+                error: function () {
+                    alert('An error occurred while processing your request.');
+                }
+            });
+        });
+    });
+</script>

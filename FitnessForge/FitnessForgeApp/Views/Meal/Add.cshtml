@@ -1,8 +1,12 @@
-﻿@model Meal
+﻿@using FitnessForgeApp.Models.ViewModels
 @{
-    string? mealType = (string?)ViewData["mealType"];
-    List<FoodHasProduct>? allFoodHasProducts = (List<FoodHasProduct>?)ViewData["allFoodHasProducts"];
+    // TODO 100g/ml-re kiírni az adatokat
+    // TODO A Recepteknél a termékeket is 100g/ml-re az ételhez képest
+    // TODO Kijavítani a mobilon elcsúszott hibát
+    // TODO Kereső
 }
+@model MealAddViewModel
+<div class="container">
 @if (ViewData["ErrorMessage"] != null)
 {
     <div class="alert alert-danger" role="alert">
@@ -10,6 +14,9 @@
     </div>
 }
 <h4 class="text-center text-orange fw-bold">Ételek</h4>
+<div class="d-flex justify-content-center">
+    <input type="text" id="searchString" class="rounded-2 form-control form-control-thin" placeholder="Keresés">
+</div>
 <div class="row text-center text-orange mt-3 rounded-3">
     <div class="col">
         <p class="fw-bold">Étel</p>
@@ -31,73 +38,10 @@
     </div>
 </div>
 <hr style="border:5px solid rgb(204,0,0)" />
-<div class="container fw-bold text-center text-orange pb-3" id="scroll-table">
-    @foreach (var fhp in allFoodHasProducts)
-    {
-            <div class="row bg-red text-center text-orange mt-3 rounded-3" id="foodDiv">
-                <div class="col">
-                    <p>@fhp.Food.Name</p>
-                    @if (fhp.Food.Products.Count > 1)
-                    {
-                        <i class="fa-solid fa-angles-down" onclick="toggleHiddenDiv(this)"></i>
-                    }
-                </div>
-                <div class="col">
-                <p>@Math.Round(fhp.Food.Products.Sum(x => x.Calorie * fhp.Amount / fhp.Food.Amount), 2)</p>
-                </div>
-                <div class="col">
-                <p>@Math.Round(fhp.Food.Products.Sum(x => x.Carbohydrate * fhp.Amount / fhp.Food.Amount), 2) g</p>
-                </div>
-                <div class="col">
-                <p>@Math.Round(fhp.Food.Products.Sum(x => x.Protein * fhp.Amount / fhp.Food.Amount), 2) g</p>
-                </div>
-                <div class="col">
-                <p>@Math.Round(fhp.Food.Products.Sum(x => x.Fat * fhp.Amount / fhp.Food.Amount), 2) g</p>
-                </div>
-                <div class="col">
-                    <div class="d-flex flex-column">
-                        <form asp-action="AddFoodToMeal" method="post">
-                            <div class="mb-2">
-                                <input asp-for="FoodId" value="@fhp.FoodId" type="hidden" />
-                                <input value="@mealType" type="hidden" name="mealType" />
-                                <input id="Amount" type="number" asp-for="Amount" min="0" step="0.001" required />
-                                <span asp-validation-for="Amount" class="text-danger"></span>
-                            </div>
-                            <div class="mb-2">
-                                <label>@fhp.Food.Unit.Symbol</label>
-                            </div>
-                            <div>
-                                <button class="btn btn-sm btn-success rounded-circle" type="submit">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        @if (fhp.Food.Products.Count > 1)
-        {
-            <div class="row hidden-div bg-red fw-bold text-orange m-1 p-1 rounded-3">
-                <div class="row">
-                    <div class="col-3"><p>Termék neve</p></div>
-                    <div class="col-3"><p>Szénhidrát</p></div>
-                    <div class="col-3"><p>Fehérje</p></div>
-                    <div class="col-3"><p>Zsír</p></div>
-                </div>
-                <hr />
-                @foreach (var product in fhp.Food.Products)
-                {                
-                    <div class="row">
-                        <div class="col-3"><p>@product.Brand - @product.Name</p></div>
-                        <div class="col-3"><p>@Math.Round(product.Carbohydrate * fhp.Food.Amount / fhp.Amount, 2) g</p></div>
-                        <div class="col-3"><p>@Math.Round(product.Protein * fhp.Food.Amount / fhp.Amount, 2) g</p></div>
-                        <div class="col-3"><p>@Math.Round(product.Fat * fhp.Food.Amount / fhp.Amount, 2) g</p></div>
-                    </div>
-                }
-            </div>
-        }
-    }
+    <partial name="_AddFoodPartial" model="Model" />
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
     function toggleHiddenDiv(icon) {
@@ -121,4 +65,30 @@
             }
         });
     }
+
+    $(document).ready(function () {
+        $('#searchString').keyup(function () {
+            var searchString = $(this).val().trim();
+            var mealType = '@Model.mealType';
+            var foods = '@Model.foods';
+
+            $.ajax({
+                url: '@Url.Action("SearchAddFood", "Meal")',
+                type: 'GET',
+                data: {
+                    searchString: searchString,
+                    mealType: mealType,
+                    foods: foods
+                },
+                success: function (data) {
+                    $('#scroll-table').html(data);
+                },
+                error: function () {
+                    alert('An error occurred while processing your request.');
+                }
+            });
+        });
+    });
+
+
 </script>

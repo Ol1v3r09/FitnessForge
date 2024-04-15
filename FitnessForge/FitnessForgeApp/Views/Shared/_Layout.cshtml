@@ -25,22 +25,23 @@
                         @if (signInManager.IsSignedIn(User))
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-action="Home" asp-controller="User">Főoldal</a>
+                                <a class="nav-link" asp-action="Home" asp-controller="User">Napi fogyasztás</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-action="CreateProduct" asp-controller="Meal">Új termék felvétele</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-action="CreateFood" asp-controller="Meal">Új étel készítése</a>
                             </li>
                             @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
                             {
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Ételek Kezelése
-                                    </a>
-                                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <li><a class="dropdown-item" asp-action="CreateProduct" asp-controller="Meal">Termék felvétele</a></li>
-                                        <li><a class="dropdown-item" asp-action="ManageProduct" asp-controller="Meal">Termékek jóváhagyása</a></li>
-                                        <li><a class="dropdown-item" asp-action="CreateFood" asp-controller="Meal">Étel felvétele</a></li>
-                                        
-                                    </ul>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-action="ManageProduct" asp-controller="Meal">Termékek jóváhagyása</a>
                                 </li>
                             }
+                            <li class="nav-item">
+                                <a class="nav-link" asp-action="UserWorkouts" asp-controller="Workout">Edzéseim</a>
+                            </li>
                             @if (User.IsInRole("Admin"))
                             {
                                 <li class="nav-item dropdown">

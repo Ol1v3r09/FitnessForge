@@ -1,11 +1,9 @@
-﻿@model List<Meal>
-@{
-    string? mealType = (string?)ViewData["mealType"];
-}
+﻿@using FitnessForgeApp.Models.ViewModels
+@model MealEditIntakeViewModel
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 <div class="container text-center mt-3 pt-3">
-    <h4 class="text-orange fw-bolder">@mealType</h4>
+    <h4 class="text-orange fw-bolder">@Model.mealType</h4>
 
 @if (ViewData["ErrorMessage"] != null)
 {
@@ -19,14 +17,14 @@
     
 
     <form asp-action="Add" asp-controller="Meal" method="post" class="mt-2">
-        @foreach (var meal in Model)
+        @foreach (var meal in Model.userMeals)
         {
             if (meal != null)
             {
                 <input type="hidden" name="foods" value="@meal.FoodId" />
             }
         }
-        <input value="@mealType" type="hidden" name="mealType" />
+        <input value="@Model.mealType" type="hidden" name="mealType" />
         <button class="btn btn-success" type="submit">Étel felvétele</button>
     </form>
 
@@ -60,7 +58,7 @@
 
     $(document).ready(function () {
         $('#searchString').keyup(function () {
-            var mealType = '@mealType';
+            var mealType = '@Model.mealType';
             var searchString = $(this).val().trim();
             $.ajax({
                 url: '@Url.Action("SearchFood", "Meal")',

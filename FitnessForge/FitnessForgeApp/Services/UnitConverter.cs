@@ -1,4 +1,4 @@
-﻿namespace FitnessForgeApp.Models
+﻿namespace FitnessForgeApp.Services
 {
     public class UnitConverter
     {

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace FitnessForgeApp.Models
 {
+    [Table("AspNetUsers")]
     public class ApplicationUser : IdentityUser
     {
         public DateOnly DateOfBirth { get; set; }

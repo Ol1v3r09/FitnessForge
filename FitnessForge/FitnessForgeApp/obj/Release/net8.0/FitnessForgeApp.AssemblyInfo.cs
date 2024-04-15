@@ -16,7 +16,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FitnessForgeApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b6a0805a4b0f5106e71c66b7d8916ef0ce17eeae")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4b6f593c6b9d37af16c092f53d59041ea3f61967")]
 [assembly: System.Reflection.AssemblyProductAttribute("FitnessForgeApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FitnessForgeApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -1,11 +1,28 @@
 ﻿@using FitnessForgeApp.Models.ViewModels
 @using System.Web
+@using FitnessForgeApp.Services
 @inject Microsoft.AspNetCore.Identity.UserManager<ApplicationUser> userManager;
 @inject UserService userService;
-@model List<DetailsViewModel>
+@model List<UserHomeViewModel>
 @{
     List<MealType>? mealTypes = (List<MealType>?)ViewData["mealTypes"];
     ApplicationUser? user = await userManager.GetUserAsync(User);
+
+    int roundingNumber = 2;
+
+    var sugarTotal = Model.Sum(x => x.Sugar);
+    var carbohydrateTotal = Model.Sum(x => x.Carbohydrate) - sugarTotal;
+    var proteinTotal = Model.Sum(x => x.Protein);
+    var saturatedFatTotal = Model.Sum(x => x.SaturatedFat);
+    var fatTotal = Model.Sum(x => x.Fat) - saturatedFatTotal;
+    var saltTotal = Model.Sum(x => x.Salt);
+    var fiberTotal = Model.Sum(x => x.Fiber);
+
+    var breakfastTotal = Model[0].Calorie;
+    var brunchTotal = Model[1].Calorie;
+    var lunchTotal = Model[2].Calorie;
+    var snackTotal = Model[3].Calorie;
+    var dinnerTotal = Model[4].Calorie;
     // TODO Kis formázás a színkódókra még ráférne
 }
 
@@ -53,12 +70,12 @@
             <div class="card rounded-3 bg-red">
                 <div class="card-body bg-red text-orange">
                     <h3 class="card-title fw-bolder">@DateTime.Today.ToShortDateString()</h3>
-                    <h5 class="card-subtitle mb-2 fw-bolder">@Model.Sum(x => x.Calorie) kcal / @Math.Round(userService.UserDailyCalorie(user), 0) kcal</h5>
+                    <h5 class="card-subtitle mb-2 fw-bolder">@Math.Round(Model.Sum(x => x.Calorie), roundingNumber) kcal / @Math.Round(userService.UserDailyCalorie(user), 0) kcal</h5>
                     </div>
                     <ul class="list-group list-group-flush">
-                    <li class="list-group-item bg-red text-orange fw-bold">Szénhidrát: @Model.Sum(x => x.Carbohydrate) g / @Math.Round(userService.UserDailyNutrients(user)[0], 0) g</li>
-                    <li class="list-group-item bg-red text-orange fw-bold">Fehérje: @Model.Sum(x => x.Protein) g / @Math.Round(userService.UserDailyNutrients(user)[1], 0) g</li>
-                    <li class="list-group-item bg-red text-orange fw-bold">Zsír: @Model.Sum(x => x.Fat) g / @Math.Round(userService.UserDailyNutrients(user)[2], 0) g</li>
+                    <li class="list-group-item bg-red text-orange fw-bold">Szénhidrát: @Math.Round(Model.Sum(x => x.Carbohydrate), roundingNumber) g / @Math.Round(userService.UserDailyNutrients(user)[0], 0) g</li>
+                    <li class="list-group-item bg-red text-orange fw-bold">Fehérje: @Math.Round(Model.Sum(x => x.Protein), roundingNumber) g / @Math.Round(userService.UserDailyNutrients(user)[1], 0) g</li>
+                    <li class="list-group-item bg-red text-orange fw-bold">Zsír: @Math.Round(Model.Sum(x => x.Fat), roundingNumber) g / @Math.Round(userService.UserDailyNutrients(user)[2], 0) g</li>
                     </ul>
                 </div>
             </div>
@@ -97,12 +114,12 @@
                         <img src="/images/meals/@(mealTypes[i].Name.ToLower()).jpg" class="card-img-top rounded-3" alt="@mealTypes[i].Name.ToLower()">
                         <div class="card-body bg-red text-orange">
                         <h5 class="card-title fw-bolder">@mealTypes[i].Name</h5>
-                            <h6 class="card-subtitle mb-2 fw-bolder">@Model[i].Calorie kcal</h6>
+                        <h6 class="card-subtitle mb-2 fw-bolder">@Math.Round(Model[i].Calorie, roundingNumber) kcal</h6>
                         </div>
                         <ul class="list-group list-group-flush">
-                        <li class="list-group-item bg-red text-orange fw-bold">Szénhidrát: @Model[i].Carbohydrate g</li>
-                        <li class="list-group-item bg-red text-orange fw-bold">Fehérje: @Model[i].Protein g</li>
-                        <li class="list-group-item bg-red text-orange fw-bold">Zsír: @Model[i].Fat g</li>
+                        <li class="list-group-item bg-red text-orange fw-bold">Szénhidrát: @Math.Round(Model[i].Carbohydrate, roundingNumber) g</li>
+                        <li class="list-group-item bg-red text-orange fw-bold">Fehérje: @Math.Round(Model[i].Protein, roundingNumber) g</li>
+                        <li class="list-group-item bg-red text-orange fw-bold">Zsír: @Math.Round(Model[i].Fat, roundingNumber) g</li>
                         </ul>
                         <div class="card-body">
                             <form asp-action="EditIntake" asp-controller="Meal" method="get" class="card-link">
@@ -119,18 +136,18 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
-<script>
+<script defer>
     document.addEventListener('DOMContentLoaded', function () {
         const canvas = document.getElementById("chart");
         const ctx = canvas.getContext("2d");
 
-        let sugarTotal = "@Model.Sum(x => x.Sugar)".replace(',', '.');
-        let carbohydrateTotal = Math.abs((@Model.Sum(x => x.Carbohydrate) - sugarTotal)).toString().replace(',', '.');
-        let proteinTotal = "@Model.Sum(x => x.Protein)".replace(',', '.');
-        let saturatedFatTotal = "@Model.Sum(x => x.SaturatedFat)".replace(',', '.');
-        let fatTotal = Math.abs((@Model.Sum(x => x.Fat) - saturatedFatTotal)).toString().replace(',', '.');
-        let saltTotal = "@Model.Sum(x => x.Salt)".replace(',', '.');
-        let fiberTotal = "@Model.Sum(x => x.Fiber)".replace(',', '.');
+        var sugarTotal = @sugarTotal.ToString().Replace(",",".");
+        var carbohydrateTotal = @carbohydrateTotal.ToString().Replace(",", ".");
+        var proteinTotal = @proteinTotal.ToString().Replace(",", ".");
+        var saturatedFatTotal = @saturatedFatTotal.ToString().Replace(",", ".");
+        var fatTotal = @fatTotal.ToString().Replace(",", ".");
+        var saltTotal = @saltTotal.ToString().Replace(",", ".");
+        var fiberTotal = @fiberTotal.ToString().Replace(",", ".");
 
         const labels = ['Szénhidrát', 'Cukor', 'Fehérje', 'Zsír', 'Telített zsír', 'Só', 'Rost'];
         const data = [carbohydrateTotal, sugarTotal, proteinTotal, fatTotal, saturatedFatTotal, saltTotal, fiberTotal];
@@ -176,16 +193,20 @@
         const canvas = document.getElementById("caloriesChart");
         const ctx = canvas.getContext("2d");
 
-        const mealNames = [];
-        const calorieData = [];
+        var breakfastTotal = @breakfastTotal.ToString().Replace(",", ".")
+        var brunchTotal = @brunchTotal.ToString().Replace(",", ".")
+        var lunchTotal = @lunchTotal.ToString().Replace(",", ".")
+        var snackTotal = @snackTotal.ToString().Replace(",", ".")
+        var dinnerTotal = @dinnerTotal.ToString().Replace(",", ".")
 
-    @for (int i = 0; i < 5; i++)
-    {
-        <text>
-                mealNames.push("@Html.Raw(HttpUtility.HtmlDecode(mealTypes[i].Name))");
-                calorieData.push(@Model[i].Calorie);
-        </text>
-    }
+        const mealNames = ["Reggeli","Tízórai","Ebéd","Uzsonna","Vacsora"];
+        const calorieData = [
+            breakfastTotal,
+            brunchTotal,
+            lunchTotal,
+            snackTotal,
+            dinnerTotal
+        ];
 
         const dataset = {
             data: calorieData,

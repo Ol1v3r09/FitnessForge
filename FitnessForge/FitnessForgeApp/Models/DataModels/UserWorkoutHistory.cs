@@ -10,6 +10,6 @@ namespace FitnessForgeApp.Models
         public ApplicationUser User { get; set; }
         public int WorkoutId { get; set; }
         public Workout Workout { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime Date { get; set; } = DateTime.Today;
     }
 }

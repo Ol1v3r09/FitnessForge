@@ -1,0 +1,68 @@
+﻿@using FitnessForgeApp.Models.ViewModels
+@model MealAddViewModel
+<div class="container fw-bold text-center text-orange pb-3" id="scroll-table">
+    @foreach (var fhp in Model.allFoodHasProducts)
+    {
+        <div class="row bg-red text-center text-orange mt-3 rounded-3" id="foodDiv">
+            <div class="col">
+                <p>@fhp.Food.Name</p>
+                @if (fhp.Food.Products.Count > 1)
+                {
+                    <i class="fa-solid fa-angles-down" onclick="toggleHiddenDiv(this)"></i>
+                }
+            </div>
+            <div class="col">
+                <p>@Math.Round(fhp.Food.Products.Sum(f => fhp.Amount / 100 * f.Calorie), 2) kcal</p>
+            </div>
+            <div class="col">
+                <p>@Math.Round(fhp.Food.Products.Sum(f => fhp.Amount / 100 * f.Carbohydrate), 2) g</p>
+            </div>
+            <div class="col">
+                <p>@Math.Round(fhp.Food.Products.Sum(f => fhp.Amount / 100 * f.Protein), 2) g</p>
+            </div>
+            <div class="col">
+                <p>@Math.Round(fhp.Food.Products.Sum(f => fhp.Amount / 100 * f.Fat), 2) g</p>
+            </div>
+            <div class="col">
+                <div class="d-flex flex-column">
+                    <form asp-action="AddFoodToMeal" asp-controller="Meal" method="post">
+                        <div class="mb-2">
+                            <input name="FoodId" value="@fhp.FoodId" type="hidden" />
+                            <input value="@Model.mealType" type="hidden" name="mealType" />
+                            <input type="number" name="Amount" min="0" step="0.001" required />
+                        </div>
+                        <div class="mb-2">
+                            <label>@fhp.Food.Unit.Symbol</label>
+                        </div>
+                        <div>
+                            <button class="btn btn-sm btn-success rounded-circle" type="submit">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        @if (fhp.Food.Products.Count > 1)
+        {
+            <div class="row hidden-div bg-red fw-bold text-orange m-1 p-1 rounded-3">
+                <div class="row">
+                    <div class="col-3"><p>Termék neve</p></div>
+                    <div class="col-3"><p>Szénhidrát</p></div>
+                    <div class="col-3"><p>Fehérje</p></div>
+                    <div class="col-3"><p>Zsír</p></div>
+                </div>
+                <hr />
+                @foreach (var product in fhp.Food.Products)
+                {
+                    <div class="row">
+                        <div class="col-3"><p>@product.Brand - @product.Name</p></div>
+                        <div class="col-3"><p>@Math.Round(fhp.Amount / 100 * product.Carbohydrate, 2) g</p></div>
+                        <div class="col-3"><p>@Math.Round(fhp.Amount / 100 * product.Protein, 2) g</p></div>
+                        <div class="col-3"><p>@Math.Round(fhp.Amount / 100 * product.Fat, 2) g</p></div>
+                    </div>
+                }
+            </div>
+        }
+    }
+</div>

@@ -1,5 +1,4 @@
-﻿using FitnessForgeAdmin.Models.Contexts;
-using FitnessForgeApp.Models;
+﻿using FitnessForgeApp.Models;
 using FitnessForgeApp.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -115,7 +114,7 @@ namespace FitnessForgeApp.Controllers
             try
             {
                 await _roleManager.CreateAsync(role);
-                return RedirectToAction("Roles");
+                return RedirectToAction("CreateRoles");
             }
             catch (Exception ex)
             {
@@ -155,18 +154,6 @@ namespace FitnessForgeApp.Controllers
             {
                 var user = await _userManager.FindByIdAsync(userId);
                 var role = await _roleManager.FindByNameAsync(roleName);
-
-                if (user == null)
-                {
-                    ViewData["ErrorMessage"] = "Nem található a felhasználó";
-                    return RedirectToAction("Roles");
-                }
-
-                if (role == null)
-                {
-                    ViewData["ErrorMessage"] = "Nem található a szerep";
-                    return RedirectToAction("Roles");
-                }
 
                 await _userManager.AddToRoleAsync(user, role.Name);
 

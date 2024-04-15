@@ -1,6 +1,6 @@
 ﻿namespace FitnessForgeApp.Models.ViewModels
 {
-    public class DetailsViewModel
+    public class UserHomeViewModel
     {
         public double Calorie { get; set; }
         public double Carbohydrate { get; set; }

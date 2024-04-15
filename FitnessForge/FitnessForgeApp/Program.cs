@@ -1,7 +1,6 @@
-using FitnessForgeAdmin.Models.Contexts;
 using FitnessForgeApp.Data;
 using FitnessForgeApp.Models;
-using FitnessForgeApp.Models.Contexts;
+using FitnessForgeApp.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -18,10 +17,6 @@ namespace FitnessForgeApp
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseMySql(connectionString,ServerVersion.AutoDetect(connectionString)));
-            builder.Services.AddDbContext<UserExerciseContext>(options =>
-                options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
-            builder.Services.AddDbContext<UserMealContext>(options =>
-                options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>()

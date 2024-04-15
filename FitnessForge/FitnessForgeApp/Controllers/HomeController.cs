@@ -1,4 +1,4 @@
-using FitnessForgeAdmin.Models.Contexts;
+using FitnessForgeApp.Data;
 using FitnessForgeApp.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,13 +11,13 @@ namespace FitnessForgeApp.Controllers
     public class HomeController : Controller
     {
         private SignInManager<ApplicationUser> _signInManager;
-        private UserMealContext db;
+        private ApplicationDbContext db;
         private UserManager<ApplicationUser> _userManager;
 
-        public HomeController(SignInManager<ApplicationUser> signInManager, UserMealContext userMealContext, UserManager<ApplicationUser> userManager)
+        public HomeController(SignInManager<ApplicationUser> signInManager, ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _signInManager = signInManager;
-            db = userMealContext;
+            db = context;
             _userManager = userManager;
         }
 

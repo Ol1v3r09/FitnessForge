@@ -1,87 +1,103 @@
 import requests
+import json
 import pymysql
-from googletrans import Translator
+
+
+def insert_exercise(conn, exercise_data):
+    cursor = conn.cursor()
+
+    # Extract data from exercise_data
+    name = exercise_data.get('name')
+    instructions = exercise_data.get('instructions')
+    exercise_type = exercise_data.get('type')
+    muscle = exercise_data.get('muscle')
+    equipment = exercise_data.get('equipment')
+
+    if name:
+        # Check if exercise with the same name exists
+        cursor.execute("SELECT Id FROM exercise WHERE Name = %s", (name,))
+        row = cursor.fetchone()
+        if row:
+            exercise_id = row[0]
+            print(f"Exercise '{name}' already exists in the database.")
+        else:
+            # Insert exercise into 'exercise' table
+            cursor.execute("INSERT INTO exercise (Name, Instructions, TypeId) VALUES (%s, %s, (SELECT Id FROM exercise_type WHERE Name = %s))",
+                           (name, instructions, exercise_type))
+            exercise_id = cursor.lastrowid
+            print(f"Exercise '{name}' inserted into the database.")
+
+        # Insert or get muscle ID
+        if muscle:
+            cursor.execute("SELECT Id FROM muscle WHERE Name = %s", (muscle,))
+            row = cursor.fetchone()
+            if row:
+                muscle_id = row[0]
+            else:
+                cursor.execute("INSERT INTO muscle (Name) VALUES (%s)", (muscle,))
+                muscle_id = cursor.lastrowid
+
+            # Check if the entry already exists in the linking table
+            cursor.execute("SELECT * FROM exercise_trains_muscle WHERE ExerciseId = %s AND MuscleId = %s",
+                           (exercise_id, muscle_id))
+            if not cursor.fetchone():
+                # Insert into linking table
+                cursor.execute("INSERT INTO exercise_trains_muscle (ExerciseId, MuscleId) VALUES (%s, %s)",
+                               (exercise_id, muscle_id))
+
+        # Insert or get equipment ID
+        if equipment:
+            cursor.execute("SELECT Id FROM equipment WHERE Name = %s", (equipment,))
+            row = cursor.fetchone()
+            if row:
+                equipment_id = row[0]
+            else:
+                cursor.execute("INSERT INTO equipment (Name) VALUES (%s)", (equipment,))
+                equipment_id = cursor.lastrowid
+
+            # Check if the entry already exists in the linking table
+            cursor.execute("SELECT * FROM exercise_requires_equipment WHERE ExerciseId = %s AND EquipmentId = %s",
+                           (exercise_id, equipment_id))
+            if not cursor.fetchone():
+                # Insert into linking table
+                cursor.execute("INSERT INTO exercise_requires_equipment (ExerciseId, EquipmentId) VALUES (%s, %s)",
+                               (exercise_id, equipment_id))
+
+        conn.commit()
+    else:
+        print("Error: 'name' missing in exercise_data")
+
+
+
+
 
 conn = pymysql.connect(
-    host='localhost',
-    user='root',
-    password='1234',
-    database='fitnessforge'
+    host='ho.m108.eu',
+    user='m108-ho',
+    password='aIy0bXw80cNKIcJ0rgND',
+    database='m108ho'
 )
 
-def insert_exersice():
-    cursor = conn.cursor()
+offsets = [0, 10]
+types = [
+    'cardio',
+    'olympic_weightlifting',
+    'plyometrics',
+    'powerlifting',
+    'strength',
+    'stretching',
+    'strongman'
+]
 
-    ex_type = ""
-    muscle = ""
-    offset = 0
+for exercise_type in types:
+    for offset in offsets:
+        api_url = 'https://api.api-ninjas.com/v1/exercises?type={}&offset={}'.format(exercise_type, offset)
+        response = requests.get(api_url, headers={'X-Api-Key': 'vfiCuJNFtgCiOoHXPaGVUrjELSZyWCJndcZfDVNF'})
 
-    api_key = 'Sgd5m0oeNrrxu6DAE2h2QA==grADgHsByZmYU4Lu'
+        if response.status_code == requests.codes.ok:
+            api_response = response.json()
+            for exercise_data in api_response:
+                insert_exercise(conn, exercise_data)
+        else:
+            print("Error:", response.status_code, response.text)
 
-    api_url = 'https://api.api-ninjas.com/v1/exercises?'
-    headers = {'X-Api-Key': api_key}
-    response = requests.get(api_url, headers=headers)
-
-    if response.status_code == requests.codes.ok:
-        data = response.json()
-
-    else:
-        print("Error:", response.status_code, response.text)
-
-    conn.commit()
-    conn.close()
-
-def insert_muscles():
-    cursor = conn.cursor()
-
-    muscles = [
-        "Mellizom (pectoralis major)",
-        "Hasizom (abdominals)",
-        "Farizom (gluteus maximus)",
-        "Hátsó combizom (hamstrings)",
-        "Négyfejű combizom (vastus lateralis, vastus medialis, vastus intermedius, rectus femoris)",
-        "Vádli (calf muscles)",
-        "Hátizom (latissimus dorsi)",
-        "Hátsó vállizom (posterior deltoid)",
-        "Elülső vállizom (anterior deltoid)",
-        "Középső vállizom (medial deltoid)",
-        "Tricepsz (triceps brachii)",
-        "Bicepsz (biceps brachii)",
-        "Széles hátizom (trapezius)",
-        "Alsó hátizom (erector spinae)",
-        "Alkarizom (flexor carpi radialis, flexor carpi ulnaris, extensor carpi radialis longus, extensor carpi radialis brevis, extensor carpi ulnaris)",
-        "Nyakizom (sternocleidomastoid, trapezius)",
-        "Alsó lábizom (soleus)",
-        "Kézhátizom (dorsal interosseous, palmar interosseous)",
-        "Középső törzsizom (rectus abdominis)",
-        "Alsó hasizom (transversus abdominis)"
-    ]
-    for muscle in muscles:
-        sql_insert = "INSERT INTO muscle (Name) VALUES (%s)"
-        cursor.execute(sql_insert, muscle)
-
-
-    conn.commit()
-    conn.close()
-
-def insert_types():
-    cursor = conn.cursor()
-
-    types = [
-        'kardió',
-        'olimpiai súlyemelés',
-        'pliometria',
-        'erőemelés',
-        'erő',
-        'nyújtás',
-        'erőember'
-    ]
-    for type in types:
-        sql_insert = "INSERT INTO exercise_type (Name) VALUES (%s)"
-        cursor.execute(sql_insert, type)
-
-
-    conn.commit()
-    conn.close()
-
-insert_muscles()

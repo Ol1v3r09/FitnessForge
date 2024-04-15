@@ -122,6 +122,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVhbFxFZGl0SW50YWtlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Programozás/FitnessForge/FitnessForge/FitnessForgeApp/Views/Meal/ManageProduct.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVhbFxNYW5hZ2VQcm9kdWN0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Programozás/FitnessForge/FitnessForge/FitnessForgeApp/Views/Meal/_FoodPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVhbFxfRm9vZFBhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 

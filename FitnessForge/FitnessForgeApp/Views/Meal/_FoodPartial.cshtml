@@ -1,8 +1,7 @@
-﻿@model List<Meal>
+﻿@using FitnessForgeApp.Models.ViewModels
+@model MealEditIntakeViewModel
 @{
-    double amount = 0;
-    List<double>? amounts = (List<double>?)ViewData["Amounts"];
-    foreach (var meal in Model)
+    foreach (var meal in Model.userMeals)
     {
         if (meal != null)
         {
@@ -10,32 +9,33 @@
                 <div class="row bg-red text-orange fw-bold mt-3 m-1 p-2 rounded-3" id="foodDiv">
                     <div class="col-12 col-md-4">
                         <p>@meal.Food.Name</p>
+                        <p>@(meal.Amount * meal.Food.Amount) @(meal.Food.Unit.Symbol)</p>
                         @if (meal.Food.Products != null && meal.Food.Products.Count > 1)
                         {
                             <i class="fa-solid fa-angles-down" onclick="toggleHiddenDiv(this)"></i>
-                        }    
+                        }
                     </div>
                     <div class="col-12 col-md-4">
                         <div class="row">
                             <div class="col-12" style="border-top: none;">
                                 <div class="row" style="border-bottom: 1px solid #ffc107;">
                                     <div class="col-6" style="border-right: 1px solid #ffc107;">
-                                        <h6 class="fw-bold">Kalória (100g/ml)</h6>
-                                        <p>@meal.Food.Products.Sum(p => p.Calorie) kcal</p>
+                                        <h6 class="fw-bold">Kalória</h6>
+                                        <p>@Math.Round(Model.userMealsFoodHasProducts.Where(f => f.FoodId == meal.FoodId).Sum(f => f.Product.Calorie * meal.Amount * f.Amount / 100),2) kcal</p>
                                     </div>
                                     <div class="col-6">
                                         <h6 class="fw-bold">Szénhidrát</h6>
-                                        <p>@meal.Food.Products.Sum(p => p.Carbohydrate) g</p>
+                                        <p>@Math.Round(Model.userMealsFoodHasProducts.Where(f => f.FoodId == meal.FoodId).Sum(f => f.Product.Carbohydrate * meal.Amount * f.Amount / 100), 2) g</p>
                                     </div>
                                 </div>
                                 <div class="row " style="border-bottom: none;">
                                     <div class="col-6" style="border-right: 1px solid #ffc107;">
                                         <h6 class="fw-bold">Fehérje</h6>
-                                        <p>@meal.Food.Products.Sum(p => p.Protein) g</p>
+                                        <p>@Math.Round(Model.userMealsFoodHasProducts.Where(f => f.FoodId == meal.FoodId).Sum(f => f.Product.Protein * meal.Amount * f.Amount / 100), 2) g</p>
                                     </div>
                                     <div class="col-6">
                                         <h6 class="fw-bold">Zsír</h6>
-                                        <p>@meal.Food.Products.Sum(p => p.Fat) g</p>
+                                        <p>@Math.Round(Model.userMealsFoodHasProducts.Where(f => f.FoodId == meal.FoodId).Sum(f => f.Product.Fat * meal.Amount * f.Amount / 100), 2) g</p>
                                     </div>
                                 </div>
                             </div>
@@ -54,21 +54,25 @@
                     <div class="row hidden-div bg-red fw-bold text-orange m-1 p-1 rounded-3">
                         <div class="row">
                             <div class="col-3"><p>Termék neve</p></div>
-                            <div class="col-3"><p>Kalória (100g/ml)</p></div>
+                            <div class="col-3"><p>Kalória</p></div>
                             <div class="col-3"><p>Szénhidrát</p></div>
                             <div class="col-3"><p>Fehérje</p></div>
                             <div class="col-3"><p>Zsír</p></div>
                         </div>
                         <hr />
-                        @foreach (var product in meal.Food.Products)
+                        @foreach (var f in Model.userMealsFoodHasProducts)
                         {
+                            if (f.FoodId == meal.FoodId)
+                            {
+                                
                             <div class="row">
-                                <div class="col-3"><p>@product.Brand - @product.Name</p></div>
-                                <div class="col-3"><p>@product.Calorie kcal</p></div>
-                                <div class="col-3"><p>@product.Carbohydrate g</p></div>
-                                <div class="col-3"><p>@product.Protein g</p></div>
-                                <div class="col-3"><p>@product.Fat g</p></div>
+                                <div class="col-3"><p>@f.Product.Brand - @f.Product.Name</p></div>
+                                <div class="col-3"><p>@Math.Round(f.Product.Calorie * meal.Amount * f.Amount / 100, 2) kcal</p></div>
+                                <div class="col-3"><p>@Math.Round(f.Product.Carbohydrate * meal.Amount * f.Amount / 100, 2) g</p></div>
+                                <div class="col-3"><p>@Math.Round(f.Product.Protein * meal.Amount * f.Amount / 100, 2) g</p></div>
+                                <div class="col-3"><p>@Math.Round(f.Product.Fat * meal.Amount * f.Amount / 100, 2) g</p></div>
                             </div>
+                            }               
                         }
                     </div>
                 }
