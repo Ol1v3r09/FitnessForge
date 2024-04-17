@@ -1,0 +1,36 @@
+﻿@using FitnessForgeApp.Models.ViewModels
+@model WorkoutDetailsViewModel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<div class="container text-center text-orange fw-bold">
+<div>
+    <h4 class="fw-bolder">Név: @Model.Workout.Name</h4>
+
+    <table class="table text-orange">
+        <thead>
+            <tr>
+                    <th class="fw-bolder">Feladat neve</th>
+                    <th class="fw-bolder">Kör szám</th>
+                    <th class="fw-bolder">Ismétlés szám</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ex in Model.WorkoutHasExercises)
+            {
+                <tr>
+                    <td>@ex.Exercise.Name</td>
+                    <td>@ex.SetCount</td>
+                    <td>@ex.RepetitionCount</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <form asp-action="@Model.ReturnAction" method="get">
+        <button type="submit" class="btn btn-warning">Vissza</button>
+    </form>
+</div>
+</div>

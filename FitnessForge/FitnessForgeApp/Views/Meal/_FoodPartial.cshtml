@@ -1,0 +1,83 @@
+﻿@using FitnessForgeApp.Models.ViewModels
+@model MealEditIntakeViewModel
+@{
+    foreach (var meal in Model.userMeals)
+    {
+        if (meal != null)
+        {
+            <div class="container text-center">
+                <div class="row bg-red text-orange fw-bold mt-3 m-1 p-2 rounded-3" id="foodDiv">
+                    <div class="col-12 col-md-4">
+                        <p>@meal.Food.Name</p>
+                        <p>@(meal.Amount * meal.Food.Amount) @(meal.Food.Unit.Symbol)</p>
+                        @if (meal.Food.Products != null && meal.Food.Products.Count > 1)
+                        {
+                            <i class="fa-solid fa-angles-down" onclick="toggleHiddenDiv(this)"></i>
+                        }
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="row">
+                            <div class="col-12" style="border-top: none;">
+                                <div class="row" style="border-bottom: 1px solid #ffc107;">
+                                    <div class="col-6" style="border-right: 1px solid #ffc107;">
+                                        <h6 class="fw-bold">Kalória</h6>
+                                        <p>@Math.Round(Model.userMealsFoodHasProducts.Where(f => f.FoodId == meal.FoodId).Sum(f => f.Product.Calorie * meal.Amount * f.Amount / 100),2) kcal</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6 class="fw-bold">Szénhidrát</h6>
+                                        <p>@Math.Round(Model.userMealsFoodHasProducts.Where(f => f.FoodId == meal.FoodId).Sum(f => f.Product.Carbohydrate * meal.Amount * f.Amount / 100), 2) g</p>
+                                    </div>
+                                </div>
+                                <div class="row " style="border-bottom: none;">
+                                    <div class="col-6" style="border-right: 1px solid #ffc107;">
+                                        <h6 class="fw-bold">Fehérje</h6>
+                                        <p>@Math.Round(Model.userMealsFoodHasProducts.Where(f => f.FoodId == meal.FoodId).Sum(f => f.Product.Protein * meal.Amount * f.Amount / 100), 2) g</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <h6 class="fw-bold">Zsír</h6>
+                                        <p>@Math.Round(Model.userMealsFoodHasProducts.Where(f => f.FoodId == meal.FoodId).Sum(f => f.Product.Fat * meal.Amount * f.Amount / 100), 2) g</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <form method="post" asp-action="Delete">
+                            <input type="hidden" name="mealType" value="@meal.MealType.Name" />
+                            <input type="hidden" name="foodId" value="@meal.FoodId" />
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Biztosan törölni szeretné ezt az ételt?');">Törlés</button>
+                        </form>
+                    </div>
+                </div>
+                @if (meal.Food.Products != null && meal.Food.Products.Count > 1)
+                {
+                    <div class="row hidden-div bg-red fw-bold text-orange m-1 p-1 rounded-3">
+                        <div class="row">
+                            <div class="col-3"><p>Termék neve</p></div>
+                            <div class="col-3"><p>Kalória</p></div>
+                            <div class="col-3"><p>Szénhidrát</p></div>
+                            <div class="col-3"><p>Fehérje</p></div>
+                            <div class="col-3"><p>Zsír</p></div>
+                        </div>
+                        <hr />
+                        @foreach (var f in Model.userMealsFoodHasProducts)
+                        {
+                            if (f.FoodId == meal.FoodId)
+                            {
+                                
+                            <div class="row">
+                                <div class="col-3"><p>@f.Product.Brand - @f.Product.Name</p></div>
+                                <div class="col-3"><p>@Math.Round(f.Product.Calorie * meal.Amount * f.Amount / 100, 2) kcal</p></div>
+                                <div class="col-3"><p>@Math.Round(f.Product.Carbohydrate * meal.Amount * f.Amount / 100, 2) g</p></div>
+                                <div class="col-3"><p>@Math.Round(f.Product.Protein * meal.Amount * f.Amount / 100, 2) g</p></div>
+                                <div class="col-3"><p>@Math.Round(f.Product.Fat * meal.Amount * f.Amount / 100, 2) g</p></div>
+                            </div>
+                            }               
+                        }
+                    </div>
+                }
+            </div>
+
+        }
+    }
+}

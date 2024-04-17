@@ -1,0 +1,42 @@
+﻿@using FitnessForgeApp.Models.ViewModels
+@model UserWorkoutsViewModel
+
+@{
+    ViewData["Title"] = "Edzéseid";
+}
+
+<div class="container text-orange fw-bold text-center">
+    <h1 class="fw-bolder">Edzéseim</h1>
+
+    <form asp-action="List" asp-controller="Workout" method="get">
+        <button type="submit" class="btn btn-success rounded-circle text-center"><i class="fa-solid fa-plus"></i></button>
+    </form>
+
+    <div class="container mt-2" id="scroll-table">
+    @foreach (var group in Model.userWorkouts
+                                .GroupBy(uwh => uwh.Date)
+                                .OrderByDescending(g => g.Key))
+    {
+        <div class="d-flex justify-content-center exclude">
+        <div class="card mb-3 w-50 text-gray bg-orange">
+            <h3 class="card-header fw-bold">@group.Key.ToShortDateString()</h3>
+            <div class="card-body">
+                @foreach (var workout in group)
+                {
+                    <div class="card mb-2 bg-orange">
+                        <div class="card-body">
+                            <h5 class="card-title">@workout.Workout.Name</h5>
+                            <form asp-action="Details" method="get" asp-controller="Workout">
+                                <input type="hidden" value="@workout.WorkoutId" name="id" />
+                                <input type="hidden" value="UserWorkouts" name="returnAction" />
+                                <button class="btn btn-success" type="submit">Részletek</button>
+                            </form>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        </div>
+    }
+    </div>
+</div>

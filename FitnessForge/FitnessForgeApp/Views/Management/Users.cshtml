@@ -1,35 +1,55 @@
-﻿   <table class="table">
+﻿@using FitnessForgeApp.Models.ViewModels
+@{
+    List<UserWithRolesViewModel>? usersWithRoles = (List<UserWithRolesViewModel>?)ViewData["UsersWithRoles"];
+}
+<div class="text-orange mt-3 text-center">
+    <h2 class="fw-bolder">Felhasználók</h2>
+
+    @if (ViewData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            @ViewData["ErrorMessage"]
+        </div>
+    }
+
+    <table class="table bg-red text-orange fw-bold mt-3 rounded-3">
         <thead>
             <tr>
-                <th>Felhasználónév</th>
-                <th>Szerepek</th>
-                <th>Törlés</th>
+                <th><h5 class="fw-bolder">Felhasználónév</h5></th>
+                <th><h5 class="fw-bolder">Szerepek</h5></th>
+                <th><h5 class="fw-bolder">Törlés</h5></th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var user in ViewBag.Users)
+            @foreach (var user in usersWithRoles)
             {
                 <tr>
                     <td>@user.UserName</td>
                     <td>
                         @foreach (var role in user.Roles)
                         {
-                            <span>@role</span>
+                            <span>@role,</span>
                         }
-                        <form action="@Url.ActionLink("Index","Role")" method="get">
-                            <button class="btn btn-primary" type="submit">Szerkesztés</button>
+                        <form action="@Url.ActionLink("Roles","Management")" method="get">
+                            <button class="btn btn-success text-center" type="submit"><i class="fa-solid fa-pen-to-square"></i></button>
                         </form>
                     </td>
                     <td>
                         @if (user.UserName != User.Identity.Name)
                         {
-                            <form method="post" asp-action="Delete">
+                            <form method="post" asp-action="DeleteUser" onsubmit="return confirm('Biztosan törölni szeretné ezt a felhasználót?');">
                                 <input type="hidden" name="userId" value="@user.UserId" />
-                                <button type="submit" class="btn btn-danger">Törlés</button>
+                                <button type="submit" class="btn btn-warning text-center"><i class="fa-solid fa-trash"></i></button>
                             </form>
+                        }
+                        else
+                        {
+                            <button class="btn btn-warning text-center" disabled><i class="fa-solid fa-trash"></i></button>
                         }
                     </td>
                 </tr>
             }
         </tbody>
     </table>
+</div>
+

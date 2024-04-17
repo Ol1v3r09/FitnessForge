@@ -1,20 +1,21 @@
 ﻿@{
         Layout = "/Views/Shared/_Layout.cshtml";
 }
+<div class="container text-orange fw-bold text-center mt-3">
+    <h1 class="fw-bolder">Beállítások</h1>
 
-<h1>Beállítások</h1>
-
-<div
-    <hr />
-    <div class="row">
-        <div class="col-md-3">
-            <partial name="_ManageNav" />
+    <div>
+        <div class="row">
+            <div class="col-12">
+                <partial name="_ManageNav" />
+            </div>
         </div>
-        <div class="col-md-9">
+        <div class="row">
             @RenderBody()
         </div>
     </div>
 </div>
+
 
 @section Scripts {
     @RenderSection("Scripts", required: false)

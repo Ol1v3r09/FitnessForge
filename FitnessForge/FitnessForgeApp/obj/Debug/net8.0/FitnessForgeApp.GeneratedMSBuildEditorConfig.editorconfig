@@ -106,8 +106,36 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWFuYWdlbWVudFxVc2Vycy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Programozás/FitnessForge/FitnessForge/FitnessForgeApp/Views/Meal/Add.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVhbFxBZGQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Programozás/FitnessForge/FitnessForge/FitnessForgeApp/Views/Meal/CreateFood.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVhbFxDcmVhdGVGb29kLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Programozás/FitnessForge/FitnessForge/FitnessForgeApp/Views/Meal/CreateProduct.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVhbFxDcmVhdGVQcm9kdWN0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Programozás/FitnessForge/FitnessForge/FitnessForgeApp/Views/Meal/EditIntake.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVhbFxFZGl0SW50YWtlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Programozás/FitnessForge/FitnessForge/FitnessForgeApp/Views/Meal/ManageProduct.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVhbFxNYW5hZ2VQcm9kdWN0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Programozás/FitnessForge/FitnessForge/FitnessForgeApp/Views/Meal/_AddFoodPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVhbFxfQWRkRm9vZFBhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Programozás/FitnessForge/FitnessForge/FitnessForgeApp/Views/Meal/_FoodPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVhbFxfRm9vZFBhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Programozás/FitnessForge/FitnessForge/FitnessForgeApp/Views/Meal/_ProductPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVhbFxfUHJvZHVjdFBhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Programozás/FitnessForge/FitnessForge/FitnessForgeApp/Views/Shared/_Layout_Manage.cshtml]
@@ -130,12 +158,48 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclxDcmVhdGVEZXRhaWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Programozás/FitnessForge/FitnessForge/FitnessForgeApp/Views/User/Feedback.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclxGZWVkYmFjay5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Programozás/FitnessForge/FitnessForge/FitnessForgeApp/Views/User/Home.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclxIb21lLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Programozás/FitnessForge/FitnessForge/FitnessForgeApp/Views/User/ManageDetails.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclxNYW5hZ2VEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Programozás/FitnessForge/FitnessForge/FitnessForgeApp/Views/Workout/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV29ya291dFxDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Programozás/FitnessForge/FitnessForge/FitnessForgeApp/Views/Workout/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV29ya291dFxEZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Programozás/FitnessForge/FitnessForge/FitnessForgeApp/Views/Workout/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV29ya291dFxEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Programozás/FitnessForge/FitnessForge/FitnessForgeApp/Views/Workout/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV29ya291dFxFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Programozás/FitnessForge/FitnessForge/FitnessForgeApp/Views/Workout/List.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV29ya291dFxMaXN0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Programozás/FitnessForge/FitnessForge/FitnessForgeApp/Views/Workout/UserWorkouts.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV29ya291dFxVc2VyV29ya291dHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Programozás/FitnessForge/FitnessForge/FitnessForgeApp/Views/Workout/_ExercisePartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV29ya291dFxfRXhlcmNpc2VQYXJ0aWFsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Programozás/FitnessForge/FitnessForge/FitnessForgeApp/Views/Workout/_WorkoutPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV29ya291dFxfV29ya291dFBhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Programozás/FitnessForge/FitnessForge/FitnessForgeApp/Views/_ViewImports.cshtml]

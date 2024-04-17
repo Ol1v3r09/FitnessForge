@@ -1,4 +1,5 @@
 ﻿using FitnessForgeApp.Models;
+using FitnessForgeApp.Models.DataModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +28,7 @@ namespace FitnessForgeApp.Data
         public DbSet<DailyIntake> dailyIntakes { get; set; }
         public DbSet<NutrientGoal> nutrientGoals { get; set; }
         public DbSet<ActivityLevel> activityLevels { get; set; }
+        public DbSet<Feedback> feedbacks { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)

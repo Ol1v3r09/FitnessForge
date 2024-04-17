@@ -1,14 +1,41 @@
 ﻿@inject Microsoft.AspNetCore.Identity.SignInManager<ApplicationUser> signInManager
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Kezdőlap";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Üdvözöllek a FitnessForge oldalán</h1>
+@if (ViewData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewData["ErrorMessage"]
+    </div>
+}
+
+<div class="text-center container text-orange mt-3">
+    @if (ViewData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            @ViewData["ErrorMessage"]
+        </div>
+    }
+    <h1 class="fw-bold">Üdvözöllek a FitnessForge oldalán</h1>
+    <p> Ha bármi hibát tapasztalsz a jelentés felületen elküldheted!</p>
     @if (!signInManager.IsSignedIn(User))
     {
-        <button class="btn btn-primary" asp-area="Identity" asp-page="/Account/Login">Bejelentkezés</button>
-        <br />
-        <button class="btn btn-primary" asp-area="Identity" asp-page="/Account/Register">Regisztráció</button>
+        <div class="row my-3">
+            <div class="col-12">
+                <form>
+                <button class="btn btn-success" asp-area="Identity" asp-page="/Account/Login">Bejelentkezés</button>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <form>
+                <button class="btn btn-success" asp-area="Identity" asp-page="/Account/Register">Regisztráció</button>
+                </form>
+            </div>
+        </div>
     }
 </div>
+
+

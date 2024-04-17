@@ -1,20 +1,33 @@
 ﻿@model Microsoft.AspNetCore.Identity.IdentityRole
-
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Szerep létrehozás";
 }
+<div class="container text-orange mt-3 text-center">
+    <h1 class="fw-bolder">Szerep létrehozása</h1>
 
-<h1>Create Role</h1>
+    @if (ViewData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            @ViewData["ErrorMessage"]
+        </div>
+    }
 
-<form asp-action="Create">
-    <div class="form-group">
-        <label asp-for="Name" class="control-label"></label>
-        <input asp-for="Name" class="form-control" />
+    <div class="d-flex justify-content-center">
+        <form asp-action="CreateRole" method="post" class="bg-red fw-bolder p-3 mt-3 rounded-3 w-25">
+            <div class="form-group">
+                <label asp-for="Name" class="control-label">Szerepnév</label>
+                <div class="d-flex justify-content-center">
+                    <input asp-for="Name" class="form-control form-control-thin" required />
+                </div>
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <button type="submit" class="btn btn-success">Létrehozás</button>
+                <a asp-action="Roles" class="btn btn-success">Vissza</a>
+            </div>
+        </form>
     </div>
 
-    <div class="form-group">
-        <button type="submit" class="btn btn-primary">Létrehozás</button>
-        <button asp-action="Roles" class="btn btn-primary">Vissza</button>
-    </div>
-</form>
+</div>
 

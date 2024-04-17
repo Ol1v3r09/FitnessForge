@@ -1,17 +1,60 @@
-using FitnessForgeAdmin.Models.Contexts;
+using FitnessForgeApp.Data;
 using FitnessForgeApp.Models;
-using FitnessForgeApp.Models.Contexts;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Threading.Tasks;
 
 namespace FitnessForgeApp.Controllers
 {
-    //Az ideiglenes Home oldal
     public class HomeController : Controller
     {
-        //Visszadja az Index View-t
-        public IActionResult Index()
+        private SignInManager<ApplicationUser> _signInManager;
+        private ApplicationDbContext db;
+        private UserManager<ApplicationUser> _userManager;
+
+        public HomeController(SignInManager<ApplicationUser> signInManager, ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
+            _signInManager = signInManager;
+            db = context;
+            _userManager = userManager;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            if (_signInManager.IsSignedIn(User))
+            {
+                try
+                {
+                    var currentUser = await _userManager.GetUserAsync(User);
+
+                    if (currentUser == null)
+                    {
+                        ViewData["ErrorMessage"] = "A felhasználó nem található";
+                        return View();
+                    }
+
+                    var dailyIntake = await db.dailyIntakes
+                        .FirstOrDefaultAsync(d => d.Date == DateTime.Today && d.UserId == currentUser.Id);
+
+                    if (dailyIntake == null)
+                    {
+                        DailyIntake intake = new DailyIntake { Date = DateTime.Today, User = currentUser, UserId = currentUser.Id };
+                        await db.dailyIntakes.AddAsync(intake);
+                        currentUser.DailyIntakes.Add(intake);
+                        await _userManager.UpdateAsync(currentUser);
+                    }
+
+                    return RedirectToAction("Home", "User");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Hiba: {ex.Message}");
+                    ViewData["ErrorMessage"] = "Hiba lépett fel a napi bevitel kezelésénél";
+                    return RedirectToAction("Index", "User");
+                }
+            }
             return View();
         }
     }

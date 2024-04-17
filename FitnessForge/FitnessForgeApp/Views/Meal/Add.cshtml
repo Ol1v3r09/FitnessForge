@@ -1,22 +1,94 @@
-﻿@model List<Product>
-<table>
-    <thead>
-        <tr>
-            <th>Termék</th>
-            <th>Szénhidrát</th>
-            <th>Fehérje</th>
-            <th>Zsír</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var product in Model)
-        {
-            <tr>
-                <td>@product.Name</td>
-                <td>@product.Carbohydrate g</td>
-                <td>@product.Protein g</td>
-                <td>@product.Fat g</td>
-            </tr>
-        }
-    </tbody>
-</table>
+﻿@using FitnessForgeApp.Models.ViewModels
+@{
+    // TODO 100g/ml-re kiírni az adatokat
+    // TODO A Recepteknél a termékeket is 100g/ml-re az ételhez képest
+    // TODO Kijavítani a mobilon elcsúszott hibát
+    // TODO Kereső
+}
+@model MealAddViewModel
+<div class="container">
+@if (ViewData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewData["ErrorMessage"]
+    </div>
+}
+<h4 class="text-center text-orange fw-bold">Ételek</h4>
+<div class="d-flex justify-content-center">
+    <input type="text" id="searchString" class="rounded-2 form-control form-control-thin" placeholder="Keresés">
+</div>
+<div class="row text-center text-orange mt-3 rounded-3">
+    <div class="col">
+        <p class="fw-bold">Étel</p>
+    </div>
+    <div class="col">
+        <p class="fw-bold">Kalória (100g/ml)</p>
+    </div>
+    <div class="col">
+        <p class="fw-bold">Szénhidrát</p>
+    </div>
+    <div class="col">
+        <p class="fw-bold">Fehérje</p>
+    </div>
+    <div class="col">
+        <p class="fw-bold">Zsír</p>
+    </div>
+    <div class="col">
+        <p class="fw-bold">Mennyiség</p>
+    </div>
+</div>
+<hr style="border:5px solid rgb(204,0,0)" />
+    <partial name="_AddFoodPartial" model="Model" />
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    function toggleHiddenDiv(icon) {
+        var parentDiv = icon.parentNode.parentNode.nextElementSibling;
+        var iconClassList = icon.classList;
+
+        parentDiv.classList.toggle("shown-div");
+        iconClassList.toggle("fa-angles-down");
+        iconClassList.toggle("fa-angles-up");
+
+        var allHiddenDivs = document.querySelectorAll('.hidden-div');
+        allHiddenDivs.forEach(function (div) {
+            if (div !== parentDiv) {
+                div.classList.remove("shown-div");
+                var siblingIcon = div.previousElementSibling.querySelector('.fa-solid');
+                if (siblingIcon) {
+                    var siblingIconClassList = siblingIcon.classList;
+                    siblingIconClassList.remove("fa-angles-up");
+                    siblingIconClassList.add("fa-angles-down");
+                }
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        $('#searchString').keyup(function () {
+            var searchString = $(this).val().trim();
+            var mealType = '@Model.mealType';
+            var foods = '@Model.foods';
+
+            $.ajax({
+                url: '@Url.Action("SearchAddFood", "Meal")',
+                type: 'GET',
+                data: {
+                    searchString: searchString,
+                    mealType: mealType,
+                    foods: foods
+                },
+                success: function (data) {
+                    $('#scroll-table').html(data);
+                },
+                error: function () {
+                    alert('An error occurred while processing your request.');
+                }
+            });
+        });
+    });
+
+
+</script>

@@ -1,0 +1,22 @@
+﻿@using FitnessForgeApp.Models.ViewModels
+@model WorkoutCreateViewModel
+
+
+@foreach (var ex in Model.Exercises)
+{
+    <div class="container exercise">
+        <div class="row fw-bold mt-3 m-1 p-2 rounded-3 d-flex flex-column justify-content-between text-center">
+            <h3 class="fw-bold">@ex.Name</h3>
+            <h5 class="fw-bold">Kör szám</h5>
+            <input type="number" id="SetCount" name="SetCount" class="form-control"/>
+            <h5 class="fw-bold">Ismétlés szám</h5>
+            <input type="number" id="RepCount" name="RepCount" class="form-control"/>
+            <input type="hidden" value="@ex.Id" name="Id" />
+            <div class="d-flex justify-content-center">
+                <button class="btn btn-success rounded-circle add-item text-center" type="button" onclick="addItemToWorkout(this)">
+                    <i class="fa-solid fa-plus"></i>
+                </button>
+            </div>         
+         </div>
+    </div>
+}

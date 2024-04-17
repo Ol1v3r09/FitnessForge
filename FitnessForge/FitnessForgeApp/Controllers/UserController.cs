@@ -1,6 +1,9 @@
-﻿using FitnessForgeAdmin.Models.Contexts;
+﻿using FitnessForgeApp.Data;
 using FitnessForgeApp.Models;
+using FitnessForgeApp.Models.DataModels;
 using FitnessForgeApp.Models.ViewModels;
+using FitnessForgeApp.Services;
+using Humanizer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,145 +15,245 @@ namespace FitnessForgeApp.Controllers
     [Authorize(Roles = "User")]
     public class UserController : Controller
     {
-        UserMealContext db;
+        ApplicationDbContext db;
+        ApplicationDbContext appDb;
         UserManager<ApplicationUser> _userManager { get; set; }
 
-        public UserController(UserMealContext db, UserManager<ApplicationUser> userManager)
+        public UserController(ApplicationDbContext db, UserManager<ApplicationUser> userManager, ApplicationDbContext applicationDb)
         {
             this.db = db;
+            appDb = applicationDb;
             _userManager = userManager;
+            List<Product> products = db.products.ToList();
+            List<Unit> units = db.units.ToList();
         }
 
+        [HttpGet]
         public async Task<IActionResult> Home()
         {
-            double[] d = new double[4];
-            ApplicationUser currentUser = await _userManager.GetUserAsync(User);
-
-            List<DetailsViewModel> allMeals = new List<DetailsViewModel>();
-            DetailsViewModel all = new DetailsViewModel();
-
-            List<MealType> mealTypes = db.mealTypes.ToList();
-            List<Meal> meals = db.meals.ToList();
-            List<FoodHasProduct> foodHasProducts = db.foodsHasProducts.ToList();
-            List<Product> products = db.products.ToList();
-
-            //Összes mai kalória kivétele
-            var foods = (from m in meals where m.DailyIntake.Date == DateTime.Today && currentUser?.Id == m.DailyIntake.UserId select m.Food).DefaultIfEmpty().ToList();
-            if (foods != null)
+            try
             {
-                foreach (var foodProduct in foodHasProducts)
+                ApplicationUser currentUser = await _userManager.GetUserAsync(User);
+
+                List<UserHomeViewModel> allMeals = new List<UserHomeViewModel>();
+
+                List<MealType> mealTypes = await db.mealTypes.ToListAsync();
+                var dailyIntake = await db.dailyIntakes.Where(d => d.UserId == currentUser.Id && d.Date == DateTime.Today).FirstOrDefaultAsync();
+                if (dailyIntake != null)
                 {
-                    foreach (var item in foods)
+                    foreach (var mealType in mealTypes)
                     {
-                        if (item != null)
+                        UserHomeViewModel details = new UserHomeViewModel();
+
+                        var allFoodsToday = await (from m in db.meals
+                                           where m.IntakeId == dailyIntake.Id && m.MealTypeId == mealType.Id
+                                           select m.Food).ToListAsync();
+
+                        if (allFoodsToday != null)
                         {
-                            if (foodProduct.FoodId == item.Id)
+                            foreach (var food in allFoodsToday)
                             {
-                                var product = (from p in products where p.Id == foodProduct.ProductId select p).FirstOrDefault();
-                                if (product != null)
+                                if (food != null)
                                 {
-                                    all.Calorie += product.Calorie;
-                                    all.Carbohydrate += product.Carbohydrate;
-                                    all.Protein += product.Protein;
-                                    all.Fat += product.Fat;
+                                    var foodProducts = await (from fp in db.foodsHasProducts
+                                                              where fp.FoodId == food.Id
+                                                              select fp).ToListAsync();
+
+                                    foreach (var fp in foodProducts)
+                                    {
+                                        double fhpAmount = fp.Amount;
+                                        if (fp.Product.Unit.Name.ToLower().Contains("gramm"))
+                                        {
+                                            fhpAmount = UnitConverter.ConvertMass(fhpAmount, fp.Product.Unit.Name, "Gramm");
+                                        }
+                                        if (fp.Product.Unit.Name.ToLower().Contains("liter"))
+                                        {
+                                            fhpAmount = UnitConverter.ConvertVolume(fhpAmount, fp.Product.Unit.Name, "Milliliter");
+                                        }
+
+                                        Meal meal = db.meals.Where(x => x.FoodId == food.Id && x.MealTypeId == mealType.Id && x.DailyIntake == dailyIntake).First();
+
+                                        details.Calorie += Math.Round(fp.Product.Calorie * meal.Amount * fhpAmount / 100, 2);
+                                        details.Carbohydrate += Math.Round(fp.Product.Carbohydrate * meal.Amount * fhpAmount / 100, 2);
+                                        details.Protein += Math.Round(fp.Product.Protein * meal.Amount * fhpAmount / 100, 2);
+                                        details.Fat += Math.Round(fp.Product.Fat * meal.Amount * fhpAmount / 100, 2);
+                                        details.Fiber += Math.Round(fp.Product.Fiber * meal.Amount * fhpAmount / 100, 2);
+                                        details.Salt += Math.Round(fp.Product.Salt * meal.Amount * fhpAmount / 100, 2);
+                                        details.SaturatedFat += Math.Round(fp.Product.SaturatedFat * meal.Amount * fhpAmount / 100, 2);
+                                        details.Sugar += Math.Round(fp.Product.Sugar * meal.Amount * fhpAmount / 100, 2);
+                                    }
                                 }
                             }
                         }
+
+                        allMeals.Add(details);
                     }
                 }
-                allMeals.Add(all);
+
+                ViewData["mealTypes"] = mealTypes;
+                return View(allMeals);
             }
-            //Összes mai étkezésenkénti kalória kivétele
-            foreach (var mealType in mealTypes)
+            catch (Exception ex)
             {
-                DetailsViewModel u = new DetailsViewModel();
-                foods = (from m in meals where m.DailyIntake.Date == DateTime.Today && currentUser?.Id == m.DailyIntake.UserId && m.MealTypeId == mealType.Id select m.Food).DefaultIfEmpty().ToList();
-                if (foods != null)
-                {
-                    foreach (var foodProduct in foodHasProducts)
-                    {
-                        foreach (var food in foods)
-                        {
-                            if (foodProduct.FoodId == food?.Id)
-                            {
-                                var product = (from p in products where p.Id == foodProduct.ProductId select p).FirstOrDefault();
-                                if (product != null)
-                                {
-                                    u.Calorie += product.Calorie;
-                                    u.Carbohydrate += product.Carbohydrate;
-                                    u.Protein += product.Protein;
-                                    u.Fat += product.Fat;
-                                }
-                            }
-                        }
-                    }
-                    allMeals.Add(u);
-                }
+                Console.WriteLine($"Hiba: {ex.Message}");
+
+                ViewData["ErrorMessage"] = "Hiba lépett fel az étkezések lekérdezése közben";
+                return View();
             }
 
-            ViewBag.MealTypes = mealTypes;
-            return View(allMeals);
         }
 
+        [HttpGet]
         public async Task<IActionResult> CreateDetails()
         {
-            var nutrients = await db.nutrientGoals.ToListAsync();
-            var activities = await db.activityLevels.ToListAsync();
+            try
+            {
+                var allNutrients = await db.nutrientGoals.ToListAsync();
+                var allActivities = await db.activityLevels.ToListAsync();
 
-            ViewBag.Activities = activities;
-            ViewBag.Nutrients = nutrients;
-            var currentUser = await _userManager.GetUserAsync(User);
-            return View(currentUser);
+                ViewData["allActivities"] = allActivities;
+                ViewData["Allnutrients"] = allNutrients;
+
+                var currentUser = await _userManager.GetUserAsync(User);
+                return View(currentUser);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Hiba: {ex.Message}");
+
+                ViewData["ErrorMessage"] = "Hiba az aktivitási szintek és a tápanyag célok lekérdezése közben";
+                return View();
+            }
+
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateDetails(ApplicationUser user)
         {
-            var currentUser = await _userManager.GetUserAsync(User);
-            if (currentUser != null) {
-                currentUser.DateOfBirth = user.DateOfBirth;
-                currentUser.Sex = user.Sex;
-                currentUser.Weight = user.Weight;
-                currentUser.Height = user.Height;
-                currentUser.WeightGoal = user.WeightGoal;
-                currentUser.WeeklyWeightGoal = user.WeeklyWeightGoal;
-                currentUser.ActivityId = user.ActivityId;
-                currentUser.NutrientId = user.NutrientId;
-                var result = await _userManager.UpdateAsync(currentUser);
+            try
+            {
+                var currentUser = await _userManager.GetUserAsync(User);
+
+                if (currentUser != null)
+                {
+                    currentUser.DateOfBirth = user.DateOfBirth;
+                    currentUser.Sex = user.Sex;
+                    currentUser.Weight = user.Weight;
+                    currentUser.Height = user.Height;
+                    currentUser.WeightGoal = user.WeightGoal;
+                    if (user.Weight > user.WeightGoal)
+                        currentUser.WeeklyWeightGoal = user.WeeklyWeightGoal * -1;
+                    else if (user.Weight < user.WeightGoal)
+                        currentUser.WeeklyWeightGoal = user.WeeklyWeightGoal;
+                    else
+                        currentUser.WeeklyWeightGoal = 0;
+                    currentUser.ActivityId = user.ActivityId;
+                    currentUser.NutrientId = user.NutrientId;
+
+                    var result = await _userManager.UpdateAsync(currentUser);
+
+                    if (!result.Succeeded)
+                    {
+                        Console.WriteLine($"Hiba a frissítésnél: {result.Errors}");
+
+                        ViewData["ErrorMessage"] = "Hiba a felhasználó fríssítése közben";
+                        return RedirectToAction("Index", "Home");
+                    }
+                }
+
+                return RedirectToAction("Index","Home");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Hiba: {ex.Message}");
+
+                ViewData["ErrorMessage"] = "Hiba az adatok frissítése közben";
+                return RedirectToAction("Index", "Home");
             }
 
-            return RedirectToAction("CreateDetails");
         }
 
+        [HttpGet]
         public async Task<IActionResult> ManageDetails()
         {
-            var nutrients = await db.nutrientGoals.ToListAsync();
-            var activities = await db.activityLevels.ToListAsync();
+            try
+            {
+                var allNutrients = await db.nutrientGoals.ToListAsync();
+                var allActivities = await db.activityLevels.ToListAsync();
 
-            ViewBag.Activities = activities;
-            ViewBag.Nutrients = nutrients;
-            var currentUser = await _userManager.GetUserAsync(User);
-            return View(currentUser);
+                ViewData["allActivities"] = allActivities;
+                ViewData["allNutrients"] = allNutrients;
+
+                var currentUser = await _userManager.GetUserAsync(User);
+                return View(currentUser);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Hiba: {ex.Message}");
+
+                ViewData["ErrosMessage"] = "Hiba lépett fel a felhasználó, a tápanyag célok és a aktivitási szintek lekérésekor";
+                return RedirectToAction("Index", "Home");
+            }
+
         }
 
         [HttpPost]
         public async Task<IActionResult> ManageDetails(ApplicationUser user)
         {
-            var currentUser = await _userManager.GetUserAsync(User);
-            if (currentUser != null)
+            try
             {
-                currentUser.DateOfBirth = user.DateOfBirth;
-                currentUser.Sex = user.Sex;
-                currentUser.Weight = user.Weight;
-                currentUser.Height = user.Height;
-                currentUser.WeightGoal = user.WeightGoal;
-                currentUser.WeeklyWeightGoal = user.WeeklyWeightGoal;
-                currentUser.ActivityId = user.ActivityId;
-                currentUser.NutrientId = user.NutrientId;
-                var result = await _userManager.UpdateAsync(currentUser);
+                var currentUser = await _userManager.GetUserAsync(User);
+
+                if (currentUser != null)
+                {
+                    currentUser.DateOfBirth = user.DateOfBirth;
+                    currentUser.Sex = user.Sex;
+                    currentUser.Weight = user.Weight;
+                    currentUser.Height = user.Height;
+                    currentUser.WeightGoal = user.WeightGoal;
+                    if (user.Weight > user.WeightGoal)
+                        currentUser.WeeklyWeightGoal = user.WeeklyWeightGoal * -1;
+                    else if (user.Weight < user.WeightGoal)
+                        currentUser.WeeklyWeightGoal = user.WeeklyWeightGoal;
+                    else
+                        currentUser.WeeklyWeightGoal = 0;
+                    currentUser.WeeklyWeightGoal = user.WeeklyWeightGoal;
+                    currentUser.ActivityId = user.ActivityId;
+                    currentUser.NutrientId = user.NutrientId;
+
+                    var result = await _userManager.UpdateAsync(currentUser);
+
+                    if (!result.Succeeded)
+                    {
+                        Console.WriteLine($"Hiba a frissítésnél: {result.Errors}");
+                        ViewData["ErrorMessage"] = "Hiba a felhasználó fríssítése közben";
+                        return RedirectToAction("ManageDetails");
+                    }
+                }
+                return RedirectToAction("ManageDetails");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Hiba: {ex.Message}");
+
+                return RedirectToAction("Index", "Home");
             }
 
-            return RedirectToAction("ManageDetails");
+        }
+
+        [HttpGet]
+        public IActionResult Feedback()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> Feedback(string feedback)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var f = new Feedback { UserId = user.Id, Text = feedback};
+            await appDb.feedbacks.AddAsync(f);
+            await appDb.SaveChangesAsync();
+            return RedirectToAction("Feedback");
         }
     }
 }

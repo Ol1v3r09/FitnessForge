@@ -1,0 +1,183 @@
+﻿@model Food
+@{
+    ViewBag.Title = "Create Food";
+    List<Product>? products = (List<Product>?)ViewData["allProducts"];
+    List<Unit>? units = (List<Unit>?)ViewData["allUnits"];
+}
+
+@if (ViewData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewData["ErrorMessage"]
+    </div>
+}
+<div class="container text-center fw-bold text-orange rounded-3 mt-3 pt-3">
+
+    <h2 class="text-orange fw-bolder">Étel készítése</h2>
+
+    <form asp-action="CreateFood" method="post" class="add-product-form">
+        <div class="form-group">
+            <h4 class="control-label fw-bold">Név</h4>
+            <div class="d-flex justify-content-center">
+                <input type="text" name="Name" class="form-control form-control-thin fw-bold" required />
+            </div>
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <h4 class="control-label fw-bold">Recept/Elkészítés</h4>
+                <textarea name="Instructions" class="form-control fw-bold" rows="15" cols="50" required></textarea>
+            <span asp-validation-for="Instructions" class="text-danger"></span>
+        </div>
+
+        <div class="container form-group">
+            <div class="row">
+                    <div class="form-group col-lg-6 col-sm-12">
+                        <h4 class="fw-bold mt-2">Termékek</h4>
+                        <div class="d-flex justify-content-center">
+                            <input type="text" id="searchString" class="rounded-2 form-control form-control-thin fw-bold" placeholder="Keresés">
+                        </div>
+                        <div class="container product-div mt-2 mb-2" id="scroll-table">
+                            @if (products != null)
+                            {
+                                <partial name="_ProductPartial" model="products" />
+                            }
+                        </div>
+                </div>
+                    <div class="form-group col-lg-6 col-sm-12">
+                        <h4 class="fw-bold mt-2">Recept termékei</h4>
+                        <div class="container receipt-div mt-2 mb-2" id="scroll-table">
+
+                        </div>
+                    </div>
+            </div>
+        </div>
+
+        <div class="form-group text-center">
+            <h4 class="fw-bold">Mennyiség</h4>
+            <div class="d-flex justify-content-center">
+                <input class="form-control fw-bold form-control-thin" name="foodAmount" type="number" step="0.001" min="0" />
+            </div>
+        </div>
+
+        <div class="form-group text-center">
+            <h4 class="fw-bold">Mértékegység</h4>
+            <div class="d-flex justify-content-center">
+                <select name="unit" class="form-control form-control-thin">
+                    @foreach (var unit in units)
+                    {
+                        <option value="@unit.Id">@unit.Name</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <button class="btn btn-success" type="submit">Mentés</button>
+    </form>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+<script type="text/javascript">
+    function toggleHiddenDiv(icon) {
+        var parentDiv = icon.parentNode.parentNode.nextElementSibling;
+        var iconClassList = icon.classList;
+
+        parentDiv.classList.toggle("shown-div");
+        iconClassList.toggle("fa-angles-down");
+        iconClassList.toggle("fa-angles-up");
+
+        var allHiddenDivs = document.querySelectorAll('.hidden-div');
+        allHiddenDivs.forEach(function (div) {
+            if (div !== parentDiv) {
+                div.classList.remove("shown-div");
+                var siblingIcon = div.previousElementSibling.querySelector('.fa-solid');
+                if (siblingIcon) {
+                    var siblingIconClassList = siblingIcon.classList;
+                    siblingIconClassList.remove("fa-angles-up");
+                    siblingIconClassList.add("fa-angles-down");
+                }
+            }
+        });
+    }
+
+    function addItemToReceipt(btn) {
+        var productDiv = btn.closest('.product');
+
+        var clonedDiv = productDiv.cloneNode(true);
+
+        var productIdInput = clonedDiv.querySelector('input[name="productId"]');
+        productIdInput.name = 'receiptProductId';
+
+        var amountInput = clonedDiv.querySelector('input[name="amount"]');
+        amountInput.name = 'receiptAmount';
+
+        var button = clonedDiv.querySelector('.add-item');
+        button.classList.remove('btn-success');
+        button.classList.add('btn-danger');
+
+        var icon = button.querySelector('.fa-plus');
+        icon.classList.remove('fa-plus');
+        icon.classList.add('fa-xmark');
+
+        button.setAttribute('onclick', 'removeItemFromReceipt(this)');
+
+        var receiptDiv = document.querySelector('.receipt-div');
+        receiptDiv.appendChild(clonedDiv);
+
+        productDiv.remove();
+    }
+
+    function removeItemFromReceipt(btn) {
+        var receiptItemDiv = btn.closest('.product');
+
+        var clonedDiv = receiptItemDiv.cloneNode(true);
+
+        var productIdInput = clonedDiv.querySelector('input[name="receiptProductId"]');
+        productIdInput.name = 'productId';
+
+        var amountInput = clonedDiv.querySelector('input[name="receiptAmount"]');
+        amountInput.name = 'amount';
+
+        var button = clonedDiv.querySelector('.add-item');
+        button.classList.remove('btn-danger');
+        button.classList.add('btn-success');
+
+        var icon = button.querySelector('.fa-xmark');
+        icon.classList.remove('fa-xmark');
+        icon.classList.add('fa-plus');
+
+        button.setAttribute('onclick', 'addItemToReceipt(this)');
+
+        var productDiv = document.querySelector('.product-div');
+        productDiv.appendChild(clonedDiv);
+
+        receiptItemDiv.remove();
+    }
+
+    $(document).ready(function () {
+        $('#searchString').keyup(function () {
+            var searchString = $(this).val().trim();
+            var receiptProductIds = [];
+
+            $('.receipt-div .product').each(function () {
+                var productId = $(this).find('input[name="receiptProductId"]').val();
+                receiptProductIds.push(productId);
+            });
+
+            $.ajax({
+                url: '@Url.Action("SearchProduct", "Meal")',
+                type: 'GET',
+                data: { search: searchString, productIds: receiptProductIds },
+                traditional: true,
+                success: function (data) {
+                    $('#scroll-table').html(data);
+                },
+                error: function () {
+                    alert('An error occurred while processing your request.');
+                }
+            });
+        });
+    });
+</script>

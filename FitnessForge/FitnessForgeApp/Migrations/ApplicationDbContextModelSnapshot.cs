@@ -16,7 +16,7 @@ namespace FitnessForgeApp.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.1")
+                .HasAnnotation("ProductVersion", "8.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("FitnessForgeApp.Models.ActivityLevel", b =>
@@ -49,15 +49,14 @@ namespace FitnessForgeApp.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ActivityId")
-                        .IsRequired()
+                    b.Property<int>("ActivityId")
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("longtext");
 
-                    b.Property<DateOnly?>("DateOfBirth")
+                    b.Property<DateOnly>("DateOfBirth")
                         .HasColumnType("date");
 
                     b.Property<string>("Email")
@@ -84,8 +83,7 @@ namespace FitnessForgeApp.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("varchar(256)");
 
-                    b.Property<int?>("NutrientId")
-                        .IsRequired()
+                    b.Property<int>("NutrientId")
                         .HasColumnType("int");
 
                     b.Property<string>("PasswordHash")
@@ -161,6 +159,25 @@ namespace FitnessForgeApp.Migrations
                     b.ToTable("daily_intake");
                 });
 
+            modelBuilder.Entity("FitnessForgeApp.Models.DataModels.Feedback", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("feedback");
+                });
+
             modelBuilder.Entity("FitnessForgeApp.Models.Equipment", b =>
                 {
                     b.Property<int>("Id")
@@ -202,19 +219,13 @@ namespace FitnessForgeApp.Migrations
 
             modelBuilder.Entity("FitnessForgeApp.Models.ExerciseRequiresEquipment", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
                     b.Property<int>("EquipmentId")
                         .HasColumnType("int");
 
                     b.Property<int>("ExerciseId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("EquipmentId");
+                    b.HasKey("EquipmentId", "ExerciseId");
 
                     b.HasIndex("ExerciseId");
 
@@ -223,19 +234,13 @@ namespace FitnessForgeApp.Migrations
 
             modelBuilder.Entity("FitnessForgeApp.Models.ExerciseTrainsMuscle", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
                     b.Property<int>("ExerciseId")
                         .HasColumnType("int");
 
                     b.Property<int>("MuscleId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("ExerciseId");
+                    b.HasKey("ExerciseId", "MuscleId");
 
                     b.HasIndex("MuscleId");
 
@@ -262,6 +267,12 @@ namespace FitnessForgeApp.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    b.Property<double>("Amount")
+                        .HasColumnType("double");
+
+                    b.Property<string>("Instructions")
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -384,6 +395,10 @@ namespace FitnessForgeApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<string>("BarCode")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<string>("Brand")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -397,11 +412,14 @@ namespace FitnessForgeApp.Migrations
                     b.Property<double>("Fat")
                         .HasColumnType("double");
 
-                    b.Property<double?>("Fiber")
+                    b.Property<double>("Fiber")
                         .HasColumnType("double");
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ProductStatus")
                         .HasColumnType("longtext");
 
                     b.Property<double>("Protein")
@@ -475,6 +493,10 @@ namespace FitnessForgeApp.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    b.Property<string>("CreatorUserId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Name")
                         .IsRequired()

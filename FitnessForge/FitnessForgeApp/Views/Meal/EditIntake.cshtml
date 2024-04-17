@@ -1,71 +1,79 @@
-﻿@model List<Food>
-<h4>@ViewBag.MealType.Name</h4>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Étel</th>
-            <th>Termékek</th>
-            <th>Részletek</th>
-            <th>Törlés</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var food in Model)
+﻿@using FitnessForgeApp.Models.ViewModels
+@model MealEditIntakeViewModel
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<div class="container text-center mt-3 pt-3">
+    <h4 class="text-orange fw-bolder">@Model.mealType</h4>
+
+@if (ViewData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewData["ErrorMessage"]
+    </div>
+}
+    <div class="d-flex justify-content-center">
+        <input type="text" id="searchString" class="rounded-2 form-control form-control-thin" placeholder="Keresés">
+    </div>
+    
+
+    <form asp-action="Add" asp-controller="Meal" method="post" class="mt-2">
+        @foreach (var meal in Model.userMeals)
         {
-            if (food != null)
+            if (meal != null)
             {
-                <tr>
-                    <td>@food.Name</td>
-                    <td>
-                        <ul>
-                            @foreach (var product in food.Products)
-                            {
-                                <li>
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>Termék</th> 
-                                                <th>Szénhidrát</th>
-                                                <th>Fehérje</th>
-                                                <th>Zsír</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>@product.Name</td>
-                                                <td>@product.Carbohydrate g</td>
-                                                <td>@product.Protein g</td>
-                                                <td>@product.Fat g</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </li>
-                            }
-                        </ul>
-                    </td>
-                    <td>
-                        <ul>
-                            <li>Szénhidrát: @food.Products.Sum(p => p.Carbohydrate) g</li>
-                            <li>Fehérje: @food.Products.Sum(p => p.Protein) g</li>
-                            <li>Zsír: @food.Products.Sum(p => p.Fat) g</li>
-                        </ul>
-                    </td>
-                    <td>
-                        <form method="post" asp-action="Delete">
-                            <input type="hidden" name="mealtype" value="@ViewBag.MealType" />
-                            <input type="hidden" name="foodId" value="@food.Id" />
-                            <button type="submit" class="btn btn-danger">Törlés</button>
-                        </form>
-                    </td>
-                </tr>
+                <input type="hidden" name="foods" value="@meal.FoodId" />
             }
         }
-    </tbody>
-</table>
-<hr />
-<form action="@Url.ActionLink("Add","Meal")" method="get">
-    <input value="@ViewBag.MealType" type="hidden" name="mealType" />
-    <button class="btn btn-primary" type="submit">
-        Étel felvétele
-    </button>
-</form>
+        <input value="@Model.mealType" type="hidden" name="mealType" />
+        <button class="btn btn-success" type="submit">Étel felvétele</button>
+    </form>
+
+    <div class="container" id="scroll-table">
+        <partial name="_FoodPartial" model="Model"/>
+    </div>
+</div>
+
+<script>
+    function toggleHiddenDiv(icon) {
+        var parentDiv = icon.parentNode.parentNode.nextElementSibling;
+        var iconClassList = icon.classList;
+
+        parentDiv.classList.toggle("shown-div");
+        iconClassList.toggle("fa-angles-down");
+        iconClassList.toggle("fa-angles-up");
+
+        var allHiddenDivs = document.querySelectorAll('.hidden-div');
+        allHiddenDivs.forEach(function (div) {
+            if (div !== parentDiv) {
+                div.classList.remove("shown-div");
+                var siblingIcon = div.previousElementSibling.querySelector('.fa-solid');
+                if (siblingIcon) {
+                    var siblingIconClassList = siblingIcon.classList;
+                    siblingIconClassList.remove("fa-angles-up");
+                    siblingIconClassList.add("fa-angles-down");
+                }
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        $('#searchString').keyup(function () {
+            var mealType = '@Model.mealType';
+            var searchString = $(this).val().trim();
+            $.ajax({
+                url: '@Url.Action("SearchFood", "Meal")',
+                type: 'GET',
+                data: { searchString: searchString, mealType: mealType },
+                success: function (data) {
+                    $('#scroll-table').html(data);
+                },
+                error: function () {
+                    alert('An error occurred while processing your request.');
+                }
+            });
+        });
+    });
+</script>
+
+
+

@@ -1,0 +1,113 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+    background-color: rgb(25,25,25);
+}
+
+.card{
+    transition: all 0.3s ease-in-out;
+}
+
+.card:hover{
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(255, 165, 0, 1), 0 8px 16px rgba(255, 165, 0, 1);
+}
+
+#foodDiv:hover {
+    box-shadow: 0 4px 8px rgba(255, 165, 0, 1), 0 8px 16px rgba(255, 165, 0, 1);
+}
+
+.text-orange {
+    color: rgb(255, 165, 0);
+}
+
+.text-gray {
+    color: rgb(25,25,25);
+}
+
+.bg-orange {
+    background-color: rgb(255, 165, 0);
+}
+
+.bg-red {
+    background-color: rgb(153, 0, 0);
+}
+
+.bg-gray {
+    background-color: rgb(25,25,25);
+}
+
+.btn-green {
+    background-color: rgb(51, 153, 51);
+}
+
+hr {
+    border: 1px solid black;
+}
+
+#Amount {
+    width: 5rem;
+}
+
+.nav-tabs {
+    border-bottom: 1px solid rgb(255, 165, 0);
+}
+
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+    color: black;
+    border-color: rgb(255, 165, 0);
+}
+
+    .nav-tabs .nav-link.active {
+        border-bottom-color: transparent;
+        background-color: rgb(25,25,25);
+    }
+
+.tab i {
+    color: rgb(255, 165, 0);
+}
+
+.form-control-thin{
+    width: 15rem;
+}
+
+@media (max-width: 768px) {
+    .form-control-thin {
+        width: 90%;
+    }
+}
+
+#scroll-table {
+    height: 30rem;
+    overflow-y: auto;
+}
+
+.hidden-div {
+    display: none;
+}
+
+.shown-div {
+    display: block;
+}
+
+.chart-container {
+    width: 100%;
+    height: 11rem;
+}
