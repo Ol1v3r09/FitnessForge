@@ -185,6 +185,7 @@ namespace FitnessForgeApp.Controllers
                 ViewData["allNutrients"] = allNutrients;
 
                 var currentUser = await _userManager.GetUserAsync(User);
+ 
                 return View(currentUser);
             }
             catch (Exception ex)
@@ -217,7 +218,6 @@ namespace FitnessForgeApp.Controllers
                         currentUser.WeeklyWeightGoal = user.WeeklyWeightGoal;
                     else
                         currentUser.WeeklyWeightGoal = 0;
-                    currentUser.WeeklyWeightGoal = user.WeeklyWeightGoal;
                     currentUser.ActivityId = user.ActivityId;
                     currentUser.NutrientId = user.NutrientId;
 

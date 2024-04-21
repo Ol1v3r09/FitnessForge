@@ -139,14 +139,8 @@ namespace FitnessForgeApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<double>("CalorieIntake")
-                        .HasColumnType("double");
-
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<double>("FluidIntake")
-                        .HasColumnType("double");
 
                     b.Property<string>("UserId")
                         .IsRequired()

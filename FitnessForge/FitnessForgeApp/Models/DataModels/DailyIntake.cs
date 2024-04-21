@@ -12,8 +12,6 @@ namespace FitnessForgeApp.Models
     {
         public int Id { get; set; }
         public DateTime Date { get; set; }
-        public double CalorieIntake { get; set; }
-        public double FluidIntake { get; set; }
         public ApplicationUser User { get; set; }
         public string UserId { get; set; }
         public ICollection<Meal> Meals { get; set; }

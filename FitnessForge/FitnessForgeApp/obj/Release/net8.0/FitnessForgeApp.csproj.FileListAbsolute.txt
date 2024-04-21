@@ -296,3 +296,5 @@ C:\Programozás\FitnessForge\FitnessForge\FitnessForgeApp\obj\Release\net8.0\ref
 C:\Programozás\FitnessForge\FitnessForge\FitnessForgeApp\obj\Release\net8.0\FitnessForgeApp.pdb
 C:\Programozás\FitnessForge\FitnessForge\FitnessForgeApp\obj\Release\net8.0\FitnessForgeApp.genruntimeconfig.cache
 C:\Programozás\FitnessForge\FitnessForge\FitnessForgeApp\obj\Release\net8.0\ref\FitnessForgeApp.dll
+C:\Programozás\FitnessForge\FitnessForge\FitnessForgeApp\bin\Release\net8.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Programozás\FitnessForge\FitnessForge\FitnessForgeApp\bin\Release\net8.0\Microsoft.Extensions.Logging.Abstractions.dll

@@ -42,10 +42,12 @@ C:\Programozás\FitnessForge\FitnessForge\FitnessForgeApp\obj\Docker\publish\Mic
 C:\Programozás\FitnessForge\FitnessForge\FitnessForgeApp\obj\Docker\publish\Microsoft.EntityFrameworkCore.Relational.dll
 C:\Programozás\FitnessForge\FitnessForge\FitnessForgeApp\obj\Docker\publish\Microsoft.EntityFrameworkCore.Sqlite.dll
 C:\Programozás\FitnessForge\FitnessForge\FitnessForgeApp\obj\Docker\publish\Microsoft.EntityFrameworkCore.SqlServer.dll
+C:\Programozás\FitnessForge\FitnessForge\FitnessForgeApp\obj\Docker\publish\Microsoft.Extensions.DependencyInjection.Abstractions.dll
 C:\Programozás\FitnessForge\FitnessForge\FitnessForgeApp\obj\Docker\publish\Microsoft.Extensions.DependencyModel.dll
 C:\Programozás\FitnessForge\FitnessForge\FitnessForgeApp\obj\Docker\publish\Microsoft.Extensions.FileProviders.Embedded.dll
 C:\Programozás\FitnessForge\FitnessForge\FitnessForgeApp\obj\Docker\publish\Microsoft.Extensions.Identity.Core.dll
 C:\Programozás\FitnessForge\FitnessForge\FitnessForgeApp\obj\Docker\publish\Microsoft.Extensions.Identity.Stores.dll
+C:\Programozás\FitnessForge\FitnessForge\FitnessForgeApp\obj\Docker\publish\Microsoft.Extensions.Logging.Abstractions.dll
 C:\Programozás\FitnessForge\FitnessForge\FitnessForgeApp\obj\Docker\publish\Microsoft.Extensions.Options.dll
 C:\Programozás\FitnessForge\FitnessForge\FitnessForgeApp\obj\Docker\publish\Microsoft.Identity.Client.dll
 C:\Programozás\FitnessForge\FitnessForge\FitnessForgeApp\obj\Docker\publish\Microsoft.Identity.Client.Extensions.Msal.dll

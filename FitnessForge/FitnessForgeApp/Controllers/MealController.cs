@@ -23,7 +23,6 @@ namespace FitnessForgeApp.Controllers
             this.db = db;
             this.userManager = userManager;
 
-            //Lazy loading miatt kell
             List<FoodHasProduct> f = db.foodsHasProducts.ToList();
             List<Food> food = db.foods.ToList();
             List<Product> p = db.products.ToList();
@@ -60,24 +59,23 @@ namespace FitnessForgeApp.Controllers
 
                 var a = db.units.ToList();
 
-                foreach (var f in model.userMealsFoodHasProducts)
+                foreach (var fhp in model.userMealsFoodHasProducts)
                 {
                     double fhpAmount = 0.0;
-                    double fAmount = 0.0;
-                    foreach (var p in f.Food.Products)
+                    foreach (var p in fhp.Food.Products)
                     {
-                        fhpAmount = f.Amount;
-                        if (f.Product.Unit.Name.ToLower().Contains("gramm"))
+                        fhpAmount = fhp.Amount;
+                        if (fhp.Product.Unit.Name.ToLower().Contains("gramm"))
                         {
-                            fhpAmount = UnitConverter.ConvertMass(fhpAmount, f.Product.Unit.Name, "Gramm");
+                            fhpAmount = UnitConverter.ConvertMass(fhpAmount, fhp.Product.Unit.Name, "Gramm");
                         }
-                        if (f.Product.Unit.Name.ToLower().Contains("liter"))
+                        if (fhp.Product.Unit.Name.ToLower().Contains("liter"))
                         {
-                            fhpAmount = UnitConverter.ConvertVolume(fhpAmount, f.Product.Unit.Name, "Milliliter");
+                            fhpAmount = UnitConverter.ConvertVolume(fhpAmount, fhp.Product.Unit.Name, "Milliliter");
                         }
 
                     }
-                    f.Amount = fhpAmount;
+                    fhp.Amount = fhpAmount;
                 }
 
                 model.mealType = mealType;
@@ -139,14 +137,15 @@ namespace FitnessForgeApp.Controllers
                 .Include(fhp => fhp.Food)
                 .Include(fhp => fhp.Product)
                 .Where(fhp => fhp.Product.ProductStatus == "Jóváhagyva" && !foods.Contains(fhp.FoodId))
-                .GroupBy(fhp => fhp.FoodId)
-                .Select(group => group.First())
                 .ToListAsync();
+
+            viewModel.groupedFoodHasProducts = viewModel.allFoodHasProducts
+                .DistinctBy(fhp => fhp.FoodId)
+                .ToList();
 
             foreach (var f in viewModel.allFoodHasProducts)
             {
                 double fhpAmount = 0.0;
-                double fAmount = 0.0;
                 foreach (var p in f.Food.Products)
                 {
                     fhpAmount = f.Amount;

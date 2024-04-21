@@ -1,7 +1,7 @@
 ﻿@using FitnessForgeApp.Models.ViewModels
 @model MealAddViewModel
 <div class="container fw-bold text-center text-orange pb-3" id="scroll-table">
-    @foreach (var fhp in Model.allFoodHasProducts)
+    @foreach (var fhp in Model.groupedFoodHasProducts)
     {
         <div class="row bg-red text-center text-orange mt-3 rounded-3" id="foodDiv">
             <div class="col">
@@ -11,18 +11,37 @@
                     <i class="fa-solid fa-angles-down" onclick="toggleHiddenDiv(this)"></i>
                 }
             </div>
-            <div class="col">
-                <p>@Math.Round(fhp.Food.Products.Sum(f => fhp.Amount / 100 * f.Calorie), 2) kcal</p>
-            </div>
-            <div class="col">
-                <p>@Math.Round(fhp.Food.Products.Sum(f => fhp.Amount / 100 * f.Carbohydrate), 2) g</p>
-            </div>
-            <div class="col">
-                <p>@Math.Round(fhp.Food.Products.Sum(f => fhp.Amount / 100 * f.Protein), 2) g</p>
-            </div>
-            <div class="col">
-                <p>@Math.Round(fhp.Food.Products.Sum(f => fhp.Amount / 100 * f.Fat), 2) g</p>
-            </div>
+            @if (fhp.Food.Products.Count > 1)
+            {
+                var datas = Model.GetFoodDatas(fhp.FoodId);
+                <div class="col">
+                    <p>@Math.Round(datas[0], 2) kcal</p>
+                </div>
+                <div class="col">
+                    <p>@Math.Round(datas[1], 2) g</p>
+                </div>
+                <div class="col">
+                    <p>@Math.Round(datas[2], 2) g</p>
+                </div>
+                <div class="col">
+                    <p>@Math.Round(datas[3], 2) g</p>
+                </div>
+            }
+            else
+            {
+                <div class="col">
+                    <p>@Math.Round(fhp.Food.Products.Sum(f => f.Calorie), 2) kcal</p>
+                </div>
+                <div class="col">
+                    <p>@Math.Round(fhp.Food.Products.Sum(f => f.Carbohydrate), 2) g</p>
+                </div>
+                <div class="col">
+                    <p>@Math.Round(fhp.Food.Products.Sum(f => f.Protein), 2) g</p>
+                </div>
+                <div class="col">
+                    <p>@Math.Round(fhp.Food.Products.Sum(f => f.Fat), 2) g</p>
+                </div>
+            }
             <div class="col">
                 <div class="d-flex flex-column">
                     <form asp-action="AddFoodToMeal" asp-controller="Meal" method="post">
@@ -47,19 +66,22 @@
         {
             <div class="row hidden-div bg-red fw-bold text-orange m-1 p-1 rounded-3">
                 <div class="row">
-                    <div class="col-3"><p>Termék neve</p></div>
-                    <div class="col-3"><p>Szénhidrát</p></div>
-                    <div class="col-3"><p>Fehérje</p></div>
-                    <div class="col-3"><p>Zsír</p></div>
+                    <div class="col"><p>Termék neve</p></div>
+                    <div class="col"><p>Kalória</p></div>
+                    <div class="col"><p>Szénhidrát</p></div>
+                    <div class="col"><p>Fehérje</p></div>
+                    <div class="col"><p>Zsír</p></div>
                 </div>
                 <hr />
-                @foreach (var product in fhp.Food.Products)
+                @foreach (var f in fhp.Food.Products)
                 {
+                    var datas = Model.GetProductDatas(f.Id, fhp.FoodId);
                     <div class="row">
-                        <div class="col-3"><p>@product.Brand - @product.Name</p></div>
-                        <div class="col-3"><p>@Math.Round(fhp.Amount / 100 * product.Carbohydrate, 2) g</p></div>
-                        <div class="col-3"><p>@Math.Round(fhp.Amount / 100 * product.Protein, 2) g</p></div>
-                        <div class="col-3"><p>@Math.Round(fhp.Amount / 100 * product.Fat, 2) g</p></div>
+                        <div class="col"><p>@f.Brand - @f.Name</p></div>
+                        <div class="col"><p>@Math.Round(datas[0], 2) kcal</p></div>
+                        <div class="col"><p>@Math.Round(datas[1], 2) g</p></div>
+                        <div class="col"><p>@Math.Round(datas[2], 2) g</p></div>
+                        <div class="col"><p>@Math.Round(datas[3], 2) g</p></div>
                     </div>
                 }
             </div>
