@@ -163,6 +163,31 @@
 </div>
 
 <script>
+    $(document).ready(function () {
+        $('form').submit(function (e) {
+            // Validate form fields
+            var error = false;
+            // Your validation logic here
+            // Set 'error' to true if validation fails
+
+            if (error) {
+                // If there's an error, switch to the appropriate tab
+                if ($('#basic').find('.text-danger').length > 0) {
+                    $('#myTab a[href="#basic"]').tab('show');
+                } else if ($('#details').find('.text-danger').length > 0) {
+                    $('#myTab a[href="#details"]').tab('show');
+                } else if ($('#additional').find('.text-danger').length > 0) {
+                    $('#myTab a[href="#additional"]').tab('show');
+                }
+            }
+
+            // Prevent the form from submitting if there's an error
+            if (error) {
+                e.preventDefault();
+            }
+        });
+    });
+
     function goToDetails() {
         $('#myTab a[href="#details"]').tab('show');
         $('#basic-tab i').removeClass('fa-solid fa-circle-dot').addClass('fa-regular fa-circle-dot');

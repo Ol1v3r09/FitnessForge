@@ -21,6 +21,7 @@ namespace FitnessForgeApp.Models.ViewModels
                 result[2] += fhp.Amount / 100 * fhp.Product.Protein;
                 result[3] += fhp.Amount / 100 * fhp.Product.Fat;
             }
+
             return result;
         }
 

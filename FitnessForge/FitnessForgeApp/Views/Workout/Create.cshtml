@@ -12,7 +12,7 @@
         <div class="form-group">
             <h3>Név</h3>
             <div class="d-flex justify-content-center">
-                <input type="text" class="form-control form-control-thin" name="Name" />
+                <input type="text" class="form-control form-control-thin" name="Name" required/>
             </div>
         </div>
         
@@ -36,10 +36,10 @@
             </div>
         </div>
 
-        <button type="submit" class="btn btn-primary mt-2">Létrehozás</button>
+        <button type="submit" class="btn btn-success mt-2">Létrehozás</button>
     </form>
 
-    <a href="@Url.Action("List")" class="mt-2">Vissza az edzéslistára</a>
+    <a href="@Url.Action("List")" class="btn btn-primary mt-2">Vissza az edzéslistára</a>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -50,7 +50,9 @@
         var clonedExercise = exerciseContainer.cloneNode(true);
 
         clonedExercise.querySelector('input[name="SetCount"]').name = 'exerciseSetCount';
+        clonedExercise.querySelector('input[name="exerciseSetCount"]').required = true;
         clonedExercise.querySelector('input[name="RepCount"]').name = 'exerciseRepCount';
+        clonedExercise.querySelector('input[name="exerciseRepCount"]').required = true;
         clonedExercise.querySelector('input[name="Id"]').name = 'exerciseId';
 
         var addButton = clonedExercise.querySelector('.add-item');

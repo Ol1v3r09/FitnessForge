@@ -133,7 +133,7 @@ namespace FitnessForgeApp.Areas.Identity.Pages.Account.Manage
                 return RedirectToPage();
             }
 
-            StatusMessage = "Your email is unchanged.";
+            StatusMessage = "Az email nem változott meg.";
             return RedirectToPage();
         }
 
@@ -165,7 +165,7 @@ namespace FitnessForgeApp.Areas.Identity.Pages.Account.Manage
                 "Confirm your email",
                 $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
-            StatusMessage = "Verification email sent. Please check your email.";
+            StatusMessage = "Az email megváltoztatás jelenleg nem működik";
             return RedirectToPage();
         }
     }

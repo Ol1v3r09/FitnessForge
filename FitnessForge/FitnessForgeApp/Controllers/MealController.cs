@@ -53,11 +53,9 @@ namespace FitnessForgeApp.Controllers
                                        .Include(m => m.MealType)
                                        .ToListAsync();
 
-                model.userMealFoodIds = (from m in model.userMeals select m.FoodId).ToList();
+                var userMealFoodIds = (from m in model.userMeals select m.FoodId).ToList();
 
-                model.userMealsFoodHasProducts = await db.foodsHasProducts.Where(f => model.userMealFoodIds.Contains(f.FoodId)).ToListAsync();
-
-                var a = db.units.ToList();
+                model.userMealsFoodHasProducts = await db.foodsHasProducts.Where(f => userMealFoodIds.Contains(f.FoodId)).ToListAsync();
 
                 foreach (var fhp in model.userMealsFoodHasProducts)
                 {
@@ -363,7 +361,7 @@ namespace FitnessForgeApp.Controllers
 
                     var foodHasProduct = await db.foodsHasProducts.FindAsync(newFood.Id, product.Id);
 
-                    if (double.TryParse(receiptAmounts[i], NumberStyles.Any, CultureInfo.InvariantCulture, out double result))
+                    if (double.TryParse(receiptAmounts[i], out double result))
                     {
                         await Console.Out.WriteLineAsync("Hiba a double parse-nál");
                     }
@@ -407,10 +405,13 @@ namespace FitnessForgeApp.Controllers
                     viewModel.allFoodHasProducts = unfiltered.ToList();
                 }
 
+                viewModel.groupedFoodHasProducts = viewModel.allFoodHasProducts
+                    .DistinctBy(fhp => fhp.FoodId)
+                    .ToList();
+
                 foreach (var f in viewModel.allFoodHasProducts)
                 {
                     double fhpAmount = 0.0;
-                    double fAmount = 0.0;
                     foreach (var p in f.Food.Products)
                     {
                         fhpAmount = f.Amount;
@@ -428,8 +429,6 @@ namespace FitnessForgeApp.Controllers
                 }
 
                 return PartialView("_AddFoodPartial", viewModel);
-
-
             }
             catch (Exception ex)
             {
@@ -463,14 +462,13 @@ namespace FitnessForgeApp.Controllers
                     viewModel.userMeals = viewModel.userMeals.Where(m => m.Food.Name.Contains(searchString)).ToList();
                 }
 
-                viewModel.userMealFoodIds = (from m in viewModel.userMeals select m.FoodId).ToList();
+                var userMealFoodIds = (from m in viewModel.userMeals select m.FoodId).ToList();
 
-                viewModel.userMealsFoodHasProducts = await db.foodsHasProducts.Where(f => viewModel.userMealFoodIds.Contains(f.FoodId)).ToListAsync();
+                viewModel.userMealsFoodHasProducts = await db.foodsHasProducts.Where(f => userMealFoodIds.Contains(f.FoodId)).ToListAsync();
 
                 foreach (var f in viewModel.userMealsFoodHasProducts)
                 {
                     double fhpAmount = 0.0;
-                    double fAmount = 0.0;
                     foreach (var p in f.Food.Products)
                     {
                         fhpAmount = f.Amount;
@@ -493,7 +491,6 @@ namespace FitnessForgeApp.Controllers
             }
             catch (Exception ex)
             {
-                // Log the exception
                 Console.WriteLine(ex.Message);
                 return StatusCode(500, "Internal server error occurred.");
             }
@@ -524,7 +521,6 @@ namespace FitnessForgeApp.Controllers
             }
             catch (Exception ex)
             {
-                // Log the exception
                 Console.WriteLine(ex.Message);
                 return StatusCode(500, "Internal server error occurred.");
             }

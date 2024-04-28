@@ -3,7 +3,6 @@
     public class MealEditIntakeViewModel
     {
         public List<Meal> userMeals {  get; set; }
-        public List<int> userMealFoodIds { get; set; }
         public string mealType { get; set; }
         public List<FoodHasProduct> userMealsFoodHasProducts { get; set; }
     }

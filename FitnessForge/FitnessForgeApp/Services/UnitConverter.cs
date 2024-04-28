@@ -46,19 +46,5 @@
                 return value * volumeConversions[fromUnit];
             }
         }
-
-        public static double ConvertVolumeToMass(double volumeValue, string volumeUnit, string massUnit)
-        {
-            double volumeInLiter = ConvertVolume(volumeValue, volumeUnit, "Liter");
-            double massInGram = volumeInLiter * 1000;
-            return ConvertMass(massInGram, "Gramm", massUnit);
-        }
-
-        public static double ConvertMassToVolume(double massValue, string massUnit, string volumeUnit)
-        {
-            double massInGram = ConvertMass(massValue, massUnit, "Gramm");
-            double volumeInLiter = massInGram / 1000;
-            return ConvertVolume(volumeInLiter, "Liter", volumeUnit);
-        }
     }
 }

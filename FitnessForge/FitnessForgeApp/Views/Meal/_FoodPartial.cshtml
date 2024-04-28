@@ -45,7 +45,7 @@
                         <form method="post" asp-action="Delete">
                             <input type="hidden" name="mealType" value="@meal.MealType.Name" />
                             <input type="hidden" name="foodId" value="@meal.FoodId" />
-                            <button type="submit" class="btn btn-danger" onclick="return confirm('Biztosan törölni szeretné ezt az ételt?');">Törlés</button>
+                            <button type="submit" class="btn btn-warning" onclick="return confirm('Biztosan törölni szeretné ezt az ételt?');">Törlés</button>
                         </form>
                     </div>
                 </div>
@@ -53,11 +53,11 @@
                 {
                     <div class="row hidden-div bg-red fw-bold text-orange m-1 p-1 rounded-3">
                         <div class="row">
-                            <div class="col-3"><p>Termék neve</p></div>
-                            <div class="col-3"><p>Kalória</p></div>
-                            <div class="col-3"><p>Szénhidrát</p></div>
-                            <div class="col-3"><p>Fehérje</p></div>
-                            <div class="col-3"><p>Zsír</p></div>
+                            <div class="col"><p>Termék neve</p></div>
+                            <div class="col"><p>Kalória</p></div>
+                            <div class="col"><p>Szénhidrát</p></div>
+                            <div class="col"><p>Fehérje</p></div>
+                            <div class="col"><p>Zsír</p></div>
                         </div>
                         <hr />
                         @foreach (var f in Model.userMealsFoodHasProducts)
@@ -66,11 +66,11 @@
                             {
                                 
                             <div class="row">
-                                <div class="col-3"><p>@f.Product.Brand - @f.Product.Name</p></div>
-                                <div class="col-3"><p>@Math.Round(f.Product.Calorie * meal.Amount * f.Amount / 100, 2) kcal</p></div>
-                                <div class="col-3"><p>@Math.Round(f.Product.Carbohydrate * meal.Amount * f.Amount / 100, 2) g</p></div>
-                                <div class="col-3"><p>@Math.Round(f.Product.Protein * meal.Amount * f.Amount / 100, 2) g</p></div>
-                                <div class="col-3"><p>@Math.Round(f.Product.Fat * meal.Amount * f.Amount / 100, 2) g</p></div>
+                                <div class="col"><p>@f.Product.Brand - @f.Product.Name</p></div>
+                                <div class="col"><p>@Math.Round(f.Product.Calorie * meal.Amount * f.Amount / 100, 2) kcal</p></div>
+                                <div class="col"><p>@Math.Round(f.Product.Carbohydrate * meal.Amount * f.Amount / 100, 2) g</p></div>
+                                <div class="col"><p>@Math.Round(f.Product.Protein * meal.Amount * f.Amount / 100, 2) g</p></div>
+                                <div class="col"><p>@Math.Round(f.Product.Fat * meal.Amount * f.Amount / 100, 2) g</p></div>
                             </div>
                             }               
                         }

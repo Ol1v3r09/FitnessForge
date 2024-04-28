@@ -14,24 +14,24 @@
                 <div class="form-group mb-3">
                     <h3 class="fw-bold">Felhasználónév</h3>
                     <input asp-for="Input.UserName" class="form-control" autocomplete="username" aria-required="true" placeholder="Felhasználónév" />    
-                    <span asp-validation-for="Input.UserName" class="text-danger"></span>
+                    <span asp-validation-for="Input.UserName" class="text-warning"></span>
                 </div>
                 <div class="form-group mb-3">
                     <h3 class="fw-bold">Email</h3>
                     <input asp-for="Input.Email" class="form-control" autocomplete="email" aria-required="true" placeholder="példa@példa.com" />             
-                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                    <span asp-validation-for="Input.Email" class="text-warning"></span>
                 </div>
                 <div class="form-group mb-3">
                     <h3 class="fw-bold">Jelszó</h3>
                     <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Jelszó" />
                     
-                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                    <span asp-validation-for="Input.Password" class="text-warning"></span>
                 </div>
                 <div class="form-group mb-3">
                     <h3 class="fw-bold">Jelszó megerősítés</h3>
                     <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Jelszó" />
                     
-                    <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                    <span asp-validation-for="Input.ConfirmPassword" class="text-warning"></span>
                 </div>
                 <button id="registerSubmit" type="submit" class="btn btn-success">Regisztráció</button>
             </form>

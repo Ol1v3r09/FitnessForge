@@ -7,6 +7,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FitnessForgeApp", "FitnessF
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{E73C29EE-D2BB-468C-BCED-8EF8F9AF68C1}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "SetupInstaller", "..\SetupInstaller\SetupInstaller.vdproj", "{EFE2D2FB-B7F2-442D-9FFC-999C9642BF18}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitnessForgeTest", "..\FitnessForgeTest\FitnessForgeTest.csproj", "{A322E3AA-CE0D-4D09-B2A7-DF3E9340D97B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,12 @@ Global
 		{E73C29EE-D2BB-468C-BCED-8EF8F9AF68C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E73C29EE-D2BB-468C-BCED-8EF8F9AF68C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E73C29EE-D2BB-468C-BCED-8EF8F9AF68C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFE2D2FB-B7F2-442D-9FFC-999C9642BF18}.Debug|Any CPU.ActiveCfg = Debug
+		{EFE2D2FB-B7F2-442D-9FFC-999C9642BF18}.Release|Any CPU.ActiveCfg = Release
+		{A322E3AA-CE0D-4D09-B2A7-DF3E9340D97B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A322E3AA-CE0D-4D09-B2A7-DF3E9340D97B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A322E3AA-CE0D-4D09-B2A7-DF3E9340D97B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A322E3AA-CE0D-4D09-B2A7-DF3E9340D97B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -30,8 +30,7 @@ namespace FitnessForgeApp.Data
         public DbSet<ActivityLevel> activityLevels { get; set; }
         public DbSet<Feedback> feedbacks { get; set; }
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options)
+        public ApplicationDbContext(DbContextOptions options) : base(options)
         {
         }
 

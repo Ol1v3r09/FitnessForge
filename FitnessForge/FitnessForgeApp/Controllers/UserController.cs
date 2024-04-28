@@ -141,6 +141,8 @@ namespace FitnessForgeApp.Controllers
                     currentUser.Weight = user.Weight;
                     currentUser.Height = user.Height;
                     currentUser.WeightGoal = user.WeightGoal;
+                    if (user.WeeklyWeightGoal < 0)
+                        user.WeeklyWeightGoal *= -1;
                     if (user.Weight > user.WeightGoal)
                         currentUser.WeeklyWeightGoal = user.WeeklyWeightGoal * -1;
                     else if (user.Weight < user.WeightGoal)
@@ -212,6 +214,8 @@ namespace FitnessForgeApp.Controllers
                     currentUser.Weight = user.Weight;
                     currentUser.Height = user.Height;
                     currentUser.WeightGoal = user.WeightGoal;
+                    if (user.WeeklyWeightGoal < 0)
+                        user.WeeklyWeightGoal *= -1;
                     if (user.Weight > user.WeightGoal)
                         currentUser.WeeklyWeightGoal = user.WeeklyWeightGoal * -1;
                     else if (user.Weight < user.WeightGoal)
